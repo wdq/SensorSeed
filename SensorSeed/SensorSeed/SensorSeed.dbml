@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SensorSeed" Class="SensorSeedDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=LOCALHOST\SQLEXPRESS;Initial Catalog=SensorSeed;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SensorSeedConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.SensorTypes" Member="SensorTypes">
+    <Type Name="SensorType">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="SensorType_Sensor" Member="Sensors" ThisKey="Id" OtherKey="SensorTypeId" Type="Sensor" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HomeBasementRoomWeatherStationData" Member="HomeBasementRoomWeatherStationDatas">
+    <Type Name="HomeBasementRoomWeatherStationData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HomeLivingRoomWeatherStationData" Member="HomeLivingRoomWeatherStationDatas">
+    <Type Name="HomeLivingRoomWeatherStationData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HomeOutsideWeatherStationData" Member="HomeOutsideWeatherStationDatas">
+    <Type Name="HomeOutsideWeatherStationData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="Pressure" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Altitude" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="WindSpeed" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+      <Column Name="GustSpeed" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+      <Column Name="Rain" Type="System.Decimal" DbType="Decimal(8,4)" CanBeNull="true" />
+      <Column Name="Battery" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Solar" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="WindDirection" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Temperature180" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Dewpoint" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HomeServerRoomWeatherStationData" Member="HomeServerRoomWeatherStationDatas">
+    <Type Name="HomeServerRoomWeatherStationData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HomeWilliamRoomWeatherStationData" Member="HomeWilliamRoomWeatherStationDatas">
+    <Type Name="HomeWilliamRoomWeatherStationData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SensorData" Member="SensorDatas">
+    <Type Name="SensorData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SensorId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="Sensor_SensorData" Member="Sensor" ThisKey="SensorId" OtherKey="Id" Type="Sensor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Sensors" Member="Sensors">
+    <Type Name="Sensor">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SensorTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Sensor_SensorData" Member="SensorDatas" ThisKey="Id" OtherKey="SensorId" Type="SensorData" />
+      <Association Name="SensorType_Sensor" Member="SensorType" ThisKey="SensorTypeId" OtherKey="Id" Type="SensorType" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
