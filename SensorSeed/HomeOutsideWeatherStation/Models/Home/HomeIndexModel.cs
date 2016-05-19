@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomeOutsideWeatherStation.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,7 +7,7 @@ using System.Web;
 namespace HomeOutsideWeatherStation.Models.Home
 {
     public class HomeIndexModel
-    {
+    { 
         /*
         *   Top left
         */
@@ -30,8 +31,8 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double CurrentWindGusts { get; set; }
 
         // Today recorded minimum and maximum temperatures, rain total
-        public double TodayTemperatureMaximum { get; set; }
-        public double TodayTemperatureMinimum { get; set; }
+        public double? TodayTemperatureMaximum { get; set; }
+        public double? TodayTemperatureMinimum { get; set; }
         public double TodayRainTotal { get; set; }
 
         // Yesterday recorded minimum and maximum temperatures, rain total
@@ -97,6 +98,50 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double YesterdayTemperatureMinimumRecord { get; set; }
         public DateTime YesterdayTemperatureMinimumRecordTimestamp { get; set; }
 
+        public HomeIndexModel()
+        {
+            SensorSeedDataContext database = new SensorSeedDataContext();
+
+            HomeOutsideWeatherStationData currentData = database.HomeOutsideWeatherStationDatas.OrderByDescending(x => x.Timestamp).FirstOrDefault();
+            StationElevation = (double)database.HomeOutsideWeatherStationDatas.Average(x => x.Altitude); // todo: maybe use a GPS to get the actual elevation
+            StationLatitude = 40.815999; // todo: these lat long values are from Google Maps, replace with real GPS values
+            StationLongitude = -96.611661;
+            StationLastUpdated = currentData.Timestamp;
+            CurrentCondition = "Stuff"; // todo: make some sort of algorithm that takes in the data and returns a condition, or get this from an Internet source
+            CurrentTemperature = (((double)currentData.Temperature + (double)currentData.Temperature180) / 2);
+            CurrentTemperatureFeelsLike = WeatherDataConversions.WindChill(CurrentTemperature, (double)currentData.WindSpeed); // todo: should this be wind chill, heat index, something else?
+            CurrentWindSpeed = (double)currentData.WindSpeed;
+            CurrentWindDirection = (double)currentData.WindDirection;
+            CurrentWindGusts = (double)currentData.GustSpeed;
+
+            DateTime startOfToday = DateTime.Today.ToUniversalTime();
+            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            List<HomeOutsideWeatherStationData> todayData = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfToday && x.Timestamp < endOfToday).ToList();
+            TodayTemperatureMaximum = (double?)todayData.Where(x => x.Temperature != null).Max(x => x.Temperature); // todo: probably have a field for the times that these happen too
+            TodayTemperatureMinimum = (double?)todayData.Where(x => x.Temperature != null).Min(x => x.Temperature);
+            TodayRainTotal = (double)todayData.Select(x => x.Rain).Sum();
+
+            DateTime startOfYesterday = DateTime.Today.AddDays(-1).ToUniversalTime();
+            DateTime endOfYesterday = DateTime.Today.ToUniversalTime();
+            List<HomeOutsideWeatherStationData> yesterdayData = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfYesterday && x.Timestamp < endOfYesterday).ToList();
+            YesterdayTemperatureMaximum = (double)yesterdayData.Max(x => x.Temperature);
+            YesterdayTemperatureMinimum = (double)yesterdayData.Min(x => x.Temperature);
+            YesterdayRainTotal = (double)yesterdayData.Select(x => x.Rain).Sum();
+
+            CurrentPressure = (double)currentData.Pressure;
+            CurrentVisibility = 0; // todo: either find out how to calculate this, or what kind of sensor I need, or pull it from the Internet
+            CurrentClouds = ""; // todo: either find out how to calculate this, or what kind of sensor I need, or pull it from the Internet
+            CurrentHeatIndex = WeatherDataConversions.HeatIndex(CurrentTemperature, (double)currentData.Humidity);
+            CurrentDewPoint = WeatherDataConversions.DewPoint(CurrentTemperature, (double)currentData.Humidity);
+            CurrentHumidity = (double)currentData.Humidity;
+            CurrentRainfall = TodayRainTotal; // todo: this may need to be something else
+            CurrentSnowDepth = 0; // todo: snow
+            Sunrise = DateTime.Today; // todo: will need to add code to calculate sunrise and sunset with an input of the date
+            Sunset = DateTime.Today;
+            MoonType = ""; // todo: moon stuff
+            MoonVisible = 0;
+
+        }
 
     }
 }

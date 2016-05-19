@@ -83,6 +83,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -173,6 +174,12 @@
     <Compile Include="Models\Shared\WindGraphModel.cs" />
     <Compile Include="Models\Shared\TimeGraphModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SensorSeed.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SensorSeed.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\WeatherDataConversions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -209,13 +216,15 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="SensorSeed.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>SensorSeed.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Shared\" />
     <Folder Include="Views\History\" />
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +234,14 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SensorSeed.dbml.layout">
+      <DependentUpon>SensorSeed.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
