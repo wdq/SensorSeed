@@ -7,6 +7,9 @@
 <h6>Home Outside Weather Station</h6>
 Temperature: @Model.CurrentTemperature
 <br />
-Feels like: @Model.CurrentTemperatureFeelsLike
+Feels like: @Html.DisplayFor( x => Model.CurrentTemperatureFeelsLike)
 <br />
-Heat index: @Model.CurrentHeatIndex
+Heat index: @Html.DisplayFor(x => Model.CurrentHeatIndex)
+<br/>
+Dew point: @Html.DisplayFor(x => Model.CurrentDewPoint)
+

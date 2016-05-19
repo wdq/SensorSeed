@@ -1,6 +1,7 @@
 ﻿using HomeOutsideWeatherStation.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -23,6 +24,7 @@ namespace HomeOutsideWeatherStation.Models.Home
         
         // Temperature, feels like
         public double CurrentTemperature { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentTemperatureFeelsLike { get; set; }
 
         // Wind speed, direction, gusts
@@ -47,7 +49,9 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double CurrentPressure { get; set; }
         public double CurrentVisibility { get; set; }
         public string CurrentClouds { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentHeatIndex { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentDewPoint { get; set; }
         public double CurrentHumidity { get; set; }
         public double CurrentRainfall { get; set; }

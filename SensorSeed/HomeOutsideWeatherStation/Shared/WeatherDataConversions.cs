@@ -23,39 +23,31 @@ namespace HomeOutsideWeatherStation.Shared
 
         public static double HeatIndex(double temperature, double humidity)
         {
-            double heatIndex = 0;
-            double temperatureF = 0;
-
             // Heat index: https://en.wikipedia.org/wiki/Heat_index
             // Doesn't seem to be very precise of a formula, looks like some sort of an infinite series
-            // HI = c_1 + c_2*T + c_3*R + c_4*T*R + c_5*T^2 + c_6*R^2 + c_7*T^2*R + c_8*T*R^2 + c_9*T^2*R^2
-            // T = temperature in F, R = humidity
+            // Code taken from here: https://gist.github.com/Injac/c8399ca89efe8bdc213f
+            // DHT11 Sensor driver for Windows 10 IoT Core - C#
 
-            double c_1 = -42.379;
-            double c_2 = 2.04901523;
-            double c_3 = 10.14333127;
-            double c_4 = -0.22475541;
-            double c_5 = -6.83783 * Math.Pow(10, -3);
-            double c_6 = -5.481717 * Math.Pow(10, -2);
-            double c_7 = 1.22874 * Math.Pow(10, -3);
-            double c_8 = 8.5282 * Math.Pow(10, -4);
-            double c_9 = -1.99 * Math.Pow(10, -6);
+            return -8.784695 +
+                    1.61139411 * temperature +
+                    2.338549 * humidity +
+                    -0.14611605 * temperature * humidity +
+                    -0.01230809 * Math.Pow(temperature, 2) +
+                    -0.01642482 * Math.Pow(humidity, 2) +
+                    0.00221173 * Math.Pow(temperature, 2) * humidity +
+                    0.00072546 * temperature * Math.Pow(humidity, 2) +
+                    -0.00000358 * Math.Pow(temperature, 2) * Math.Pow(humidity, 2);
 
-            heatIndex = c_1 + (c_2 * temperatureF) + (c_3 * humidity) + (c_4 * temperatureF * humidity) + (c_5 * Math.Pow(temperatureF, 2)) + (c_6 * Math.Pow(humidity, 2)) + (c_7 * Math.Pow(temperatureF, 2) * humidity) + (c_8 * temperatureF * Math.Pow(humidity, 2)) + (c_9 * Math.Pow(temperatureF, 2) * Math.Pow(humidity, 2));
-
-            heatIndex = (heatIndex * (9 / 5)) + 32; // Fahrenheit to Celsius
-
-            return heatIndex;
         }
 
         public static double DewPoint(double temperature, double humidity)
         {
-            double dewPoint = 0;
+            //double dewPoint = 0;
 
             // Dewpoint: https://en.wikipedia.org/wiki/Dew_point
-            // todo: formula
+            // Code taken from here: http://stackoverflow.com/a/27289801
 
-            return dewPoint;
+            return (temperature - (14.55 + 0.114 * temperature) * (1 - (0.01 * humidity)) - Math.Pow(((2.5 + 0.007 * temperature) * (1 - (0.01 * humidity))), 3) - (15.9 + 0.117 * temperature) * Math.Pow((1 - (0.01 * humidity)), 14));
         }
     }
 }
