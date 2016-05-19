@@ -67,6 +67,36 @@ namespace HomeOutsideWeatherStation.Models.Home
         *   Bottom
         */
 
+        // History, note: a lot of these will be meaningless until I have over a year of data
+        // TodayTemperatureMaximum
+        // TodayTemperatureMinimum
+        public double TemperatureAverageMaximum { get; set; }
+        public double TemperatureAverageMinimum { get; set; }
+        public double TemperatureMaximumRangeBottom { get; set; }
+        public double TemperatureMaximumRangeTop { get; set; }
+        public double TemperatureMinimumRangeBottom { get; set; }
+        public double TemperatureMinimumRangeTop { get; set; }
+        // TodayRainTotal
+        public double RainAverage { get; set; }
+        public double RainRangeBottom { get; set; } // todo: rain vs snow, I'll need to add in snow before winter, snow measurements will require additional hardware (maybe a heater for the rain gauge), can use temperature to determine if the heater needs to run, and if it is snow or rain
+        public double RainRangeTop { get; set; }
+        public double DewPointMaximum { get; set; }
+        public double DewPointMinimum { get; set; }
+        public double DewPointAverageMaximum { get; set; }
+        public double DewPointAverageMinimum { get; set; }
+        public double DewPointMaximumRangeBottom { get; set; }
+        public double DewPointMaximumRangeTop { get; set; }
+        public double DewPointMinimumRangeBottom { get; set; }
+        public double DewPointMinimumRangeTop { get; set; }
+        // YesterdayTemperatureMaximum
+        // YesterdayTemperatureMinimum
+        public double YesterdayTemperatureMaximumAverage { get; set; }
+        public double YesterdayTemperatureMinimumAverage { get; set; }
+        public double YesterdayTemperatureMaximumRecord { get; set; }
+        public DateTime YesterdayTemperatureMaximumRecordTimestamp { get; set; } 
+        public double YesterdayTemperatureMinimumRecord { get; set; }
+        public DateTime YesterdayTemperatureMinimumRecordTimestamp { get; set; }
+
 
     }
 }
