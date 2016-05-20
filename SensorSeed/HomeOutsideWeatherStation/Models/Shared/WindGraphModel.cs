@@ -11,5 +11,12 @@ namespace HomeOutsideWeatherStation.Models.Shared
         public DateTime Timestamp { get; set; }
         public double WindSpeed { get; set; }
         public double WindDirection { get; set; }
+
+        public WindGraphModel(DateTime timestamp, double windSpeed, double windDirection)
+        {
+            Timestamp = timestamp;
+            WindSpeed = windSpeed;
+            WindDirection = windDirection;
+        }
     }
 }

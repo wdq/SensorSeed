@@ -10,5 +10,11 @@ namespace HomeOutsideWeatherStation.Models.Shared
     {
         public DateTime Timestamp { get; set; }
         public double Value { get; set; }
+
+        public TimeGraphModel(DateTime timestamp, double value)
+        {
+            Timestamp = timestamp;
+            Value = value;
+        }
     }
 }

@@ -83,7 +83,7 @@ namespace HomeOutsideWeatherStation.Models.Home
         *   Middle
         */
 
-        public List<HomeTenDayHistoryGraphModel> TenDayHistoryGraph { get; set; }
+        public HomeTenDayHistoryGraphModel TenDayHistoryGraph { get; set; }
 
 
         /*
@@ -162,6 +162,8 @@ namespace HomeOutsideWeatherStation.Models.Home
             Sunset = DateTime.Today;
             MoonType = ""; // todo: moon stuff
             MoonVisible = 0;
+
+            TenDayHistoryGraph = new HomeTenDayHistoryGraphModel(); 
 
         }
 

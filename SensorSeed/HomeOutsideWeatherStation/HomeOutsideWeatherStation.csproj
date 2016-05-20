@@ -170,6 +170,7 @@
     </Compile>
     <Compile Include="Models\History\HistoryIndexModel.cs" />
     <Compile Include="Models\Home\HomeIndexModel.cs" />
+    <Compile Include="Models\Home\HomeTenDayHistoryGraphDayModel.cs" />
     <Compile Include="Models\Home\HomeTenDayHistoryGraphModel.cs" />
     <Compile Include="Models\Shared\WindGraphModel.cs" />
     <Compile Include="Models\Shared\TimeGraphModel.cs" />
@@ -193,6 +194,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\d3\d3.js" />
+    <Content Include="Scripts\d3\d3.min.js" />
+    <Content Include="Scripts\d3\LICENSE" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
