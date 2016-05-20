@@ -8,53 +8,71 @@ using System.Web;
 namespace HomeOutsideWeatherStation.Models.Home
 {
     public class HomeIndexModel
-    { 
+    {
         /*
         *   Top left
         */
 
         // Elevation, coordinates, last updated
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double StationElevation { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double StationLatitude { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double StationLongitude { get; set; }
-        public DateTime StationLastUpdated { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public double StationLastUpdated { get; set; }
 
         // Condition icon/text, 
         public string CurrentCondition { get; set; }
-        
+
         // Temperature, feels like
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentTemperature { get; set; }
         [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentTemperatureFeelsLike { get; set; }
 
         // Wind speed, direction, gusts
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentWindSpeed { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentWindDirection { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentWindGusts { get; set; }
 
         // Today recorded minimum and maximum temperatures, rain total
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double? TodayTemperatureMaximum { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double? TodayTemperatureMinimum { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double TodayRainTotal { get; set; }
 
         // Yesterday recorded minimum and maximum temperatures, rain total
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double YesterdayTemperatureMaximum { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double YesterdayTemperatureMinimum { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double YesterdayRainTotal { get; set; }
 
         /*
         *   Top right
         */
-
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentPressure { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentVisibility { get; set; }
         public string CurrentClouds { get; set; }
         [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentHeatIndex { get; set; }
         [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentDewPoint { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentHumidity { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentRainfall { get; set; }
+        [DisplayFormat(DataFormatString = "{0:N}")]
         public double CurrentSnowDepth { get; set; }
         public DateTime Sunrise { get; set; }
         public DateTime Sunset { get; set; }
@@ -110,7 +128,7 @@ namespace HomeOutsideWeatherStation.Models.Home
             StationElevation = (double)database.HomeOutsideWeatherStationDatas.Average(x => x.Altitude); // todo: maybe use a GPS to get the actual elevation
             StationLatitude = 40.815999; // todo: these lat long values are from Google Maps, replace with real GPS values
             StationLongitude = -96.611661;
-            StationLastUpdated = currentData.Timestamp;
+            StationLastUpdated = (DateTime.Now - currentData.Timestamp.ToLocalTime()).TotalSeconds;
             CurrentCondition = "Stuff"; // todo: make some sort of algorithm that takes in the data and returns a condition, or get this from an Internet source
             CurrentTemperature = (((double)currentData.Temperature + (double)currentData.Temperature180) / 2);
             CurrentTemperatureFeelsLike = WeatherDataConversions.WindChill(CurrentTemperature, (double)currentData.WindSpeed); // todo: should this be wind chill, heat index, something else?

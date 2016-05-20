@@ -4,6 +4,96 @@
     ViewBag.Title = "Home Outside Weather Station";
 }
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Home Outside Weather Station</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table">
+                <tr>
+                    <td>Forecast</td>
+                    <td>History</td>
+                    <td>Calendar</td>
+                    <td>Rain / Snow</td>
+                    <td>Health</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="row">
+                Elev @Html.DisplayFor(x => Model.StationElevation) m @Html.DisplayFor(x => Model.StationLatitude) lat, @Html.DisplayFor(x => Model.StationLongitude) long | Updated @Html.DisplayFor(x => Model.StationLastUpdated) sec ago
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Todo</h4>
+                    <h4>Todo</h4>
+                    <h4>Todo</h4>
+                </div>
+                <div class="col-md-5">
+                    <h1>@Html.DisplayFor(x => Model.CurrentTemperature) °C</h1>
+                    <h5>Feels Like @Html.DisplayFor(x => Model.CurrentTemperatureFeelsLike) °C</h5>
+                </div>
+                <div class="col-md-4">
+                    <h2>@Html.DisplayFor(x => Model.CurrentWindSpeed)</h2>
+                    <h5>Wind from @Html.DisplayFor(x => Model.CurrentWindDirection)°</h5>
+                    <h5>Gusts @Html.DisplayFor(x => Model.CurrentWindGusts) km/h</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><b>Today</b></h5>
+                    <h6>High @Html.DisplayFor(x => Model.TodayTemperatureMaximum) | Low @Html.DisplayFor(x => Model.TodayTemperatureMinimum) °C</h6>
+                    <h6>Precip. @Html.DisplayFor(x => Model.TodayRainTotal) mm</h6>
+                </div>
+                <div class="col-md-6">
+                    <h5><b>Yesterday</b></h5>
+                    <h6>High @Html.DisplayFor(x => Model.YesterdayTemperatureMaximum) | Low @Html.DisplayFor(x => Model.YesterdayTemperatureMinimum) °C</h6>
+                    <h6>Precip. @Html.DisplayFor(x => Model.YesterdayRainTotal) mm</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <table class="table">
+                <tr>
+                    <td>Pressure</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentPressure) hPa</td>
+                </tr>
+                <tr>
+                    <td>Visibility</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentVisibility) km</td>
+                </tr>
+                <tr>
+                    <td>Clouds</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentClouds)</td>
+                </tr>
+                <tr>
+                    <td>Dew Point</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentDewPoint) °C</td>
+                </tr>
+                <tr>
+                    <td>Humidity</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentHumidity)%</td>
+                </tr>
+                <tr>
+                    <td>Rainfall</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentRainfall) mm</td>
+                </tr>
+                <tr>
+                    <td>Snow Depth</td>
+                    <td>@Html.DisplayFor(x => Model.CurrentSnowDepth)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!--
 <h6>Home Outside Weather Station</h6>
 Temperature: @Model.CurrentTemperature
 <br />
@@ -12,4 +102,4 @@ Feels like: @Html.DisplayFor( x => Model.CurrentTemperatureFeelsLike)
 Heat index: @Html.DisplayFor(x => Model.CurrentHeatIndex)
 <br/>
 Dew point: @Html.DisplayFor(x => Model.CurrentDewPoint)
-
+    -->
