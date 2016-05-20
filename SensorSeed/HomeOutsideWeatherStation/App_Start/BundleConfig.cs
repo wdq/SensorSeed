@@ -10,6 +10,7 @@ namespace HomeOutsideWeatherStation
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/table-to-json/lib/jquery.tabletojson.js",
                         "~/Scripts/d3/d3.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

@@ -22,3 +22,57 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.TemperatureLine {
+  fill: none;
+  stroke: #D6212A;
+  stroke-width: 1.5px;
+}
+
+.HumidityLine {
+  fill: none;
+  stroke: #87C404;
+  stroke-width: 1.5px;
+}
+
+.PressureLine {
+  fill: none;
+  stroke: #1E2023;
+  stroke-width: 1.5px;
+}
+
+.DewPointLine {
+  fill: none;
+  stroke: #5B9F4A;
+  stroke-width: 1.5px;
+}
+
+.WindSpeedLine {
+  fill: none;
+  stroke: #002F80;
+  stroke-width: 1.5px;
+}
+
+.FeelsLikeLine {
+  fill: none;
+  stroke: #AD55A1;
+  stroke-width: 1.5px;
+}
+
+.RainLine {
+  fill: none;
+  stroke: #0074A2;
+  stroke-width: 1.5px;
+}

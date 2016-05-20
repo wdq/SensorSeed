@@ -93,10 +93,52 @@
     <div class="row">
         <div class="col-md-12">
             <h3>10-Day Weather History</h3>
+            <div id="TemperatureGraph"></div>
+            <table class="table" id="TemperatureTable">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Temperature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var temperature in Model.TenDayHistoryGraph.TemperatureGraph)
+                    {
+                    <tr>
+                        <td>@temperature.Timestamp</td>
+                        <td>@temperature.Value</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="HumidityGraph"></div>
+            <table class="table" id="HumidityTable">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Humidity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var humidity in Model.TenDayHistoryGraph.HumidityGraph)
+                    {
+                        <tr>
+                            <td>@humidity.Timestamp</td>
+                            <td>@humidity.Value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+</script>
 
+<script type="text/javascript" src="~/Content/Home/HomeTemperatureChart.js"></script>
+<script type="text/javascript" src="~/Content/Home/HomeHumidityChart.js"></script>
 
 <!--
 <h6>Home Outside Weather Station</h6>

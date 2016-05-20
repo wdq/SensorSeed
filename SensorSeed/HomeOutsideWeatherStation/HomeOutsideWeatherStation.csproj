@@ -185,6 +185,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Home\HomeTemperatureChart.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -208,6 +209,15 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\table-to-json\.gitattributes" />
+    <Content Include="Scripts\table-to-json\.gitignore" />
+    <Content Include="Scripts\table-to-json\Gruntfile.js" />
+    <Content Include="Scripts\table-to-json\lib\jquery.tabletojson.js" />
+    <Content Include="Scripts\table-to-json\lib\jquery.tabletojson.min.js" />
+    <Content Include="Scripts\table-to-json\src\jquery.tabletojson.js" />
+    <Content Include="Scripts\table-to-json\test\index.html" />
+    <Content Include="Scripts\table-to-json\test\specs\content.test.js" />
+    <Content Include="Scripts\table-to-json\test\specs\core.test.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -240,6 +250,14 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\table-to-json\.jshintrc" />
+    <Content Include="Scripts\table-to-json\.travis.yml" />
+    <Content Include="Scripts\table-to-json\bower.json" />
+    <Content Include="Scripts\table-to-json\CHANGELOG.md" />
+    <Content Include="Scripts\table-to-json\MIT-LICENSE" />
+    <Content Include="Scripts\table-to-json\package.json" />
+    <Content Include="Scripts\table-to-json\README.md" />
+    <Content Include="Scripts\table-to-json\tabletojson.jquery.json" />
     <None Include="SensorSeed.dbml.layout">
       <DependentUpon>SensorSeed.dbml</DependentUpon>
     </None>
