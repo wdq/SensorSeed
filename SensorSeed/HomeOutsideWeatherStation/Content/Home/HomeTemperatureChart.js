@@ -32,7 +32,11 @@
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
     var table = $("#TemperatureTable").tableToJSON();
+    table.sort(function (a, b) {
+        return formatDate.parse(a.Timestamp) - formatDate.parse(b.Timestamp);
+    })
     $("#TemperatureTable").css("display", "none");
     x.domain(d3.extent(table, function (d) { return formatDate.parse(d.Timestamp); }));
     y.domain([-20, 40]);
@@ -51,11 +55,53 @@
         .attr("class", "TemperatureLine")
         .attr("d", line);
 
-    function type(d) {
-        d.Timestamp = formatDate.parse(d.Timestamp);
-        d.Temperature = d.Temperature;
-        console.log(d);
-        return d;
+
+
+    var focus = svg.append("g")
+        .attr("class", "focus")
+        .style("display", "none");
+
+    focus.append("circle")
+        .attr("r", 4.5);
+
+    focus.append("text")
+        .attr("x", 9)
+        .attr("dy", ".35em");
+
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .on("mouseover", function () { focus.style("display", null); })
+        .on("mouseout", function () { focus.style("display", "none"); })
+        .on("mousemove", mousemove);
+
+    var bisectDate = d3.bisector(function (d) { return d.Timestamp; }).left;
+
+    function mousemove() {
+        var x0 = x.invert(d3.mouse(this)[0]);
+        var i = 0;
+        //var i = bisectDate(table, x0, d3.max(table));
+        //console.log(new Date(table[500].Timestamp).toString());
+        //console.log(new Date(x0).toString());
+        for (var count = 0; count < table.length; count++) {
+            if (new Date(table[count].Timestamp).toString() == new Date(x0).toString()) {
+                i = count;
+                console.log(i);
+            }
+        }
+        var d0 = table[i - 1];
+        var d1 = table[i];
+        //console.log(x0);
+        //console.log(i);
+        //console.log(d0);
+        //console.log(d1);
+        //console.log("");
+        // var d = x0 - d0.Timestamp > d1.Timestamp - x0 ? d1 : d0;
+        var d = d1;
+            focus.attr("transform", "translate(" + x(formatDate.parse(d.Timestamp)) + "," + y(d.Temperature) + ")");
+            focus.select("text").text(d.Temperature);
     }
+
 
 });

@@ -76,3 +76,13 @@ textarea {
   stroke: #0074A2;
   stroke-width: 1.5px;
 }
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}

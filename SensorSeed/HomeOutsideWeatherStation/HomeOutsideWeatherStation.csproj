@@ -185,6 +185,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Home\HomeHumidityChart.js" />
+    <Content Include="Content\Home\HomepRessureChart.js" />
     <Content Include="Content\Home\HomeTemperatureChart.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
