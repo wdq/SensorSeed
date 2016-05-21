@@ -33,11 +33,11 @@ namespace HomeOutsideWeatherStation.Models.Home
             }
 
             DayInformation = DayInformationTemp;
-            TemperatureGraph = tenDayDatas.Where(x => x.Temperature != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Temperature)).ToList();
-            HumidityGraph = tenDayDatas.Where(x => x.Humidity != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Humidity)).ToList();
-            PressureGraph = tenDayDatas.Where(x => x.Pressure != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Pressure)).ToList();
-            RainfallGraph = tenDayDatas.Where(x => x.Rain != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Rain)).ToList();
-            WindSpeedGraph = tenDayDatas.Where(x => x.WindSpeed != null && x.WindDirection != null).Select(x => new WindGraphModel(x.Timestamp.ToLocalTime(), (double)x.WindSpeed, (double)x.WindDirection)).ToList();
+            //TemperatureGraph = tenDayDatas.Where(x => x.Temperature != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Temperature)).ToList();
+            //HumidityGraph = tenDayDatas.Where(x => x.Humidity != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Humidity)).ToList();
+            //PressureGraph = tenDayDatas.Where(x => x.Pressure != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Pressure)).ToList();
+            //RainfallGraph = tenDayDatas.Where(x => x.Rain != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Rain)).ToList();
+            //WindSpeedGraph = tenDayDatas.Where(x => x.WindSpeed != null && x.WindDirection != null).Select(x => new WindGraphModel(x.Timestamp.ToLocalTime(), (double)x.WindSpeed, (double)x.WindDirection)).ToList();
 
         }
     }

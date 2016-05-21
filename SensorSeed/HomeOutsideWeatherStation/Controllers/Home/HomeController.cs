@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace HomeOutsideWeatherStation.Controllers.Home
 {
@@ -13,6 +14,28 @@ namespace HomeOutsideWeatherStation.Controllers.Home
         {
             HomeIndexModel model = new HomeIndexModel();            
             return View(model);
+        }
+
+        public JsonResult TemperatureFeelsLikeDewPointChartData()
+        {
+            HomeTemperatureFeelsLikeDewPointChartDataModel model = new HomeTemperatureFeelsLikeDewPointChartDataModel();
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult HumidityPressureChartData()
+        {
+            HomeHumidityPressureChartDataModel model = new HomeHumidityPressureChartDataModel();
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult PrecipitationChartData()
+        {
+            return View();
+        }
+
+        public ActionResult WindChartData()
+        {
+            return View();
         }
 
     }

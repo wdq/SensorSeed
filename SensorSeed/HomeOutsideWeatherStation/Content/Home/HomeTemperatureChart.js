@@ -22,8 +22,17 @@
             mode: "time",
             timeformat: "%m/%d/%Y %I:%M:%S %p",
             show: false
+        },
+        crosshair: {
+            mode: "x"
+        },
+        grid: {
+            hoverable: true,
+            autoHighlight: false
         }
     }); 
+
+
 
 
     /* var margin = { top: 30, right: 20, bottom: 30, left: 50 },
