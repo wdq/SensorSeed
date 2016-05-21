@@ -1,51 +1,77 @@
 ﻿$(document).ready(function () {
 
-    var margin = { top: 30, right: 20, bottom: 30, left: 50 },
-        width = 960 - margin.left - margin.right,
-        height = 150 - margin.top - margin.bottom;
-
-    var formatDate = d3.time.format("%x %I:%M:%S %p");
-
-    var x = d3.time.scale()
-        .range([0, width]);
-
-    var y = d3.scale.linear()
-        .range([height, 0]);
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-        .ticks(10);
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(3);
-
-    var line = d3.svg.line()
-        .x(function (d) { return x(formatDate.parse(d.Timestamp)); })
-        .y(function (d) { return y(d.Temperature); });
-
-    var svg = d3.select("#TemperatureGraph").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    //var table = $("#TemperatureTable").tableToJSON();
 
 
-    var table = $("#TemperatureTable").tableToJSON();
-    table.sort(function (a, b) {
-        return formatDate.parse(a.Timestamp) - formatDate.parse(b.Timestamp);
-    })
-    $("#TemperatureTable").css("display", "none");
-    x.domain(d3.extent(table, function (d) { return formatDate.parse(d.Timestamp); }));
-    y.domain([-20, 40]);
+    var data = [];
 
-   /* svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis); */
+    $("#TemperatureTable tr").each(function () {;
+        var row = [];
+        $("td", this).each(function() {
+            row.push($(this).html());
+        });
+        if (row.length == 2) {
+            row[0] = new Date(row[0]);
+            data.push(row);
+        }
+    });
 
+    $.plot($("#TemperatureGraph"), [data],
+    {
+        xaxis: {
+            mode: "time",
+            timeformat: "%m/%d/%Y %I:%M:%S %p",
+            show: false
+        }
+    }); 
+
+
+    /* var margin = { top: 30, right: 20, bottom: 30, left: 50 },
+         width = 960 - margin.left - margin.right,
+         height = 150 - margin.top - margin.bottom;
+ 
+     var formatDate = d3.time.format("%x %I:%M:%S %p");
+ 
+     var x = d3.time.scale()
+         .range([0, width]);
+ 
+     var y = d3.scale.linear()
+         .range([height, 0]);
+ 
+     var xAxis = d3.svg.axis()
+         .scale(x)
+         .orient("bottom")
+         .ticks(10);
+ 
+     var yAxis = d3.svg.axis()
+         .scale(y)
+         .orient("left")
+         .ticks(3);
+ 
+     var line = d3.svg.line()
+         .x(function (d) { return x(formatDate.parse(d.Timestamp)); })
+         .y(function (d) { return y(d.Temperature); });
+ 
+     var svg = d3.select("#TemperatureGraph").append("svg")
+         .attr("width", width + margin.left + margin.right)
+         .attr("height", height + margin.top + margin.bottom)
+       .append("g")
+         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+ 
+ 
+     var table = $("#TemperatureTable").tableToJSON();
+     table.sort(function (a, b) {
+         return formatDate.parse(a.Timestamp) - formatDate.parse(b.Timestamp);
+     })
+     $("#TemperatureTable").css("display", "none");
+     x.domain(d3.extent(table, function (d) { return formatDate.parse(d.Timestamp); }));
+     y.domain([5, 30]);
+ 
+    /* svg.append("g")
+         .attr("class", "x axis")
+         .attr("transform", "translate(0," + height + ")")
+         .call(xAxis); */
+/*
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
@@ -101,7 +127,7 @@
         var d = d1;
             focus.attr("transform", "translate(" + x(formatDate.parse(d.Timestamp)) + "," + y(d.Temperature) + ")");
             focus.select("text").text(d.Temperature);
-    }
-
+    } 
+    */
 
 });
