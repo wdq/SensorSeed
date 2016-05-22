@@ -190,7 +190,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Home\HomeHumidityChart.js" />
     <Content Include="Content\Home\HomepRessureChart.js" />
-    <Content Include="Content\Home\HomeTemperatureChart.js" />
+    <Content Include="Content\Home\TemperatureFeelsLikeDewPointChart.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

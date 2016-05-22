@@ -93,92 +93,7 @@
     <div class="row">
         <div class="col-md-12">
             <h3>10-Day Weather History</h3>
-            <table class="table table-bordered">
-                <tbody>
-                    <tr>
-                        @foreach (var day in Model.TenDayHistoryGraph.DayInformation)
-                        {
-                            <td class="col-md-1">
-                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">@day.Date.DayOfWeek.ToString().Substring(0, 3) @day.Date.ToString("MM/dd")</h6></center>
-
-                            </td>
-                        }
-                    </tr>
-                    <tr>
-                        @foreach(var day in Model.TenDayHistoryGraph.DayInformation)
-                        {
-                            <td class="col-md-1">
-                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">@day.TemperatureHigh° | @day.TemperatureLow°</h6></center>
-                                
-                            </td>
-                        }
-                    </tr>
-                    <tr>
-                        @foreach (var day in Model.TenDayHistoryGraph.DayInformation)
-                        {
-                            <td class="col-md-1">
-                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">Todo</h6></center>
-                                <br />
-                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">@day.Rain mm</h6></center>
-                            </td>
-                        }
-                    </tr>
-                </tbody>
-            </table>
-            <div id="TemperatureGraph" style="width: 960px; height: 150px;"></div>
-            <table class="table" id="TemperatureTable" style="display: none;">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Temperature</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var temperature in Model.TenDayHistoryGraph.TemperatureGraph)
-                    {
-                    <tr>
-                        <td>@temperature.Timestamp</td>
-                        <td>@temperature.Value</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-            <div id="HumidityGraph"></div>
-            <table class="table" id="HumidityTable">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Humidity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var humidity in Model.TenDayHistoryGraph.HumidityGraph)
-                    {
-                        <tr>
-                            <td>@humidity.Timestamp</td>
-                            <td>@humidity.Value</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div id="PressureGraph"></div>
-            <table class="table" id="PressureTable">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Pressure</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var pressure in Model.TenDayHistoryGraph.PressureGraph)
-                    {
-                        <tr>
-                            <td>@pressure.Timestamp</td>
-                            <td>@pressure.Value</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div id="TemperatureFeelsLikeDewPointChart"></div>
         </div>
     </div>
 </div>
@@ -187,9 +102,7 @@
     });
 </script>
 
-<script type="text/javascript" src="~/Content/Home/HomeTemperatureChart.js"></script>
-<script type="text/javascript" src="~/Content/Home/HomeHumidityChart.js"></script>
-<script type="text/javascript" src="~/Content/Home/HomepRessureChart.js"></script>
+<script type="text/javascript" src="~/Content/Home/TemperatureFeelsLikeDewPointChart.js"></script>
 
 <!--
 <h6>Home Outside Weather Station</h6>

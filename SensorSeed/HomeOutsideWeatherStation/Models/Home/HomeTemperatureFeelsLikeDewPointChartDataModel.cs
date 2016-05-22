@@ -8,14 +8,14 @@ namespace HomeOutsideWeatherStation.Models.Home
 {
     public class HomeTemperatureFeelsLikeDewPointChartDataPointModel
     {
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; }
         public double Temperature { get; set; }
         public double TemperatureFeelsLike { get; set; }
         public double DewPoint { get; set; }
 
         public HomeTemperatureFeelsLikeDewPointChartDataPointModel(HomeOutsideWeatherStationData data)
         {
-            Timestamp = data.Timestamp;
+            Timestamp = data.Timestamp.ToString();
             Temperature = (double)data.Temperature;
             TemperatureFeelsLike = WeatherDataConversions.WindChill((double)data.Temperature, (double)data.WindSpeed);
             DewPoint = WeatherDataConversions.DewPoint((double)data.Temperature, (double)data.Humidity);
