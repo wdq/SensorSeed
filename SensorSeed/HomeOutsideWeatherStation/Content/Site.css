@@ -41,6 +41,12 @@ textarea {
   stroke-width: 1.5px;
 }
 
+.TemperatureFeelsLikeLine {
+    fill: none;
+    stroke: #AD55A1;
+    stroke-width: 1.5px;
+}
+
 .HumidityLine {
   fill: none;
   stroke: #87C404;

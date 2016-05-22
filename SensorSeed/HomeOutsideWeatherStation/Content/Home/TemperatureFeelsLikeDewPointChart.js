@@ -4,7 +4,7 @@
     // Set the dimensions of the canvas / graph
     var margin = { top: 30, right: 20, bottom: 30, left: 50 },
             width = 960 - margin.left - margin.right,
-            height = 150 - margin.top - margin.bottom;
+            height = 350 - margin.top - margin.bottom;
 
     // Parse the date / time
     var parseDate = d3.time.format.utc("%m/%d/%Y %I:%M:%S %p").parse;
@@ -20,10 +20,18 @@
     var yAxis = d3.svg.axis().scale(y)
         .orient("left").ticks(3);
      // Define the line
-      var valueline = d3.svg.line()
+    var TemperatureValueLine = d3.svg.line()
+          .interpolate("basis")
           .x(function (d) { return x(d.Timestamp); })
           .y(function (d) { return y(d.Temperature); });
-          
+    var TemperatureFeelsLikeValueLine = d3.svg.line()
+          .interpolate("basis")
+          .x(function (d) { return x(d.Timestamp); })
+          .y(function (d) { return y(d.TemperatureFeelsLike); });
+    var DewPointValueLine = d3.svg.line()
+          .interpolate("basis")
+          .x(function (d) { return x(d.Timestamp); })
+          .y(function (d) { return y(d.DewPoint); });
 
     // Adds the svg canvas
     var svg = d3.select("#TemperatureFeelsLikeDewPointChart")
@@ -46,7 +54,7 @@
 
         // Scale the range of the data
         x.domain(d3.extent(data, function (d) { return d.Timestamp; }));
-        y.domain([0, d3.max(data, function (d) { return d.Temperature; })]);
+        y.domain([d3.min(data, function (d) { return d.DewPoint; }), d3.max(data, function (d) { return d.Temperature; })]);
         //y.domain([-20, 40]);
 
 
@@ -71,7 +79,13 @@
             .attr("cy", function (d) { return y(d.Temperature); }); */
         svg.append("path")
             .attr("class", "TemperatureLine")
-            .attr("d", valueline(data));
+            .attr("d", TemperatureValueLine(data));
+        /*svg.append("path")
+            .attr("class", "TemperatureFeelsLikeLine")
+            .attr("d", TemperatureFeelsLikeValueLine(data));*/
+        svg.append("path")
+            .attr("class", "DewPointLine")
+            .attr("d", DewPointValueLine(data));
 
     });
 
