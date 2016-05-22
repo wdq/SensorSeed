@@ -31,7 +31,7 @@ namespace HomeOutsideWeatherStation.Models.Home
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-10).ToUniversalTime();
+            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Temperature != null && x.Humidity != null && x.WindSpeed != null).OrderByDescending(x => x.Timestamp).ToList();
 

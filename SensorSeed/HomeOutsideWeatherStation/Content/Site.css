@@ -92,3 +92,40 @@ textarea {
   fill: none;
   stroke: steelblue;
 }
+
+  .tick line{
+    opacity: 0.2;
+  }
+
+.TenDayWeatherHistoryTable, th, td {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.TenDayWeatherHistoryTable {
+    margin-left: 50px;
+    margin-right: 20px;
+    width: 1120px;
+    table-layout: fixed;
+    overflow: hidden;
+    border: 1px solid #D7D7D7;
+    border-left: 0px;
+}
+
+.TenDayWeatherHistoryTable td {
+    width: 108px;
+    min-width: 108px;
+    max-width: 108px;
+    padding: 0px;
+    overflow-x: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    border-left: 1px solid #D7D7D7;
+    margin-top: -4px;
+}
+
+
+
+.TenDayWeatherHistoryTableTopRow {
+    border-bottom: 1px solid #D7D7D7;
+}

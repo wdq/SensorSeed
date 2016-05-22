@@ -93,6 +93,38 @@
     <div class="row">
         <div class="col-md-12">
             <h3>10-Day Weather History</h3>
+            <table class="TenDayWeatherHistoryTable">
+                <tbody>
+                    <tr class="TenDayWeatherHistoryTableTopRow">
+                        @foreach (var day in Model.TenDayHistoryGraph.DayInformation)
+                        {
+                            <td>
+                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">@day.Date.DayOfWeek.ToString().Substring(0, 3) @day.Date.ToString("MM/dd")</h6></center>
+
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var day in Model.TenDayHistoryGraph.DayInformation)
+                        {
+                            <td>
+                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">@day.TemperatureHigh° | @day.TemperatureLow°</h6></center>
+
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        @foreach (var day in Model.TenDayHistoryGraph.DayInformation)
+                        {
+                            <td>
+                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">Todo</h6></center>
+                                <br />
+                                <center><h6 style="margin-top: 0px; margin-bottom:0px;">@day.Rain mm</h6></center>
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
             <div id="TemperatureFeelsLikeDewPointChart"></div>
         </div>
     </div>

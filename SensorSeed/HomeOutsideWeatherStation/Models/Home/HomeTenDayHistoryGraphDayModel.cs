@@ -29,7 +29,7 @@ namespace HomeOutsideWeatherStation.Models.Home
 
         public HomeTenDayHistoryGraphDayModel(List<HomeOutsideWeatherStationData> dayDatas)
         {
-            Date = dayDatas.FirstOrDefault().Timestamp;
+            Date = dayDatas.FirstOrDefault().Timestamp.ToLocalTime();
             TemperatureHigh = (double?)dayDatas.Where(x => x.Temperature != null).Max(x => x.Temperature);
             TemperatureLow = (double?) dayDatas.Where(x => x.Temperature != null).Min(x => x.Temperature);
             Condition = ""; // todo:

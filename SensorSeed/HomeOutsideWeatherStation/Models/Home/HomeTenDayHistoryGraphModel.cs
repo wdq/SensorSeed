@@ -27,10 +27,14 @@ namespace HomeOutsideWeatherStation.Models.Home
             DateTime endOfTodayTemp = DateTime.Today.AddHours(24).ToUniversalTime();
             for (int i = 0; i < 10; i++)
             {
-                List<HomeOutsideWeatherStationData> dayDatas = tenDayDatas.Where(x => x.Timestamp > endOfTodayTemp.AddDays(-1) && x.Timestamp < endOfTodayTemp).OrderByDescending(x => x.Timestamp).ToList();
+                DateTime start = endOfTodayTemp.AddDays(-1);
+                DateTime end = endOfTodayTemp;
+                List<HomeOutsideWeatherStationData> dayDatas = tenDayDatas.Where(x => x.Timestamp > start && x.Timestamp < end).OrderByDescending(x => x.Timestamp).ToList();
                 DayInformationTemp.Add(new HomeTenDayHistoryGraphDayModel(dayDatas));
                 endOfTodayTemp = endOfTodayTemp.AddDays(-1);
             }
+
+            DayInformationTemp = DayInformationTemp.AsEnumerable().Reverse().ToList();
 
             DayInformation = DayInformationTemp;
             //TemperatureGraph = tenDayDatas.Where(x => x.Temperature != null).Select(x => new TimeGraphModel(x.Timestamp.ToLocalTime(), (double)x.Temperature)).ToList();
