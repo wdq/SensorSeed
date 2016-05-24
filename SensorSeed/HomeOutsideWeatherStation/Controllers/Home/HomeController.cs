@@ -24,7 +24,7 @@ namespace HomeOutsideWeatherStation.Controllers.Home
 
         public JsonResult HumidityPressureChartData()
         {
-            HomeHumidityPressureChartDataModel model = new HomeHumidityPressureChartDataModel();
+            HomeHumidityPressureDataModel model = new HomeHumidityPressureDataModel();
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 

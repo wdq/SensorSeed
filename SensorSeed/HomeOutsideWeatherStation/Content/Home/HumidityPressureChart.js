@@ -2,7 +2,7 @@
 
 
     // Get the data
-    d3.json("./Home/PowerChartData", function (error, json) {
+    d3.json("./Home/HumidityPressureChartData", function (error, json) {
         var data;
         data = json.Data;
 
@@ -16,7 +16,8 @@
 
         // Set the ranges
         var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
+        var y0 = d3.scale.linear().range([height, 0]);
+        var y1 = d3.scale.linear().range([height, 0]);
 
         // Define the axes
         var xAxis = d3.svg.axis()
@@ -28,26 +29,34 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        var yAxis = d3.svg.axis()
-            .scale(y)
+        var yAxisLeft = d3.svg.axis() // humidity
+            .scale(y0)
             .orient("left")
             .ticks(3)
             .innerTickSize(-width)
             .outerTickSize(0)
             .tickPadding(10);
 
+        var yAxisRight = d3.svg.axis() // pressure
+            .scale(y1)
+            .orient("right")
+            .ticks(3)
+            .innerTickSize(-width)
+            .outerTickSize(0)
+            .tickPadding(10);
+
         // Define the line
-        var BatteryValueLine = d3.svg.line()
+        var HumidityValueLine = d3.svg.line()
               .interpolate("basis")
               .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.Battery); });
-        var SolarValueLine = d3.svg.line()
+              .y(function (d) { return y0(d.Humidity); });
+        var PressureValueLine = d3.svg.line()
               .interpolate("basis")
               .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.Solar); });
+              .y(function (d) { return y1(d.Pressure); });
 
         // Adds the svg canvas
-        var svg = d3.select("#PowerChart")
+        var svg = d3.select("#HumidityPressureChart")
             .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -65,7 +74,8 @@
         var startDate = new Date();
         // Scale the range of the data
         x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y.domain([0, 5]);
+        y0.domain([0, 100]);
+        y1.domain([d3.min(data, function (d) { return d.Pressure; }), d3.max(data, function (d) { return d.Pressure; })]);
         //y.domain([-20, 40]);
 
 
@@ -79,15 +89,20 @@
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis);
-
+            .call(yAxisLeft);
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + width + " ,0)")
+            .style("fill", "#87C404")
+            .call(yAxisRight);
 
         svg.append("path")
-            .attr("class", "BatteryLine")
-            .attr("d", BatteryValueLine(data));
+            .attr("class", "HumidityLine")
+            .attr("d", HumidityValueLine(data));
+
         svg.append("path")
-            .attr("class", "SolarLine")
-            .attr("d", SolarValueLine(data));
+            .attr("class", "PressureLine")
+            .attr("d", PressureValueLine(data));
 
     });
 

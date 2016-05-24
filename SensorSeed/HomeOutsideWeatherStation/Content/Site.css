@@ -116,7 +116,7 @@ textarea {
 
 .TenDayWeatherHistoryTable {
     margin-left: 50px;
-    margin-right: 20px;
+    margin-right: 50px;
     width: 1120px;
     table-layout: fixed;
     overflow: hidden;
@@ -126,8 +126,8 @@ textarea {
 
 .TenDayWeatherHistoryTable td {
     width: 108px;
-    min-width: 108px;
-    max-width: 108px;
+    min-width: 106px;
+    max-width: 106px;
     padding: 0px;
     overflow-x: hidden;
     display: inline-block;
