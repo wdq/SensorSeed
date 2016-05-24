@@ -89,11 +89,11 @@
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
+            .style("fill", "#87C404")
             .call(yAxisLeft);
         svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + width + " ,0)")
-            .style("fill", "#87C404")
             .call(yAxisRight);
 
         svg.append("path")
