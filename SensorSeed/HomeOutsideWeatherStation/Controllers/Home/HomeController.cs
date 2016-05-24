@@ -38,5 +38,11 @@ namespace HomeOutsideWeatherStation.Controllers.Home
             return View();
         }
 
+        public JsonResult PowerChartData()
+        {
+            HomePowerChartDataModel model = new HomePowerChartDataModel();
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

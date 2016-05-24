@@ -171,6 +171,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\History\HistoryIndexModel.cs" />
+    <Compile Include="Models\Home\HomePowerChartDataModel.cs" />
     <Compile Include="Models\Home\HomeHumidityPressureChartDataModel.cs" />
     <Compile Include="Models\Home\HomeIndexModel.cs" />
     <Compile Include="Models\Home\HomeTemperatureFeelsLikeDewPointChartDataModel.cs" />
@@ -191,6 +192,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Home\HomeHumidityChart.js" />
     <Content Include="Content\Home\HomepRessureChart.js" />
+    <Content Include="Content\Home\PowerChart.js" />
     <Content Include="Content\Home\TemperatureFeelsLikeDewPointChart.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -204,6 +206,7 @@
     <Content Include="Scripts\d3\d3.js" />
     <Content Include="Scripts\d3\d3.min.js" />
     <Content Include="Scripts\d3\LICENSE" />
+    <None Include="Properties\PublishProfiles\C.pubxml" />
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

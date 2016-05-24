@@ -47,6 +47,18 @@ textarea {
     stroke-width: 1.5px;
 }
 
+.SolarLine {
+  fill: none;
+  stroke: #D6212A;
+  stroke-width: 1.5px;
+}
+
+.BatteryLine {
+    fill: none;
+    stroke: #AD55A1;
+    stroke-width: 1.5px;
+}
+
 .HumidityLine {
   fill: none;
   stroke: #87C404;
