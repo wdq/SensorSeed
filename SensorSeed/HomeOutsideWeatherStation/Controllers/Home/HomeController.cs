@@ -44,5 +44,10 @@ namespace HomeOutsideWeatherStation.Controllers.Home
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult TenDaySunriseSunsetData()
+        {
+            HomeTenDaySunriseSunsetDataModel model = new HomeTenDaySunriseSunsetDataModel();
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
     }
 }

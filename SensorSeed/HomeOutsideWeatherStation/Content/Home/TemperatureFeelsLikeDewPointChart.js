@@ -96,6 +96,40 @@
             .attr("class", "DewPointLine")
             .attr("d", DewPointValueLine(data));
 
+
+        
+        $.get("./Home/TenDaySunriseSunsetData",
+            function (data) {
+                var previousSunset = data.Data[0].Date;
+                $.each(data.Data,
+                    function (i, item) {
+                        //console.log(new Date(previousSunset));
+                        //console.log(new Date(item.Sunrise));
+
+                        var start = new Date(previousSunset);
+                        var end = new Date(item.Sunrise);
+                        var timeDiff = Math.abs(start.getTime() - end.getTime());
+                        //console.log(timeDiff / 1000);
+
+                        // todo: there is a lot of weirdness in the next bit
+                        // The width is coming from the relationship between the number of seconds in 10 days (864000) and the width of the chart (1040). 
+                        // The starting position has a lot of time zone and daylight savings time things going on. The 25200 comes from 6 hours (difference between central time and UTC) + 1 hour (daylight savings time thing), and 1040 is the chart width
+                        // I'll need to get all of this to work year round.
+
+                        //console.log("");
+                        svg.append("rect")
+                            .attr("x", x(parseDate(previousSunset)) + (25200 / 1040))
+                            .attr("y", 0)
+                            .attr("width", ((timeDiff / 1000)) * (1040 / 864000))
+                            .attr("height", 290)
+                            .style("opacity", 0.06)
+                            .style("fill", "#000000");
+                        previousSunset = item.Sunset;
+                    });
+            });
+            
+
+
     });
 
 

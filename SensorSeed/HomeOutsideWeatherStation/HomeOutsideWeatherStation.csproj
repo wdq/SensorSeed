@@ -44,6 +44,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Innovative.Geometry, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Angle.1.0.2.1\lib\net45\Innovative.Geometry.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Innovative.SolarCalculator, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SolarCalculator.1.0.8\lib\net45\Innovative.SolarCalculator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -177,6 +185,7 @@
     <Compile Include="Models\Home\HomeTemperatureFeelsLikeDewPointChartDataModel.cs" />
     <Compile Include="Models\Home\HomeTenDayHistoryGraphDayModel.cs" />
     <Compile Include="Models\Home\HomeTenDayHistoryGraphModel.cs" />
+    <Compile Include="Models\Home\HomeTenDaySunriseSunsetDataModel.cs" />
     <Compile Include="Models\Shared\WindGraphModel.cs" />
     <Compile Include="Models\Shared\TimeGraphModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -190,8 +199,6 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Home\HomeHumidityChart.js" />
-    <Content Include="Content\Home\HomepRessureChart.js" />
     <Content Include="Content\Home\PowerChart.js" />
     <Content Include="Content\Home\HumidityPressureChart.js" />
     <Content Include="Content\Home\TemperatureFeelsLikeDewPointChart.js" />
