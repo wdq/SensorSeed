@@ -41,10 +41,40 @@ textarea {
   stroke-width: 1.5px;
 }
 
+.SeriesColor {
+    position: relative;
+}
+
+.SeriesColorText {
+    padding-left: 30px;
+}
+
+.TemperatureBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #D6212A;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+
+
 .TemperatureFeelsLikeLine {
     fill: none;
     stroke: #AD55A1;
     stroke-width: 1.5px;
+}
+
+.FeelsLikeBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #AD55A1;
+    position: absolute;
+    left: 5px;
+    top: 5px;
 }
 
 .SolarLine {
@@ -53,10 +83,30 @@ textarea {
   stroke-width: 1.5px;
 }
 
+.SolarBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #D6212A;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
 .BatteryLine {
     fill: none;
     stroke: #AD55A1;
     stroke-width: 1.5px;
+}
+
+.BatteryBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #AD55A1;
+    position: absolute;
+    left: 5px;
+    top: 5px;
 }
 
 .HumidityLine {
@@ -65,16 +115,46 @@ textarea {
   stroke-width: 1.5px;
 }
 
+.HumidityBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #87C404;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
 .PressureLine {
   fill: none;
   stroke: #1E2023;
   stroke-width: 1.5px;
 }
 
+.PressureBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #1E2023;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
 .DewPointLine {
   fill: none;
   stroke: #5B9F4A;
   stroke-width: 1.5px;
+}
+
+.DewPointBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #5B9F4A;
+    position: absolute;
+    left: 5px;
+    top: 5px;
 }
 
 .WindSpeedLine {
