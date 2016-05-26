@@ -9,7 +9,7 @@
         // Set the dimensions of the canvas / graph
         var margin = { top: 30, right: 50, bottom: 30, left: 50 },
                 width = 1140 - margin.left - margin.right,
-                height = 350 - margin.top - margin.bottom;
+                height = 150 - margin.top - margin.bottom;
 
         // Parse the date / time
         var parseDate = d3.time.format.utc("%m/%d/%Y %I:%M:%S %p").parse;
@@ -113,7 +113,7 @@
                             .attr("x", x(parseDate(previousSunset)) + (25200 / 1040))
                             .attr("y", 0)
                             .attr("width", ((timeDiff / 1000)) * (1040 / 864000))
-                            .attr("height", 290)
+                            .attr("height", 90)
                             .style("opacity", 0.06)
                             .style("fill", "#000000");
                         previousSunset = item.Sunset;

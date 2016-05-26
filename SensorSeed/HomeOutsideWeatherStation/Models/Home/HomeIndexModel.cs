@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Innovative.SolarCalculator;
 
 namespace HomeOutsideWeatherStation.Models.Home
 {
@@ -158,8 +159,12 @@ namespace HomeOutsideWeatherStation.Models.Home
             CurrentHumidity = (double)currentData.Humidity;
             CurrentRainfall = TodayRainTotal; // todo: this may need to be something else
             CurrentSnowDepth = 0; // todo: snow
-            Sunrise = DateTime.Today; // todo: will need to add code to calculate sunrise and sunset with an input of the date
-            Sunset = DateTime.Today;
+            TimeZoneInfo cst = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            SolarTimes solarTimes = new SolarTimes(DateTime.Today, 40.815999, -96.611661);
+            DateTime sunrise = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunrise.ToUniversalTime(), cst);
+            DateTime sunset = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunset.ToUniversalTime(), cst); 
+            Sunrise = sunrise;
+            Sunset = sunset;
             MoonType = ""; // todo: moon stuff
             MoonVisible = 0;
 

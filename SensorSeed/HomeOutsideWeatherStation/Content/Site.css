@@ -221,3 +221,18 @@ textarea {
 .TenDayWeatherHistoryTableTopRow {
     border-bottom: 1px solid #D7D7D7;
 }
+
+.HomeCurrentDataTable {
+    border: none;
+    
+}
+
+.HomeCurrentDataTable td {
+    border: none;
+    padding-bottom: 5px;
+    padding-right: 40px;
+}
+
+.HomeCurrentDataTable th .HomeCurrentDataTable tr {
+    border: none;
+}

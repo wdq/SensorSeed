@@ -194,6 +194,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SensorSeed.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Shared\Moon.cs" />
     <Compile Include="Shared\WeatherDataConversions.cs" />
   </ItemGroup>
   <ItemGroup>
