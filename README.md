@@ -1,8 +1,12 @@
 # SensorSeed
 
-This is C# code for a custom weather station I built. 
+This is C# code for a custom weather station I built.
 
-Parts list:
+There is an outdoor component to the station that collects temperature, humidity, pressure, wind speed, wind direction, and rain every five minutes. There are four small indoor devices that collect just temperature and humidity data in four rooms every five minutes.
+
+
+
+Outdoor weather station parts list:
 
 | Item                                             | Price   | Description                                                                                                                                                   | Link                                                                                                                                          |
 |--------------------------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -17,4 +21,15 @@ Parts list:
 | Ambient Weather SRS100LX                         | $40     | Solar radiation shield to get accurate temperature and humidity measurements.                                                                                 | http://www.amazon.com/Ambient-Weather-SRS100LX-Temperature-Radiation/dp/B003EB3GE4?ie=UTF8&psc=1&redirect=true&ref_=oh_aui_detailpage_o06_s00 |
 | BUD Industries NBF-32018                         | $25     | Sealed, weather proof, enclosure for the microcontrollers, battery, and other electronics.                                                                    | http://www.amazon.com/BUD-Industries-NBF-32018-Plastic-Economy/dp/B005T990I0?ie=UTF8&psc=1&redirect=true&ref_=oh_aui_detailpage_o00_s00       |
 |                                                  |         |                                                                                                                                                               |                                                                                                                                               |
-| Total:                                           | $310.75 |                                                                                                                                                               |                                                                                                                                               |
+| Total:                                           | $310.75 |                                                                                                                                                               |                                                                                
+|
+Indoor weather station parts list:
+
+| Item                | Price | Description                                                                           | Link                                                                                                                                                                    |
+|---------------------|-------|---------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 5x DHT11            | $9    | Temperature/humidity sensor.                                                          | http://www.ebay.com/itm/5X-DHT11-Temperature-and-Relative-Humidity-Sensor-Module-for-arduino-/321972401029?hash=item4af70cf385:g:rCUAAOSwaA5WkrJA                       |
+| 5x ESP8266          | $12   | Arduino compatible microcontroller with WiFi support.                                 | http://www.ebay.com/itm/5pcs-ESP8266-Serial-WIFI-Wireless-Transceiver-Module-WIFI-ESP-01-Support-AP-STA-/291362195261?hash=item43d68a473d:g:r1cAAOSwstxVFSb9            |
+| 5x LD1117V33        | $3    | Linear voltage regulator to convert 5V USB power to 3V power for the microcontroller. | http://www.ebay.com/itm/5PCS-LD1117V33-Linear-Voltage-Regulator-800mA-3-3V-TO-220-/181941289370?hash=item2a5c8bc19a:g:pN4AAOSwv-NWVDIz                                  |
+| 4x USB Wall Charger | $12   | Used to power the stations.                                                           | http://www.ebay.com/itm/2A-Fast-Wall-Charger-USB-Data-Cable-For-Samsung-Galaxy-S6-S6-Edge-Note-5-White-/272094650576?var=&hash=item3f5a1ae0d0:m:mC8CwZiIfjTshipOqjTuGcQ |
+|                     |       |                                                                                       |                                                                                                                                                                         |
+| Total:              | $46   |                                                                                       |                                                                                                                                                                         |
