@@ -30,9 +30,6 @@ namespace HomeOutsideWeatherStation
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertSensorType(SensorType instance);
-    partial void UpdateSensorType(SensorType instance);
-    partial void DeleteSensorType(SensorType instance);
     partial void InsertHomeBasementRoomWeatherStationData(HomeBasementRoomWeatherStationData instance);
     partial void UpdateHomeBasementRoomWeatherStationData(HomeBasementRoomWeatherStationData instance);
     partial void DeleteHomeBasementRoomWeatherStationData(HomeBasementRoomWeatherStationData instance);
@@ -54,6 +51,9 @@ namespace HomeOutsideWeatherStation
     partial void InsertSensor(Sensor instance);
     partial void UpdateSensor(Sensor instance);
     partial void DeleteSensor(Sensor instance);
+    partial void InsertSensorType(SensorType instance);
+    partial void UpdateSensorType(SensorType instance);
+    partial void DeleteSensorType(SensorType instance);
     #endregion
 		
 		public SensorSeedDataContext() : 
@@ -84,14 +84,6 @@ namespace HomeOutsideWeatherStation
 				base(connection, mappingSource)
 		{
 			OnCreated();
-		}
-		
-		public System.Data.Linq.Table<SensorType> SensorTypes
-		{
-			get
-			{
-				return this.GetTable<SensorType>();
-			}
 		}
 		
 		public System.Data.Linq.Table<HomeBasementRoomWeatherStationData> HomeBasementRoomWeatherStationDatas
@@ -149,119 +141,13 @@ namespace HomeOutsideWeatherStation
 				return this.GetTable<Sensor>();
 			}
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SensorTypes")]
-	public partial class SensorType : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _Id;
-		
-		private string _Name;
-		
-		private EntitySet<Sensor> _Sensors;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(System.Guid value);
-    partial void OnIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    #endregion
-		
-		public SensorType()
-		{
-			this._Sensors = new EntitySet<Sensor>(new Action<Sensor>(this.attach_Sensors), new Action<Sensor>(this.detach_Sensors));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid Id
+		public System.Data.Linq.Table<SensorType> SensorTypes
 		{
 			get
 			{
-				return this._Id;
+				return this.GetTable<SensorType>();
 			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SensorType_Sensor", Storage="_Sensors", ThisKey="Id", OtherKey="SensorTypeId")]
-		public EntitySet<Sensor> Sensors
-		{
-			get
-			{
-				return this._Sensors;
-			}
-			set
-			{
-				this._Sensors.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Sensors(Sensor entity)
-		{
-			this.SendPropertyChanging();
-			entity.SensorType = this;
-		}
-		
-		private void detach_Sensors(Sensor entity)
-		{
-			this.SendPropertyChanging();
-			entity.SensorType = null;
 		}
 	}
 	
@@ -1526,6 +1412,120 @@ namespace HomeOutsideWeatherStation
 		{
 			this.SendPropertyChanging();
 			entity.Sensor = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SensorTypes")]
+	public partial class SensorType : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _Id;
+		
+		private string _Name;
+		
+		private EntitySet<Sensor> _Sensors;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(System.Guid value);
+    partial void OnIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    #endregion
+		
+		public SensorType()
+		{
+			this._Sensors = new EntitySet<Sensor>(new Action<Sensor>(this.attach_Sensors), new Action<Sensor>(this.detach_Sensors));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SensorType_Sensor", Storage="_Sensors", ThisKey="Id", OtherKey="SensorTypeId")]
+		public EntitySet<Sensor> Sensors
+		{
+			get
+			{
+				return this._Sensors;
+			}
+			set
+			{
+				this._Sensors.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Sensors(Sensor entity)
+		{
+			this.SendPropertyChanging();
+			entity.SensorType = this;
+		}
+		
+		private void detach_Sensors(Sensor entity)
+		{
+			this.SendPropertyChanging();
+			entity.SensorType = null;
 		}
 	}
 }

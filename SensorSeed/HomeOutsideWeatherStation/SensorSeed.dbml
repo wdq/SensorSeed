@@ -1,12 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SensorSeed" Class="SensorSeedDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=IIS\SQLEXPRESS;Initial Catalog=SensorSeed;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SensorSeedConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.SensorTypes" Member="SensorTypes">
-    <Type Name="SensorType">
-      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Association Name="SensorType_Sensor" Member="Sensors" ThisKey="Id" OtherKey="SensorTypeId" Type="Sensor" />
-    </Type>
-  </Table>
+  <Connection Mode="WebSettings" ConnectionString="Data Source=iis;Initial Catalog=SensorSeed;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SensorSeedConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.HomeBasementRoomWeatherStationData" Member="HomeBasementRoomWeatherStationDatas">
     <Type Name="HomeBasementRoomWeatherStationData">
       <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -73,6 +66,13 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Association Name="Sensor_SensorData" Member="SensorDatas" ThisKey="Id" OtherKey="SensorId" Type="SensorData" />
       <Association Name="SensorType_Sensor" Member="SensorType" ThisKey="SensorTypeId" OtherKey="Id" Type="SensorType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SensorTypes" Member="SensorTypes">
+    <Type Name="SensorType">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="SensorType_Sensor" Member="Sensors" ThisKey="Id" OtherKey="SensorTypeId" Type="Sensor" />
     </Type>
   </Table>
 </Database>
