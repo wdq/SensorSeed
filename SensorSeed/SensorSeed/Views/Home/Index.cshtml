@@ -18,10 +18,23 @@
                 <li>Wind speed</li>
                 <li>Gust speed</li>
                 <li>Wind direction</li>
+                <li>Sunrise</li>
+                <li>Sunset</li>
             </ul>
             @Html.ActionLink("View", "Index",
                 new {controller = "HomeOutsideWeatherStation/Home"},
                 new {@class = "btn btn-primary btn-sm"})
+        </div>
+        <div class="col-md-4">
+            <h4>Home Indoor Weather Station</h4>
+            <ul>
+                <li>Temperature</li>
+                <li>Humidity</li>
+                <li>Dew point</li>
+            </ul>
+            @Html.ActionLink("View", "Index",
+                new { controller = "HomeIndoorWeatherStation/Home" },
+                new { @class = "btn btn-primary btn-sm" })
         </div>
     </div>
 
