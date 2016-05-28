@@ -126,9 +126,9 @@ namespace HomeOutsideWeatherStation.Models.Home
             SensorSeedDataContext database = new SensorSeedDataContext();
 
             HomeOutsideWeatherStationData currentData = database.HomeOutsideWeatherStationDatas.OrderByDescending(x => x.Timestamp).FirstOrDefault();
-            StationElevation = (double)database.HomeOutsideWeatherStationDatas.Average(x => x.Altitude); // todo: maybe use a GPS to get the actual elevation
-            StationLatitude = 40.815999; // todo: these lat long values are from Google Maps, replace with real GPS values
-            StationLongitude = -96.611661;
+            StationElevation = (double)database.HomeOutsideWeatherStationDatas.Average(x => x.Altitude);
+            StationLatitude = 40.815987372770905;
+            StationLongitude = -96.61160876043141;
             StationLastUpdated = (DateTime.Now - currentData.Timestamp.ToLocalTime()).TotalSeconds;
             CurrentCondition = "Stuff"; // todo: make some sort of algorithm that takes in the data and returns a condition, or get this from an Internet source
             CurrentTemperature = (((double)currentData.Temperature + (double)currentData.Temperature180) / 2);

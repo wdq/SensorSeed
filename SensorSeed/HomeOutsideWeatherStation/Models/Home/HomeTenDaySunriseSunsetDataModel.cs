@@ -20,7 +20,7 @@ namespace HomeOutsideWeatherStation.Models.Home
             Date = date.Date.ToString();
 
             TimeZoneInfo cst = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            SolarTimes solarTimes = new SolarTimes(date, 40.815999, -96.611661);
+            SolarTimes solarTimes = new SolarTimes(date, 40.815987372770905, -96.61160876043141);
             DateTime sunrise = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunrise.ToUniversalTime(), cst).AddHours(-1); // todo: pretty sure the subtracting an hour is required for the daylight savings stuff
             DateTime sunset = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunset.ToUniversalTime(), cst).AddHours(-1);  // todo: I'll need to figure that out and get this to work year round
 
