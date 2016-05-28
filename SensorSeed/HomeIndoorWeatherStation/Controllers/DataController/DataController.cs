@@ -45,7 +45,7 @@ namespace HomeIndoorWeatherStation.Controllers.DataController
                 database.HomeBasementRoomWeatherStationDatas.InsertOnSubmit(data);
                 database.SubmitChanges();
             }
-            else if (StationIP == WeatherStationLivingRoomAddress[1])
+            else if (StationIP == WeatherStationLivingRoomAddress[0])
             {
                 HomeLivingRoomWeatherStationData data = new HomeLivingRoomWeatherStationData();
                 data.Id = Guid.NewGuid();
@@ -71,7 +71,7 @@ namespace HomeIndoorWeatherStation.Controllers.DataController
                 database.HomeLivingRoomWeatherStationDatas.InsertOnSubmit(data);
                 database.SubmitChanges();
             }
-            else if (StationIP == WeatherStationServerRoomAddress[1])
+            else if (StationIP == WeatherStationServerRoomAddress[0])
             {
                 HomeServerRoomWeatherStationData data = new HomeServerRoomWeatherStationData();
                 data.Id = Guid.NewGuid();
@@ -97,7 +97,7 @@ namespace HomeIndoorWeatherStation.Controllers.DataController
                 database.HomeServerRoomWeatherStationDatas.InsertOnSubmit(data);
                 database.SubmitChanges();
             }
-            else if (StationIP == WeatherStationWilliamsRoomAddress[1])
+            else if (StationIP == WeatherStationWilliamsRoomAddress[0])
             {
                 HomeWilliamRoomWeatherStationData data = new HomeWilliamRoomWeatherStationData();
                 data.Id = Guid.NewGuid();

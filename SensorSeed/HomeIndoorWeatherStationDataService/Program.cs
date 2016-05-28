@@ -124,7 +124,7 @@ namespace HomeIndoorWeatherStationDataService
 
                 using (var client = new WebClient())
                 {
-                    var postResponse = client.UploadValues("http://localhost/SensorSeed/HomeIndoorWeatherStation/Data/AddData", postData);
+                    var postResponse = client.UploadValues("http://localhost:8081/HomeIndoorWeatherStation/Data/AddData", postData);
                     var postResponseString = Encoding.Default.GetString(postResponse);
                     Console.WriteLine(postResponseString);
                     tryAgain = false;
