@@ -36,15 +36,6 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        // Define the line
-        var WindSpeedValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.WindSpeed); });
-        var GustSpeedValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.GustSpeed); });
 
         // Adds the svg canvas
         var svg = d3.select("#WindChart")
@@ -81,14 +72,23 @@
             .attr("class", "y axis")
             .call(yAxis);
 
+        var g = svg.append("svg:g");
 
-        svg.append("path")
-            .attr("class", "WindSpeedLine")
-            .attr("d", WindSpeedValueLine(data));
-        svg.append("path")
-            .attr("class", "GustSpeedLine")
-            .attr("d", GustSpeedValueLine(data));
+        g.selectAll("scatter-dots")
+          .data(data)
+          .enter().append("svg:circle")
+              .attr("cx", function (d, i) { return x(d.Timestamp); })
+              .attr("cy", function (d) { return y(d.WindSpeed); })
+              .attr("r", 2)
+              .style("fill", "#002F80");
 
+        g.selectAll("scatter-dots")
+          .data(data)
+          .enter().append("svg:circle")
+              .attr("cx", function (d, i) { return x(d.Timestamp); })
+              .attr("cy", function (d) { return y(d.GustSpeed); })
+              .attr("r", 2)
+              .style("fill", "#8BD5EE");
 
         $.get("./Home/TenDaySunriseSunsetData",
             function (data) {
