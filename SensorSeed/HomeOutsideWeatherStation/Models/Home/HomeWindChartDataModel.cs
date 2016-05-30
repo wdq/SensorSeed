@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using HomeOutsideWeatherStation.Shared;
+
+namespace HomeOutsideWeatherStation.Models.Home
+{
+    public class HomeWindChartDataPointModel
+    {
+        public string Timestamp { get; set; }
+        public double WindSpeed { get; set; }
+        public double GustSpeed { get; set; }
+        public double WindDirection { get; set; }
+
+        public HomeWindChartDataPointModel(HomeOutsideWeatherStationData data)
+        {
+            Timestamp = data.Timestamp.ToString();
+            WindSpeed = (double)data.WindSpeed;
+            GustSpeed = (double)data.GustSpeed;
+            WindDirection = (double) data.WindDirection;
+        }
+    }
+
+    public class HomeWindChartDataModel
+    {
+        public List<HomeWindChartDataPointModel> Data { get; set; }
+
+        public HomeWindChartDataModel()
+        {
+            SensorSeedDataContext database = new SensorSeedDataContext();
+
+            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
+            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.WindSpeed != null && x.GustSpeed != null && x.WindDirection != null).OrderByDescending(x => x.Timestamp).ToList();
+
+
+            List<HomeWindChartDataPointModel> dataTemp = new List<HomeWindChartDataPointModel>();
+            foreach (var data in tenDayDatas)
+            {
+                dataTemp.Add(new HomeWindChartDataPointModel(data));
+            }
+
+            Data = dataTemp;
+        }
+    }
+}

@@ -171,17 +171,40 @@
                 <div class="col-md-3 col-md-offset-9">
                     <table>
                         <tbody>
+                        <tr>
+                            <td>
+                                <div class="SeriesColor">
+                                    <div class="SeriesColorText">Humidity [%]</div>
+                                    <div class="HumidityBox"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="SeriesColor">
+                                    <div class="SeriesColorText">Pressure [hPa]</div>
+                                    <div class="PressureBox"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="WindChart"></div>
+            <div class="row">
+                <div class="col-md-3 col-md-offset-9">
+                    <table>
+                        <tbody>
                             <tr>
                                 <td>
                                     <div class="SeriesColor">
-                                        <div class="SeriesColorText">Humidity [%]</div>
-                                        <div class="HumidityBox"></div>
+                                        <div class="SeriesColorText">Wind Speed [km/h]</div>
+                                        <div class="WindSpeedBox"></div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="SeriesColor">
-                                        <div class="SeriesColorText">Pressure [hPa]</div>
-                                        <div class="PressureBox"></div>
+                                        <div class="SeriesColorText">Gust Speed [km/h]</div>
+                                        <div class="GustSpeedBox"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -222,6 +245,7 @@
 
 <script type="text/javascript" src="~/Content/Home/TemperatureFeelsLikeDewPointChart.js"></script>
 <script type="text/javascript" src="~/Content/Home/HumidityPressureChart.js"></script>
+<script type="text/javascript" src="~/Content/Home/WindChart.js"></script>
 <script type="text/javascript" src="~/Content/Home/PowerChart.js"></script>
 
 

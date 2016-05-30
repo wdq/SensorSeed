@@ -163,6 +163,32 @@ textarea {
   stroke-width: 1.5px;
 }
 
+.WindSpeedBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #002F80;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+.GustSpeedLine {
+  fill: none;
+  stroke: #8BD5EE;
+  stroke-width: 1.5px;
+}
+
+.GustSpeedBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #8BD5EE;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
 .FeelsLikeLine {
   fill: none;
   stroke: #AD55A1;
