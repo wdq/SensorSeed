@@ -2,7 +2,7 @@
 
 
     // Get the data
-    d3.json("./Home/TemperatureFeelsLikeDewPointChartData", function (error, json) {
+    d3.json("./Home/PrecipitationChartData", function (error, json) {
         var data;
         data = json.Data;
 
@@ -37,21 +37,13 @@
             .tickPadding(10);
 
         // Define the line
-        var TemperatureValueLine = d3.svg.line()
+        var TotalRainValueLine = d3.svg.line()
               .interpolate("basis")
               .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.Temperature); });
-        var TemperatureFeelsLikeValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.TemperatureFeelsLike); });
-        var DewPointValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.DewPoint); });
+              .y(function (d) { return y(d.TotalRain); });
 
         // Adds the svg canvas
-        var svg = d3.select("#TemperatureFeelsLikeDewPointChart")
+        var svg = d3.select("#PrecipitationChart")
             .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -64,12 +56,12 @@
             d.Timestamp = parseDate(d.Timestamp);
         });
 
-        //console.log(data);
+        console.log(data);
 
         var startDate = new Date();
         // Scale the range of the data
         x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y.domain([d3.min(data, function (d) { return d.DewPoint; }), d3.max(data, function (d) { return d.Temperature; })]);
+        y.domain([0, d3.max(data, function (d) { return d.TotalRain; })]);
         //y.domain([-20, 40]);
 
 
@@ -85,19 +77,20 @@
             .attr("class", "y axis")
             .call(yAxis);
 
-
         svg.append("path")
-            .attr("class", "TemperatureLine")
-            .attr("d", TemperatureValueLine(data));
-        /*svg.append("path")
-            .attr("class", "TemperatureFeelsLikeLine")
-            .attr("d", TemperatureFeelsLikeValueLine(data));*/
-        svg.append("path")
-            .attr("class", "DewPointLine")
-            .attr("d", DewPointValueLine(data));
+            .attr("class", "TotalRainLine")
+            .attr("d", TotalRainValueLine(data));
 
+        var g = svg.append("svg:g");
 
-        
+        g.selectAll("scatter-dots")
+          .data(data)
+          .enter().append("svg:circle")
+              .attr("cx", function (d, i) { return x(d.Timestamp); })
+              .attr("cy", function (d) { return y(d.CurrentRain); })
+              .attr("r", 2)
+              .style("fill", "#22730B");
+
         $.get("./Home/TenDaySunriseSunsetData",
             function (data) {
                 var previousSunset = data.Data[0].Date;
@@ -127,8 +120,6 @@
                         previousSunset = item.Sunset;
                     });
             });
-            
-
 
     });
 

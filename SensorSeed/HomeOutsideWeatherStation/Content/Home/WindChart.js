@@ -51,7 +51,7 @@
             d.Timestamp = parseDate(d.Timestamp);
         });
 
-        console.log(data);
+        //console.log(data);
 
         var startDate = new Date();
         // Scale the range of the data

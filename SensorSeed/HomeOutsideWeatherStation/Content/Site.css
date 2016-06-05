@@ -141,6 +141,32 @@ textarea {
     top: 5px;
 }
 
+.CurrentRainBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #22730B;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+.TotalRainBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #0074A2;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+.TotalRainLine {
+  fill: none;
+  stroke: #0074A2;
+  stroke-width: 1.5px;
+}
+
 .DewPointLine {
   fill: none;
   stroke: #5B9F4A;

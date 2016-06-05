@@ -189,6 +189,29 @@
                     </table>
                 </div>
             </div>
+            <div id="PrecipitationChart"></div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-8">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="SeriesColor">
+                                        <div class="SeriesColorText">Total Rain [mm]</div>
+                                        <div class="TotalRainBox"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="SeriesColor">
+                                        <div class="SeriesColorText">Current Rain [mm]</div>
+                                        <div class="CurrentRainBox"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div id="WindChart"></div>
             <div class="row">
                 <div class="col-md-3 col-md-offset-9">
@@ -236,15 +259,17 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-    });
+    $(document)
+        .ready(function() {
+        });
 </script>
 
 <script type="text/javascript" src="~/Content/Home/TemperatureFeelsLikeDewPointChart.js"></script>
 <script type="text/javascript" src="~/Content/Home/HumidityPressureChart.js"></script>
+<script type="text/javascript" src="~/Content/Home/PrecipitationChart.js"></script>
 <script type="text/javascript" src="~/Content/Home/WindChart.js"></script>
 <script type="text/javascript" src="~/Content/Home/PowerChart.js"></script>
 
