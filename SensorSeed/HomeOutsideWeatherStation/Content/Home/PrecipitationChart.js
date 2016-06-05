@@ -16,7 +16,8 @@
 
         // Set the ranges
         var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
+        var y0 = d3.scale.linear().range([height, 0]);
+        var y1 = d3.scale.linear().range([height, 0]);
 
         // Define the axes
         var xAxis = d3.svg.axis()
@@ -28,9 +29,17 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        var yAxis = d3.svg.axis()
-            .scale(y)
+        var yAxisLeft = d3.svg.axis() // total rain
+            .scale(y0)
             .orient("left")
+            .ticks(3)
+            .innerTickSize(-width)
+            .outerTickSize(0)
+            .tickPadding(10);
+
+        var yAxisRight = d3.svg.axis() // current rain
+            .scale(y1)
+            .orient("right")
             .ticks(3)
             .innerTickSize(-width)
             .outerTickSize(0)
@@ -40,7 +49,7 @@
         var TotalRainValueLine = d3.svg.line()
               .interpolate("basis")
               .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.TotalRain); });
+              .y(function (d) { return y0(d.TotalRain); });
 
         // Adds the svg canvas
         var svg = d3.select("#PrecipitationChart")
@@ -60,8 +69,9 @@
 
         var startDate = new Date();
         // Scale the range of the data
-        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y.domain([0, d3.max(data, function (d) { return d.TotalRain; })]);
+        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]);
+        y0.domain([0, d3.max(data, function (d) { return d.TotalRain; })]);
+        y1.domain([0, d3.max(data, function (d) { return d.CurrentRain; })]);
         //y.domain([-20, 40]);
 
 
@@ -75,7 +85,13 @@
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis);
+            .style("fill", "#0074A2")
+            .call(yAxisLeft);
+        svg.append("g")
+            .attr("class", "y axis")
+            .style("fill", "#22730B")
+            .attr("transform", "translate(" + width + " ,0)")
+            .call(yAxisRight);
 
         svg.append("path")
             .attr("class", "TotalRainLine")
@@ -87,7 +103,7 @@
           .data(data)
           .enter().append("svg:circle")
               .attr("cx", function (d, i) { return x(d.Timestamp); })
-              .attr("cy", function (d) { return y(d.CurrentRain); })
+              .attr("cy", function (d) { return y1(d.CurrentRain); })
               .attr("r", 2)
               .style("fill", "#22730B");
 
