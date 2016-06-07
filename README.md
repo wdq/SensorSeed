@@ -23,7 +23,6 @@ Outdoor weather station parts list:
 | Adafruit TSL2561                         | $6     | Luminosity/Lux/Light sensor.                                                                    | https://www.adafruit.com/products/439       |
 | Adafruit VEML6070                         | $6     | UV index sensor.                                                                    | https://www.adafruit.com/products/2899      |
 | Photo transistor                         | $1     | Photo transistor, will be used to measure solar irradiance/flux.                                                                    | https://www.adafruit.com/products/2831      |
-
 |                                                  |         |                                                                                                                                                               |                                                                                                                                               |
 | Total:                                           | $323.75 |                                                                                                                                                               |                                                                                
 |
