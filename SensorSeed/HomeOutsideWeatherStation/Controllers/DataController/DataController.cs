@@ -9,7 +9,7 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
     public class DataController : Controller
     {
         [HttpPost]
-        public ActionResult AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180)
+        public ActionResult AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string Veml6070, string Lux)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
@@ -197,6 +197,25 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 data.Temperature180 = TemperatureDecimal;
             }
             catch (Exception exception) { }
+
+            // Veml6070
+            try
+            {
+                int Veml6070Int = 0;
+                Veml6070Int = Convert.ToInt32(Veml6070);
+                data.Veml6070 = Veml6070Int;
+            }
+            catch (Exception exception) { }
+
+            // Lux
+            try
+            {
+                decimal LuxDecimal = 0;
+                LuxDecimal = Convert.ToDecimal(Lux);
+                data.Lux = LuxDecimal;
+            }
+            catch (Exception exception) { }
+
 
 
 

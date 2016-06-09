@@ -46,7 +46,7 @@ namespace HomeOutsideWeatherStationDataService
                             int index = html.IndexOf("\n");
                             html = html.Substring(index + "\n".Length);
                             string[] lines = html.Split(new string[] { "\n" }, StringSplitOptions.None);
-                            for (int i = 0; i < 11; i++)
+                            for (int i = 0; i < 13; i++)
                             {
                                 string lineData = lines[i].Substring(lines[i].IndexOf(":") + 2).Trim();
                                 if (i == 0)
@@ -92,6 +92,14 @@ namespace HomeOutsideWeatherStationDataService
                                 else if (i == 10)
                                 {
                                     postData["Temperature180"] = lineData;
+                                }
+                                else if (i == 11)
+                                {
+                                    postData["Veml6070"] = lineData;
+                                }
+                                else if (i == 12)
+                                {
+                                    postData["Lux"] = lineData;
                                 }
                             }
                             using (var client = new WebClient())

@@ -36,9 +36,6 @@ namespace HomeOutsideWeatherStation
     partial void InsertHomeLivingRoomWeatherStationData(HomeLivingRoomWeatherStationData instance);
     partial void UpdateHomeLivingRoomWeatherStationData(HomeLivingRoomWeatherStationData instance);
     partial void DeleteHomeLivingRoomWeatherStationData(HomeLivingRoomWeatherStationData instance);
-    partial void InsertHomeOutsideWeatherStationData(HomeOutsideWeatherStationData instance);
-    partial void UpdateHomeOutsideWeatherStationData(HomeOutsideWeatherStationData instance);
-    partial void DeleteHomeOutsideWeatherStationData(HomeOutsideWeatherStationData instance);
     partial void InsertHomeServerRoomWeatherStationData(HomeServerRoomWeatherStationData instance);
     partial void UpdateHomeServerRoomWeatherStationData(HomeServerRoomWeatherStationData instance);
     partial void DeleteHomeServerRoomWeatherStationData(HomeServerRoomWeatherStationData instance);
@@ -54,6 +51,9 @@ namespace HomeOutsideWeatherStation
     partial void InsertSensorType(SensorType instance);
     partial void UpdateSensorType(SensorType instance);
     partial void DeleteSensorType(SensorType instance);
+    partial void InsertHomeOutsideWeatherStationData(HomeOutsideWeatherStationData instance);
+    partial void UpdateHomeOutsideWeatherStationData(HomeOutsideWeatherStationData instance);
+    partial void DeleteHomeOutsideWeatherStationData(HomeOutsideWeatherStationData instance);
     #endregion
 		
 		public SensorSeedDataContext() : 
@@ -102,14 +102,6 @@ namespace HomeOutsideWeatherStation
 			}
 		}
 		
-		public System.Data.Linq.Table<HomeOutsideWeatherStationData> HomeOutsideWeatherStationDatas
-		{
-			get
-			{
-				return this.GetTable<HomeOutsideWeatherStationData>();
-			}
-		}
-		
 		public System.Data.Linq.Table<HomeServerRoomWeatherStationData> HomeServerRoomWeatherStationDatas
 		{
 			get
@@ -147,6 +139,14 @@ namespace HomeOutsideWeatherStation
 			get
 			{
 				return this.GetTable<SensorType>();
+			}
+		}
+		
+		public System.Data.Linq.Table<HomeOutsideWeatherStationData> HomeOutsideWeatherStationDatas
+		{
+			get
+			{
+				return this.GetTable<HomeOutsideWeatherStationData>();
 			}
 		}
 	}
@@ -394,380 +394,6 @@ namespace HomeOutsideWeatherStation
 					this._Humidity = value;
 					this.SendPropertyChanged("Humidity");
 					this.OnHumidityChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.HomeOutsideWeatherStationData")]
-	public partial class HomeOutsideWeatherStationData : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _Id;
-		
-		private System.DateTime _Timestamp;
-		
-		private System.Nullable<decimal> _Temperature;
-		
-		private System.Nullable<decimal> _Humidity;
-		
-		private System.Nullable<decimal> _Pressure;
-		
-		private System.Nullable<decimal> _Altitude;
-		
-		private System.Nullable<decimal> _WindSpeed;
-		
-		private System.Nullable<decimal> _GustSpeed;
-		
-		private System.Nullable<decimal> _Rain;
-		
-		private System.Nullable<decimal> _Battery;
-		
-		private System.Nullable<decimal> _Solar;
-		
-		private System.Nullable<decimal> _WindDirection;
-		
-		private System.Nullable<decimal> _Temperature180;
-		
-		private System.Nullable<decimal> _Dewpoint;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(System.Guid value);
-    partial void OnIdChanged();
-    partial void OnTimestampChanging(System.DateTime value);
-    partial void OnTimestampChanged();
-    partial void OnTemperatureChanging(System.Nullable<decimal> value);
-    partial void OnTemperatureChanged();
-    partial void OnHumidityChanging(System.Nullable<decimal> value);
-    partial void OnHumidityChanged();
-    partial void OnPressureChanging(System.Nullable<decimal> value);
-    partial void OnPressureChanged();
-    partial void OnAltitudeChanging(System.Nullable<decimal> value);
-    partial void OnAltitudeChanged();
-    partial void OnWindSpeedChanging(System.Nullable<decimal> value);
-    partial void OnWindSpeedChanged();
-    partial void OnGustSpeedChanging(System.Nullable<decimal> value);
-    partial void OnGustSpeedChanged();
-    partial void OnRainChanging(System.Nullable<decimal> value);
-    partial void OnRainChanged();
-    partial void OnBatteryChanging(System.Nullable<decimal> value);
-    partial void OnBatteryChanged();
-    partial void OnSolarChanging(System.Nullable<decimal> value);
-    partial void OnSolarChanged();
-    partial void OnWindDirectionChanging(System.Nullable<decimal> value);
-    partial void OnWindDirectionChanged();
-    partial void OnTemperature180Changing(System.Nullable<decimal> value);
-    partial void OnTemperature180Changed();
-    partial void OnDewpointChanging(System.Nullable<decimal> value);
-    partial void OnDewpointChanged();
-    #endregion
-		
-		public HomeOutsideWeatherStationData()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Timestamp", DbType="DateTime2 NOT NULL")]
-		public System.DateTime Timestamp
-		{
-			get
-			{
-				return this._Timestamp;
-			}
-			set
-			{
-				if ((this._Timestamp != value))
-				{
-					this.OnTimestampChanging(value);
-					this.SendPropertyChanging();
-					this._Timestamp = value;
-					this.SendPropertyChanged("Timestamp");
-					this.OnTimestampChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Temperature", DbType="Decimal(4,2)")]
-		public System.Nullable<decimal> Temperature
-		{
-			get
-			{
-				return this._Temperature;
-			}
-			set
-			{
-				if ((this._Temperature != value))
-				{
-					this.OnTemperatureChanging(value);
-					this.SendPropertyChanging();
-					this._Temperature = value;
-					this.SendPropertyChanged("Temperature");
-					this.OnTemperatureChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Humidity", DbType="Decimal(5,2)")]
-		public System.Nullable<decimal> Humidity
-		{
-			get
-			{
-				return this._Humidity;
-			}
-			set
-			{
-				if ((this._Humidity != value))
-				{
-					this.OnHumidityChanging(value);
-					this.SendPropertyChanging();
-					this._Humidity = value;
-					this.SendPropertyChanged("Humidity");
-					this.OnHumidityChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pressure", DbType="Decimal(6,2)")]
-		public System.Nullable<decimal> Pressure
-		{
-			get
-			{
-				return this._Pressure;
-			}
-			set
-			{
-				if ((this._Pressure != value))
-				{
-					this.OnPressureChanging(value);
-					this.SendPropertyChanging();
-					this._Pressure = value;
-					this.SendPropertyChanged("Pressure");
-					this.OnPressureChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Altitude", DbType="Decimal(6,2)")]
-		public System.Nullable<decimal> Altitude
-		{
-			get
-			{
-				return this._Altitude;
-			}
-			set
-			{
-				if ((this._Altitude != value))
-				{
-					this.OnAltitudeChanging(value);
-					this.SendPropertyChanging();
-					this._Altitude = value;
-					this.SendPropertyChanged("Altitude");
-					this.OnAltitudeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindSpeed", DbType="Decimal(20,2)")]
-		public System.Nullable<decimal> WindSpeed
-		{
-			get
-			{
-				return this._WindSpeed;
-			}
-			set
-			{
-				if ((this._WindSpeed != value))
-				{
-					this.OnWindSpeedChanging(value);
-					this.SendPropertyChanging();
-					this._WindSpeed = value;
-					this.SendPropertyChanged("WindSpeed");
-					this.OnWindSpeedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GustSpeed", DbType="Decimal(20,2)")]
-		public System.Nullable<decimal> GustSpeed
-		{
-			get
-			{
-				return this._GustSpeed;
-			}
-			set
-			{
-				if ((this._GustSpeed != value))
-				{
-					this.OnGustSpeedChanging(value);
-					this.SendPropertyChanging();
-					this._GustSpeed = value;
-					this.SendPropertyChanged("GustSpeed");
-					this.OnGustSpeedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rain", DbType="Decimal(8,4)")]
-		public System.Nullable<decimal> Rain
-		{
-			get
-			{
-				return this._Rain;
-			}
-			set
-			{
-				if ((this._Rain != value))
-				{
-					this.OnRainChanging(value);
-					this.SendPropertyChanging();
-					this._Rain = value;
-					this.SendPropertyChanged("Rain");
-					this.OnRainChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Battery", DbType="Decimal(6,2)")]
-		public System.Nullable<decimal> Battery
-		{
-			get
-			{
-				return this._Battery;
-			}
-			set
-			{
-				if ((this._Battery != value))
-				{
-					this.OnBatteryChanging(value);
-					this.SendPropertyChanging();
-					this._Battery = value;
-					this.SendPropertyChanged("Battery");
-					this.OnBatteryChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Solar", DbType="Decimal(6,2)")]
-		public System.Nullable<decimal> Solar
-		{
-			get
-			{
-				return this._Solar;
-			}
-			set
-			{
-				if ((this._Solar != value))
-				{
-					this.OnSolarChanging(value);
-					this.SendPropertyChanging();
-					this._Solar = value;
-					this.SendPropertyChanged("Solar");
-					this.OnSolarChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindDirection", DbType="Decimal(6,2)")]
-		public System.Nullable<decimal> WindDirection
-		{
-			get
-			{
-				return this._WindDirection;
-			}
-			set
-			{
-				if ((this._WindDirection != value))
-				{
-					this.OnWindDirectionChanging(value);
-					this.SendPropertyChanging();
-					this._WindDirection = value;
-					this.SendPropertyChanged("WindDirection");
-					this.OnWindDirectionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Temperature180", DbType="Decimal(6,2)")]
-		public System.Nullable<decimal> Temperature180
-		{
-			get
-			{
-				return this._Temperature180;
-			}
-			set
-			{
-				if ((this._Temperature180 != value))
-				{
-					this.OnTemperature180Changing(value);
-					this.SendPropertyChanging();
-					this._Temperature180 = value;
-					this.SendPropertyChanged("Temperature180");
-					this.OnTemperature180Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Dewpoint", DbType="Decimal(4,2)")]
-		public System.Nullable<decimal> Dewpoint
-		{
-			get
-			{
-				return this._Dewpoint;
-			}
-			set
-			{
-				if ((this._Dewpoint != value))
-				{
-					this.OnDewpointChanging(value);
-					this.SendPropertyChanging();
-					this._Dewpoint = value;
-					this.SendPropertyChanged("Dewpoint");
-					this.OnDewpointChanged();
 				}
 			}
 		}
@@ -1526,6 +1152,428 @@ namespace HomeOutsideWeatherStation
 		{
 			this.SendPropertyChanging();
 			entity.SensorType = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.HomeOutsideWeatherStationData")]
+	public partial class HomeOutsideWeatherStationData : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _Id;
+		
+		private System.DateTime _Timestamp;
+		
+		private System.Nullable<decimal> _Temperature;
+		
+		private System.Nullable<decimal> _Humidity;
+		
+		private System.Nullable<decimal> _Pressure;
+		
+		private System.Nullable<decimal> _Altitude;
+		
+		private System.Nullable<decimal> _WindSpeed;
+		
+		private System.Nullable<decimal> _GustSpeed;
+		
+		private System.Nullable<decimal> _Rain;
+		
+		private System.Nullable<decimal> _Battery;
+		
+		private System.Nullable<decimal> _Solar;
+		
+		private System.Nullable<decimal> _WindDirection;
+		
+		private System.Nullable<decimal> _Temperature180;
+		
+		private System.Nullable<decimal> _Dewpoint;
+		
+		private System.Nullable<int> _Veml6070;
+		
+		private System.Nullable<decimal> _Lux;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(System.Guid value);
+    partial void OnIdChanged();
+    partial void OnTimestampChanging(System.DateTime value);
+    partial void OnTimestampChanged();
+    partial void OnTemperatureChanging(System.Nullable<decimal> value);
+    partial void OnTemperatureChanged();
+    partial void OnHumidityChanging(System.Nullable<decimal> value);
+    partial void OnHumidityChanged();
+    partial void OnPressureChanging(System.Nullable<decimal> value);
+    partial void OnPressureChanged();
+    partial void OnAltitudeChanging(System.Nullable<decimal> value);
+    partial void OnAltitudeChanged();
+    partial void OnWindSpeedChanging(System.Nullable<decimal> value);
+    partial void OnWindSpeedChanged();
+    partial void OnGustSpeedChanging(System.Nullable<decimal> value);
+    partial void OnGustSpeedChanged();
+    partial void OnRainChanging(System.Nullable<decimal> value);
+    partial void OnRainChanged();
+    partial void OnBatteryChanging(System.Nullable<decimal> value);
+    partial void OnBatteryChanged();
+    partial void OnSolarChanging(System.Nullable<decimal> value);
+    partial void OnSolarChanged();
+    partial void OnWindDirectionChanging(System.Nullable<decimal> value);
+    partial void OnWindDirectionChanged();
+    partial void OnTemperature180Changing(System.Nullable<decimal> value);
+    partial void OnTemperature180Changed();
+    partial void OnDewpointChanging(System.Nullable<decimal> value);
+    partial void OnDewpointChanged();
+    partial void OnVeml6070Changing(System.Nullable<int> value);
+    partial void OnVeml6070Changed();
+    partial void OnLuxChanging(System.Nullable<decimal> value);
+    partial void OnLuxChanged();
+    #endregion
+		
+		public HomeOutsideWeatherStationData()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Timestamp", DbType="DateTime2 NOT NULL")]
+		public System.DateTime Timestamp
+		{
+			get
+			{
+				return this._Timestamp;
+			}
+			set
+			{
+				if ((this._Timestamp != value))
+				{
+					this.OnTimestampChanging(value);
+					this.SendPropertyChanging();
+					this._Timestamp = value;
+					this.SendPropertyChanged("Timestamp");
+					this.OnTimestampChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Temperature", DbType="Decimal(4,2)")]
+		public System.Nullable<decimal> Temperature
+		{
+			get
+			{
+				return this._Temperature;
+			}
+			set
+			{
+				if ((this._Temperature != value))
+				{
+					this.OnTemperatureChanging(value);
+					this.SendPropertyChanging();
+					this._Temperature = value;
+					this.SendPropertyChanged("Temperature");
+					this.OnTemperatureChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Humidity", DbType="Decimal(5,2)")]
+		public System.Nullable<decimal> Humidity
+		{
+			get
+			{
+				return this._Humidity;
+			}
+			set
+			{
+				if ((this._Humidity != value))
+				{
+					this.OnHumidityChanging(value);
+					this.SendPropertyChanging();
+					this._Humidity = value;
+					this.SendPropertyChanged("Humidity");
+					this.OnHumidityChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pressure", DbType="Decimal(6,2)")]
+		public System.Nullable<decimal> Pressure
+		{
+			get
+			{
+				return this._Pressure;
+			}
+			set
+			{
+				if ((this._Pressure != value))
+				{
+					this.OnPressureChanging(value);
+					this.SendPropertyChanging();
+					this._Pressure = value;
+					this.SendPropertyChanged("Pressure");
+					this.OnPressureChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Altitude", DbType="Decimal(6,2)")]
+		public System.Nullable<decimal> Altitude
+		{
+			get
+			{
+				return this._Altitude;
+			}
+			set
+			{
+				if ((this._Altitude != value))
+				{
+					this.OnAltitudeChanging(value);
+					this.SendPropertyChanging();
+					this._Altitude = value;
+					this.SendPropertyChanged("Altitude");
+					this.OnAltitudeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindSpeed", DbType="Decimal(20,2)")]
+		public System.Nullable<decimal> WindSpeed
+		{
+			get
+			{
+				return this._WindSpeed;
+			}
+			set
+			{
+				if ((this._WindSpeed != value))
+				{
+					this.OnWindSpeedChanging(value);
+					this.SendPropertyChanging();
+					this._WindSpeed = value;
+					this.SendPropertyChanged("WindSpeed");
+					this.OnWindSpeedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GustSpeed", DbType="Decimal(20,2)")]
+		public System.Nullable<decimal> GustSpeed
+		{
+			get
+			{
+				return this._GustSpeed;
+			}
+			set
+			{
+				if ((this._GustSpeed != value))
+				{
+					this.OnGustSpeedChanging(value);
+					this.SendPropertyChanging();
+					this._GustSpeed = value;
+					this.SendPropertyChanged("GustSpeed");
+					this.OnGustSpeedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rain", DbType="Decimal(8,4)")]
+		public System.Nullable<decimal> Rain
+		{
+			get
+			{
+				return this._Rain;
+			}
+			set
+			{
+				if ((this._Rain != value))
+				{
+					this.OnRainChanging(value);
+					this.SendPropertyChanging();
+					this._Rain = value;
+					this.SendPropertyChanged("Rain");
+					this.OnRainChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Battery", DbType="Decimal(6,2)")]
+		public System.Nullable<decimal> Battery
+		{
+			get
+			{
+				return this._Battery;
+			}
+			set
+			{
+				if ((this._Battery != value))
+				{
+					this.OnBatteryChanging(value);
+					this.SendPropertyChanging();
+					this._Battery = value;
+					this.SendPropertyChanged("Battery");
+					this.OnBatteryChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Solar", DbType="Decimal(6,2)")]
+		public System.Nullable<decimal> Solar
+		{
+			get
+			{
+				return this._Solar;
+			}
+			set
+			{
+				if ((this._Solar != value))
+				{
+					this.OnSolarChanging(value);
+					this.SendPropertyChanging();
+					this._Solar = value;
+					this.SendPropertyChanged("Solar");
+					this.OnSolarChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WindDirection", DbType="Decimal(6,2)")]
+		public System.Nullable<decimal> WindDirection
+		{
+			get
+			{
+				return this._WindDirection;
+			}
+			set
+			{
+				if ((this._WindDirection != value))
+				{
+					this.OnWindDirectionChanging(value);
+					this.SendPropertyChanging();
+					this._WindDirection = value;
+					this.SendPropertyChanged("WindDirection");
+					this.OnWindDirectionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Temperature180", DbType="Decimal(6,2)")]
+		public System.Nullable<decimal> Temperature180
+		{
+			get
+			{
+				return this._Temperature180;
+			}
+			set
+			{
+				if ((this._Temperature180 != value))
+				{
+					this.OnTemperature180Changing(value);
+					this.SendPropertyChanging();
+					this._Temperature180 = value;
+					this.SendPropertyChanged("Temperature180");
+					this.OnTemperature180Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Dewpoint", DbType="Decimal(4,2)")]
+		public System.Nullable<decimal> Dewpoint
+		{
+			get
+			{
+				return this._Dewpoint;
+			}
+			set
+			{
+				if ((this._Dewpoint != value))
+				{
+					this.OnDewpointChanging(value);
+					this.SendPropertyChanging();
+					this._Dewpoint = value;
+					this.SendPropertyChanged("Dewpoint");
+					this.OnDewpointChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Veml6070", DbType="Int")]
+		public System.Nullable<int> Veml6070
+		{
+			get
+			{
+				return this._Veml6070;
+			}
+			set
+			{
+				if ((this._Veml6070 != value))
+				{
+					this.OnVeml6070Changing(value);
+					this.SendPropertyChanging();
+					this._Veml6070 = value;
+					this.SendPropertyChanged("Veml6070");
+					this.OnVeml6070Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lux", DbType="Decimal(10,2)")]
+		public System.Nullable<decimal> Lux
+		{
+			get
+			{
+				return this._Lux;
+			}
+			set
+			{
+				if ((this._Lux != value))
+				{
+					this.OnLuxChanging(value);
+					this.SendPropertyChanging();
+					this._Lux = value;
+					this.SendPropertyChanged("Lux");
+					this.OnLuxChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }
