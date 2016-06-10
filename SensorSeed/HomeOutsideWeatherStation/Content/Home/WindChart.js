@@ -31,7 +31,7 @@
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left")
-            .ticks(3)
+            .ticks(5)
             .innerTickSize(-width)
             .outerTickSize(0)
             .tickPadding(10);
@@ -49,14 +49,21 @@
 
         data.forEach(function (d) {
             d.Timestamp = parseDate(d.Timestamp);
+            if (d.GustSpeed > 500) {
+                d.GustSpeed = 0;
+            }
         });
 
         //console.log(data);
 
         var startDate = new Date();
         // Scale the range of the data
-        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y.domain([0, 5]);
+        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]);
+        y.domain([0, d3.max(data, function (d) { if (d.GustSpeed > d.WindSpeed) {
+            return d.GustSpeed;
+        } else {
+            return d.WindSpeed;
+        } })]);
         //y.domain([-20, 40]);
 
 
