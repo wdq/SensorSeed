@@ -93,6 +93,22 @@ textarea {
     top: 5px;
 }
 
+.WindDirectionLine {
+  fill: none;
+  stroke: #D6212A;
+  stroke-width: 1.5px;
+}
+
+.WindDirectionBox {
+    width: 20px;
+    height: 10px;
+    display: inline-block;
+    background-color: #D6212A;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
 .BatteryLine {
     fill: none;
     stroke: #AD55A1;
