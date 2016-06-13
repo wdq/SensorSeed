@@ -16,7 +16,9 @@
 
         // Set the ranges
         var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
+        var y0 = d3.scale.linear().range([height, 0]);
+        var y1 = d3.scale.linear().range([height, 0]);
+
 
         // Define the axes
         var xAxis = d3.svg.axis()
@@ -28,9 +30,17 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        var yAxis = d3.svg.axis()
-            .scale(y)
+        var yAxisLeft = d3.svg.axis() // battery
+            .scale(y0)
             .orient("left")
+            .ticks(3)
+            .innerTickSize(-width)
+            .outerTickSize(0)
+            .tickPadding(10);
+
+        var yAxisRight = d3.svg.axis() // solar
+            .scale(y1)
+            .orient("right")
             .ticks(3)
             .innerTickSize(-width)
             .outerTickSize(0)
@@ -40,11 +50,11 @@
         var BatteryValueLine = d3.svg.line()
               .interpolate("basis")
               .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.Battery); });
+              .y(function (d) { return y0(d.Battery); });
         var SolarValueLine = d3.svg.line()
               .interpolate("basis")
               .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.Solar); });
+              .y(function (d) { return y1(d.Solar); });
 
         // Adds the svg canvas
         var svg = d3.select("#PowerChart")
@@ -65,7 +75,8 @@
         var startDate = new Date();
         // Scale the range of the data
         x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y.domain([0, 5]);
+        y0.domain([d3.min(data, function (d) { return d.Battery; }), d3.max(data, function (d) { return d.Battery; })]);
+        y1.domain([0, 5]);
         //y.domain([-20, 40]);
 
 
@@ -79,7 +90,13 @@
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis);
+            .style("fill", "#AD55A1")
+            .call(yAxisLeft);
+        svg.append("g")
+            .attr("class", "y axis")
+            .style("fill", "#D6212A")
+            .attr("transform", "translate(" + width + " ,0)")
+            .call(yAxisRight);
 
 
         svg.append("path")
