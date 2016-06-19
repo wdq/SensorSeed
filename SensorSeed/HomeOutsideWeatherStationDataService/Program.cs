@@ -46,7 +46,7 @@ namespace HomeOutsideWeatherStationDataService
                             int index = html.IndexOf("\n");
                             html = html.Substring(index + "\n".Length);
                             string[] lines = html.Split(new string[] { "\n" }, StringSplitOptions.None);
-                            for (int i = 0; i < 13; i++)
+                            for (int i = 0; i < 15; i++)
                             {
                                 string lineData = lines[i].Substring(lines[i].IndexOf(":") + 2).Trim();
                                 if (i == 0)
