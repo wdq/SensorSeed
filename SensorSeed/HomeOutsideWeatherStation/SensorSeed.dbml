@@ -75,6 +75,8 @@
       <Column Name="Dewpoint" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
       <Column Name="Veml6070" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Lux" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="TemperatureDHT22" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="HumidityDHT22" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
     </Type>
   </Table>
 </Database>

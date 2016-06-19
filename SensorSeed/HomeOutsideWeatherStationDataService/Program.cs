@@ -23,7 +23,7 @@ namespace HomeOutsideWeatherStationDataService
 
 
                 string html = string.Empty;
-                string url = @"http://10.0.13.219/";
+                string url = @"http://10.0.14.34/";
                 var postData = new NameValueCollection();
 
                 bool tryAgain = true;
@@ -100,6 +100,14 @@ namespace HomeOutsideWeatherStationDataService
                                 else if (i == 12)
                                 {
                                     postData["Lux"] = lineData;
+                                }
+                                else if (i == 13)
+                                {
+                                    postData["TemperatureDHT22"] = lineData;
+                                }
+                                else if (i == 14)
+                                {
+                                    postData["HumidityDHT22"] = lineData;
                                 }
                             }
                             using (var client = new WebClient())

@@ -9,7 +9,7 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
     public class DataController : Controller
     {
         [HttpPost]
-        public ActionResult AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string Veml6070, string Lux)
+        public ActionResult AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string Veml6070, string Lux, string TemperatureDHT22, string HumidityDHT22)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
@@ -183,6 +183,7 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 }
 
                 data.WindDirection = DirectionDegreesDecimal;
+
             }
             catch (Exception exception)
             {
@@ -216,7 +217,23 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
             }
             catch (Exception exception) { }
 
+            // TemperatureDHT22
+            try
+            {
+                decimal TemperatureDecimalDHT22 = 0;
+                TemperatureDecimalDHT22 = Convert.ToDecimal(TemperatureDHT22);
+                data.TemperatureDHT22 = TemperatureDecimalDHT22;
+            }
+            catch (Exception exception) { }
 
+            // HumidityDHT22
+            try
+            {
+                decimal HumidityDecimalDHT22 = 0;
+                HumidityDecimalDHT22 = Convert.ToDecimal(HumidityDHT22);
+                data.HumidityDHT22 = HumidityDecimalDHT22;
+            }
+            catch (Exception exception) { }
 
 
             database.HomeOutsideWeatherStationDatas.InsertOnSubmit(data);

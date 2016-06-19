@@ -1193,6 +1193,10 @@ namespace HomeOutsideWeatherStation
 		
 		private System.Nullable<decimal> _Lux;
 		
+		private System.Nullable<decimal> _TemperatureDHT22;
+		
+		private System.Nullable<decimal> _HumidityDHT22;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1229,6 +1233,10 @@ namespace HomeOutsideWeatherStation
     partial void OnVeml6070Changed();
     partial void OnLuxChanging(System.Nullable<decimal> value);
     partial void OnLuxChanged();
+    partial void OnTemperatureDHT22Changing(System.Nullable<decimal> value);
+    partial void OnTemperatureDHT22Changed();
+    partial void OnHumidityDHT22Changing(System.Nullable<decimal> value);
+    partial void OnHumidityDHT22Changed();
     #endregion
 		
 		public HomeOutsideWeatherStationData()
@@ -1552,6 +1560,46 @@ namespace HomeOutsideWeatherStation
 					this._Lux = value;
 					this.SendPropertyChanged("Lux");
 					this.OnLuxChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TemperatureDHT22", DbType="Decimal(4,2)")]
+		public System.Nullable<decimal> TemperatureDHT22
+		{
+			get
+			{
+				return this._TemperatureDHT22;
+			}
+			set
+			{
+				if ((this._TemperatureDHT22 != value))
+				{
+					this.OnTemperatureDHT22Changing(value);
+					this.SendPropertyChanging();
+					this._TemperatureDHT22 = value;
+					this.SendPropertyChanged("TemperatureDHT22");
+					this.OnTemperatureDHT22Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HumidityDHT22", DbType="Decimal(5,2)")]
+		public System.Nullable<decimal> HumidityDHT22
+		{
+			get
+			{
+				return this._HumidityDHT22;
+			}
+			set
+			{
+				if ((this._HumidityDHT22 != value))
+				{
+					this.OnHumidityDHT22Changing(value);
+					this.SendPropertyChanging();
+					this._HumidityDHT22 = value;
+					this.SendPropertyChanged("HumidityDHT22");
+					this.OnHumidityDHT22Changed();
 				}
 			}
 		}
