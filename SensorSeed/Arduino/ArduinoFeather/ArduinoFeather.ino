@@ -5,6 +5,8 @@
 #include <Adafruit_BMP085_U.h>
 #include <Adafruit_VEML6070.h>
 #include <Adafruit_TSL2561_U.h>
+#include <DHT.h>
+#include <DHT_U.h>
 #include <SPI.h>
 #include <Adafruit_WINC1500.h>
 #include <avr/dtostrf.h>
@@ -16,6 +18,8 @@
 #define VANE_PIN A1
 #define SOLAR_PIN A2
 #define RAIN_GAUGE_PIN 11
+#define DHTPIN            9
+#define DHTTYPE           DHT22
 
 #define RAIN_FACTOR 0.2794
 #define WIND_FACTOR 2.4
@@ -27,19 +31,20 @@
 #define WINC_EN   2
 
 
-volatile unsigned long rain_count=0;
-volatile unsigned long rain_last=0;
-volatile unsigned long anem_count=0;
-volatile unsigned long anem_last=0;
-volatile unsigned long anem_min=0xffffffff;
-static const int vaneValues[] PROGMEM={66,84,92,127,184,244,287,406,461,600,631,702,786,827,889,946};
-static const int vaneDirections[] PROGMEM={1125,675,900,1575,1350,2025,1800,225,450,2475,2250,3375,0,2925,3150,2700};
+volatile unsigned long rain_count = 0;
+volatile unsigned long rain_last = 0;
+volatile unsigned long anem_count = 0;
+volatile unsigned long anem_last = 0;
+volatile unsigned long anem_min = 0xffffffff;
+static const int vaneValues[] PROGMEM = {66, 84, 92, 127, 184, 244, 287, 406, 461, 600, 631, 702, 786, 827, 889, 946};
+static const int vaneDirections[] PROGMEM = {1125, 675, 900, 1575, 1350, 2025, 1800, 225, 450, 2475, 2250, 3375, 0, 2925, 3150, 2700};
 
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 Adafruit_BMP085_Unified bmp180 = Adafruit_BMP085_Unified(10085);
 Adafruit_WINC1500 WiFi(WINC_CS, WINC_IRQ, WINC_RST);
 Adafruit_VEML6070 veml6070 = Adafruit_VEML6070();
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
+DHT_Unified dht(DHTPIN, DHTTYPE);
 
 char ssid[] = "wpa.quade.local";      // your network SSID (name)
 char pass[] = "aWq$HDvYE0Zn";   // your network password
@@ -48,7 +53,7 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 int status = WL_IDLE_STATUS;
 //IPAddress server(10,0,0,64);
 //#define webpage "/SensorSeed/Sensor/AddSensorData"
-unsigned long lastConnectionTime = 0;   
+unsigned long lastConnectionTime = 0;
 const unsigned long postingInterval = 300L * 1000L;
 
 Adafruit_WINC1500Server server(80);
@@ -56,39 +61,39 @@ Adafruit_WINC1500Server server(80);
 
 void anemometerClick()
 {
-  long thisTime=millis()-anem_last;
-    anem_count++;
-  anem_last=millis();
-    
-    if(thisTime<anem_min)
-    {
-      anem_min=thisTime;
-    }
- 
+  long thisTime = millis() - anem_last;
+  anem_count++;
+  anem_last = millis();
+
+  if (thisTime < anem_min)
+  {
+    anem_min = thisTime;
+  }
+
 }
 
 void rainGageClick()
 {
-    long thisTime=millis()-rain_last;
-    if(thisTime>10)
-    {
-    rain_last=millis();      
-      rain_count++;
-    }
+  long thisTime = millis() - rain_last;
+  if (thisTime > 10)
+  {
+    rain_last = millis();
+    rain_count++;
+  }
 }
 
 void setup() {
 #ifdef WINC_EN
   pinMode(WINC_EN, OUTPUT);
   digitalWrite(WINC_EN, HIGH);
-#endif    
+#endif
   Serial.begin(9600);
   Serial.println("Starting...");
   pinMode(VBATPIN, INPUT);
   pinMode(SOLAR_PIN, INPUT);
 
   initializeSensors();
-  
+
   // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
@@ -108,9 +113,9 @@ void setup() {
   }
   server.begin();
   // you're connected now, so print out the status:
-  printWifiStatus();  
+  printWifiStatus();
   WiFi.setSleepMode(M2M_PS_H_AUTOMATIC, 1);
-  
+
 }
 
 void loop() {
@@ -149,7 +154,9 @@ void loop() {
           unsigned int dir = getDirection();
           float temperaturebmp180 = getTemperatureBMP180();
           uint16_t veml6070Data = veml6070.readUV();
-          float luxData = getLux();  
+          float luxData = getLux();
+          float temperatureDHT22 = getTemperatureDHT22();
+          float humidityDHT22 = getHumidityDHT22();
 
           client.print("temperature: ");
           client.print(temperature);
@@ -177,20 +184,25 @@ void loop() {
           client.print("\n");
           client.print("solar: ");
           client.print(solar);
-          client.print("\n");  
+          client.print("\n");
           client.print("direction: ");
           client.print(dir);
           client.print("\n");
           client.print("temperaturebmp180: ");
           client.print(temperaturebmp180);
-          client.print("\n");   
+          client.print("\n");
           client.print("veml6070: ");
           client.print(veml6070Data);
-          client.print("\n");    
+          client.print("\n");
           client.print("lux: ");
           client.print(luxData);
-          client.print("\n");                 
-
+          client.print("\n");
+          client.print("temperatureDHT22: ");
+          client.print(temperatureDHT22);
+          client.print("\n");
+          client.print("humidityDHT22: ");
+          client.print(humidityDHT22);
+          client.print("\n");
 
           break;
         }
@@ -210,7 +222,7 @@ void loop() {
     // close the connection:
     client.stop();
     Serial.println("client disconnected");
-  } 
+  }
 }
 
 void initializeSensors() {
@@ -225,7 +237,7 @@ void initializeSensors() {
   //pinMode(VANE_PWR,OUTPUT);
   //digitalWrite(VANE_PWR,LOW);
   //attachInterrupt(ANEMOMETER_PIN, anemometerClick, FALLING);
-  //attachInterrupt(RAIN_GAUGE_PIN, rainGageClick, FALLING); 
+  //attachInterrupt(RAIN_GAUGE_PIN, rainGageClick, FALLING);
   interrupts();
 }
 
@@ -264,7 +276,7 @@ String getGustSpeedI2C() {
   String data = String(temp1);
   data.trim();
   delay(5);
-  return data;  
+  return data;
 }
 
 String getRainI2C() {
@@ -283,7 +295,7 @@ String getRainI2C() {
   String data = String(temp1);
   data.trim();
   delay(5);
-  return data;  
+  return data;
 }
 
 
@@ -310,16 +322,28 @@ unsigned int getDirection() {
   return adc;
 }
 
+float getTemperatureDHT22() {
+  sensors_event_t event;
+  dht.temperature().getEvent(&event);
+  return event.temperature;
+}
+
+float getHumidityDHT22() {
+  sensors_event_t event;
+  dht.humidity().getEvent(&event);
+  return event.relative_humidity;
+}
+
 String getSHT31() {
   float temperature = sht31.readTemperature();
   float humidity = sht31.readHumidity();
   char temp1[10];
-  char temp2[10];  
+  char temp2[10];
   dtostrf(temperature, 1, 2, temp1);
   dtostrf(humidity, 1, 2, temp2);
   String data = String(temp1) + "," + String(temp2);
   return data;
-}
+} 
 
 String getBMP180() {
   sensors_event_t event;
@@ -328,7 +352,7 @@ String getBMP180() {
   float temperature;
   bmp180.getTemperature(&temperature);
   float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;
-  float altitude = bmp180.pressureToAltitude(seaLevelPressure, event.pressure);  
+  float altitude = bmp180.pressureToAltitude(seaLevelPressure, event.pressure);
   char temp1[10];
   char temp2[10];
   char temp3[10];
@@ -345,7 +369,7 @@ String getWindSpeed() {
   char temp1[10];
   char temp2[10];
   dtostrf(wind, 1, 2, temp1);
-  dtostrf(gust, 1, 2, temp2);  
+  dtostrf(gust, 1, 2, temp2);
   String data = String(temp1) + "," + String(temp2);
   return data;
 }
@@ -355,7 +379,7 @@ String getRain() {
   char temp1[10];
   dtostrf(rain, 1, 2, temp1);
   String data = String(temp1);
-  return data;    
+  return data;
 }
 
 float getTemperature() {
@@ -379,13 +403,13 @@ float getHumidity() {
 float getPressure() {
   sensors_event_t event;
   bmp180.getEvent(&event);
-  return event.pressure;  
+  return event.pressure;
 }
 
 float getLux() {
   sensors_event_t event;
   tsl.getEvent(&event);
-  return event.light;  
+  return event.light;
 }
 
 
@@ -398,104 +422,104 @@ float getAltitude() {
 
 double getUnitWind()
 {
-  unsigned long reading=anem_count;
-  anem_count=0;
-  return (WIND_FACTOR*reading)/(TEST_PAUSE/1000);
+  unsigned long reading = anem_count;
+  anem_count = 0;
+  return (WIND_FACTOR * reading) / (TEST_PAUSE / 1000);
 }
- 
+
 double getGust()
 {
- 
-  unsigned long reading=anem_min;
-  anem_min=0xffffffff;
-  double time=reading/1000000.0;
- 
-  return (1/(reading/1000000.0))*WIND_FACTOR;
+
+  unsigned long reading = anem_min;
+  anem_min = 0xffffffff;
+  double time = reading / 1000000.0;
+
+  return (1 / (reading / 1000000.0)) * WIND_FACTOR;
 }
- 
+
 
 
 unsigned int getWindDirection() {
-    digitalWrite(VANE_PWR,HIGH);
+  digitalWrite(VANE_PWR, HIGH);
   unsigned int adc;
   adc = averageAnalogRead(VANE_PIN);
-      digitalWrite(VANE_PWR,LOW);
-	/*if (adc < 380) return (113);
-	if (adc < 393) return (68);
-	if (adc < 414) return (90);
-	if (adc < 456) return (158);
-	if (adc < 508) return (135);
-	if (adc < 551) return (203);
-	if (adc < 615) return (180);
-	if (adc < 680) return (23);
-	if (adc < 746) return (45);
-	if (adc < 801) return (248);
-	if (adc < 833) return (225);
-	if (adc < 878) return (338);
-	if (adc < 913) return (0);
-	if (adc < 940) return (293);
-	if (adc < 967) return (315);
-	if (adc < 990) return (270);
-	return (-1); // error, disconnected?  */
-return adc;
+  digitalWrite(VANE_PWR, LOW);
+  /*if (adc < 380) return (113);
+    if (adc < 393) return (68);
+    if (adc < 414) return (90);
+    if (adc < 456) return (158);
+    if (adc < 508) return (135);
+    if (adc < 551) return (203);
+    if (adc < 615) return (180);
+    if (adc < 680) return (23);
+    if (adc < 746) return (45);
+    if (adc < 801) return (248);
+    if (adc < 833) return (225);
+    if (adc < 878) return (338);
+    if (adc < 913) return (0);
+    if (adc < 940) return (293);
+    if (adc < 967) return (315);
+    if (adc < 990) return (270);
+    return (-1); // error, disconnected?  */
+  return adc;
 }
 
 int averageAnalogRead(int pinToRead)
 {
-	byte numberOfReadings = 8;
-	unsigned int runningValue = 0;
+  byte numberOfReadings = 8;
+  unsigned int runningValue = 0;
 
-	for(int x = 0 ; x < numberOfReadings ; x++)
-		runningValue += analogRead(pinToRead);
-	runningValue /= numberOfReadings;
+  for (int x = 0 ; x < numberOfReadings ; x++)
+    runningValue += analogRead(pinToRead);
+  runningValue /= numberOfReadings;
 
-	return(runningValue);
+  return (runningValue);
 }
 
 double getWindVane()
 {
   //analogReference(DEFAULT);
-  digitalWrite(VANE_PWR,HIGH);
+  digitalWrite(VANE_PWR, HIGH);
   delay(100);
-  for(int n=0;n<10;n++)
+  for (int n = 0; n < 10; n++)
   {
     analogRead(VANE_PIN);
   }
- 
-  unsigned int reading=analogRead(VANE_PIN);
-  digitalWrite(VANE_PWR,LOW);
-  unsigned int lastDiff=2048;
- 
-  for (int n=0;n<16;n++)
+
+  unsigned int reading = analogRead(VANE_PIN);
+  digitalWrite(VANE_PWR, LOW);
+  unsigned int lastDiff = 2048;
+
+  for (int n = 0; n < 16; n++)
   {
-    int diff=reading-pgm_read_word(&vaneValues[n]);
-    diff=abs(diff);
-    if(diff==0)
-       return pgm_read_word(&vaneDirections[n])/10.0;
- 
-    if(diff>lastDiff)
+    int diff = reading - pgm_read_word(&vaneValues[n]);
+    diff = abs(diff);
+    if (diff == 0)
+      return pgm_read_word(&vaneDirections[n]) / 10.0;
+
+    if (diff > lastDiff)
     {
-      return pgm_read_word(&vaneDirections[n-1])/10.0;
+      return pgm_read_word(&vaneDirections[n - 1]) / 10.0;
     }
- 
-    lastDiff=diff;
- }
- 
-  return pgm_read_word(&vaneDirections[15])/10.0;
- 
+
+    lastDiff = diff;
+  }
+
+  return pgm_read_word(&vaneDirections[15]) / 10.0;
+
 }
 
 
 double getUnitRain()
 {
- 
-  unsigned long reading=rain_count;
-  rain_count=0;
-  double unit_rain=reading*RAIN_FACTOR;
- 
+
+  unsigned long reading = rain_count;
+  rain_count = 0;
+  double unit_rain = reading * RAIN_FACTOR;
+
   return unit_rain;
 }
- 
+
 
 void printWifiStatus() {
   // print the SSID of the network you're attached to:
