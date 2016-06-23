@@ -23,7 +23,7 @@ namespace HomeOutsideWeatherStationDataService
 
 
                 string html = string.Empty;
-                string url = @"http://10.0.14.34/";
+                string url = @"http://10.0.13.219/";
                 var postData = new NameValueCollection();
 
                 bool tryAgain = true;
