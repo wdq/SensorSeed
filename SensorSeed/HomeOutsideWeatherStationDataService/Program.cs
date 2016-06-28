@@ -33,29 +33,22 @@ namespace HomeOutsideWeatherStationDataService
                     Console.Write(":    Getting sensor data...");
                     try
                     {
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                        request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-                        request.Timeout = 20000;
+                        WebClient client = new WebClient();
+                        client.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+                        html = client.DownloadString(url);
 
-                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-
-                        using (Stream stream = response.GetResponseStream())
-                        using (StreamReader reader = new StreamReader(stream))
+                        int index = html.IndexOf("\n");
+                        html = html.Substring(index + "\n".Length);
+                        string[] lines = html.Split(new string[] { "\n" }, StringSplitOptions.None);
+                        for (int i = 0; i < 15; i++)
                         {
-                            html = reader.ReadToEnd();
-                            int index = html.IndexOf("\n");
-                            html = html.Substring(index + "\n".Length);
-                            string[] lines = html.Split(new string[] { "\n" }, StringSplitOptions.None);
-                            for (int i = 0; i < 15; i++)
-                            {
-                                string lineData = lines[i].Substring(lines[i].IndexOf(":") + 2).Trim();
-                                sensorData[i] = lineData;
-                            }
-
-                            string addDataResult = AddData(sensorData[0], sensorData[1], sensorData[2], sensorData[3], sensorData[4], sensorData[5], sensorData[6], sensorData[7], sensorData[8], sensorData[9], sensorData[10], sensorData[11], sensorData[12], sensorData[13], sensorData[14]);
-                            Console.WriteLine(addDataResult);
-                            tryAgain = false;
+                            string lineData = lines[i].Substring(lines[i].IndexOf(":") + 2).Trim();
+                            sensorData[i] = lineData;
                         }
+
+                        string addDataResult = AddData(sensorData[0], sensorData[1], sensorData[2], sensorData[3], sensorData[4], sensorData[5], sensorData[6], sensorData[7], sensorData[8], sensorData[9], sensorData[10], sensorData[11], sensorData[12], sensorData[13], sensorData[14]);
+                        Console.WriteLine(addDataResult);
+                        tryAgain = false;
                     }
                     catch (Exception ex)
                     {
