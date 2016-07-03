@@ -23,7 +23,7 @@ namespace HomeOutsideWeatherStationDataService
 
 
                 string html = string.Empty;
-                string url = @"http://10.0.14.1/";
+                string url = @"http://10.0.13.219/data.txt";
                 string[] sensorData = new string[16];
 
                 bool tryAgain = true;
@@ -61,7 +61,7 @@ namespace HomeOutsideWeatherStationDataService
             }
         }
 
-        public static string AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string Veml6070, string Lux, string TemperatureDHT22, string HumidityDHT22)
+        public static string AddData(string Temperature, string Humidity, string Temperature180, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Veml6070, string Lux, string TemperatureDHT22, string HumidityDHT22)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
