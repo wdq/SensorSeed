@@ -140,23 +140,23 @@ void loop() {
           client.println();
           client.print("Outside Home Weather Station\n");
           float temperature = getTemperature();
-          float humidity = getHumidity();
-          float pressure = getPressure();
-          float altitude = getAltitude();
+          float humidity = getHumidity(); // i2c
+          float pressure = getPressure(); // i2c
+          float altitude = getAltitude(); // i2c
           //double wind = getUnitWind();
           //double gust = getGust();
           //double rain = getUnitRain();
-          String wind = getWindSpeedI2C();
-          String gust = getGustSpeedI2C();
-          String rain = getRainI2C();
-          float battery = getBattery();
-          float solar = getSolar();
-          unsigned int dir = getDirection();
-          float temperaturebmp180 = getTemperatureBMP180();
-          uint16_t veml6070Data = veml6070.readUV();
-          float luxData = getLux();
-          float temperatureDHT22 = getTemperatureDHT22();
-          float humidityDHT22 = getHumidityDHT22();
+          String wind = getWindSpeedI2C(); // i2c
+          String gust = getGustSpeedI2C(); // i2c
+          String rain = getRainI2C(); // i2c
+          float battery = getBattery(); // adc
+          float solar = getSolar(); // adc
+          unsigned int dir = getDirection(); // adc
+          float temperaturebmp180 = getTemperatureBMP180(); // i2c
+          uint16_t veml6070Data = veml6070.readUV(); // i2c
+          float luxData = getLux(); // i2c
+          float temperatureDHT22 = getTemperatureDHT22(); // other serial interface
+          float humidityDHT22 = getHumidityDHT22(); // other serial interface
 
           client.print("temperature: ");
           client.print(temperature);

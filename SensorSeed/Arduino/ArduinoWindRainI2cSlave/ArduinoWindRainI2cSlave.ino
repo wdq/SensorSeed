@@ -1,4 +1,5 @@
 #include <Wire.h> 
+#include <avr/dtostrf.h>
 
 volatile byte* Float1ArrayPtr;
 
@@ -7,6 +8,10 @@ volatile byte* Float1ArrayPtr;
 #define ANEMOMETER_INT 1
 #define RAIN_GAUGE_PIN 2
 #define RAIN_GAUGE_INT 0
+#define VANE_PIN A1
+#define SOLAR_PIN A2
+#define VBATPIN A3
+
 
 #define WIND_FACTOR 2.4
 #define TEST_PAUSE 60000
@@ -38,6 +43,8 @@ void setupWeatherInts()
   digitalWrite(RAIN_GAUGE_PIN,HIGH);  // Turn on the internal Pull Up Resistor
   attachInterrupt(ANEMOMETER_INT,anemometerClick,FALLING);
   attachInterrupt(RAIN_GAUGE_INT,rainGageClick,FALLING);
+  pinMode(VBATPIN, INPUT);
+  pinMode(SOLAR_PIN, INPUT);  
   //t not interrupts();
 }
 
@@ -112,6 +119,37 @@ void rainGageClick()
 
 }
 
+int averageAnalogRead(int pinToRead)
+{
+  byte numberOfReadings = 8;
+  unsigned int runningValue = 0;
+
+  for (int x = 0 ; x < numberOfReadings ; x++)
+    runningValue += analogRead(pinToRead);
+  runningValue /= numberOfReadings;
+
+  return (runningValue);
+}
+
+
+unsigned int getDirection() {
+  unsigned int adc;
+  adc = averageAnalogRead(VANE_PIN);
+
+  return adc;
+}
+
+
+float getSolar() {
+  float measuredvsolar = analogRead(SOLAR_PIN);
+  return measuredvsolar;
+}
+
+float getBattery() {
+  float measuredvbat = analogRead(VBATPIN);
+  return measuredvbat;
+}
+
 void setup() {
  Wire.begin(2);
  Wire.onRequest(requestEvent); 
@@ -145,9 +183,7 @@ void requestEvent(){
   //Wire.write("abcd");
   //Serial.print("Sent: ");
   //Serial.println(data);
-  //Serial.println("-----");
-
-  
+  //Serial.println("-----"); 
 }
 
 
@@ -165,6 +201,12 @@ void receiveEvent(int howMany){
   } else if(c == 3) { // rain
      // dataToSend = 5.6;
     dataToSend = getUnitRain();  
+  } else if(c == 3) { // wind direction
+    dataToSend = getDirection();
+  } else if(c == 4) { // solar
+    dataToSend = getSolar();
+  } else if(c == 5) { // battery
+    dataToSend = getBattery();
   }
   previousMillis = millis();
 }      
