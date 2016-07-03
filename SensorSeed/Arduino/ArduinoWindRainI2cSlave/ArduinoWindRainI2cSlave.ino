@@ -1,5 +1,5 @@
 #include <Wire.h> 
-#include <avr/dtostrf.h>
+#include <stdlib.h>
 
 volatile byte* Float1ArrayPtr;
 
@@ -151,7 +151,7 @@ float getBattery() {
 }
 
 void setup() {
- Wire.begin(2);
+ Wire.begin(6);
  Wire.onRequest(requestEvent); 
  Wire.onReceive(receiveEvent);
  //Serial.begin(9600);
@@ -201,11 +201,11 @@ void receiveEvent(int howMany){
   } else if(c == 3) { // rain
      // dataToSend = 5.6;
     dataToSend = getUnitRain();  
-  } else if(c == 3) { // wind direction
+  } else if(c == 4) { // wind direction
     dataToSend = getDirection();
-  } else if(c == 4) { // solar
+  } else if(c == 5) { // solar
     dataToSend = getSolar();
-  } else if(c == 5) { // battery
+  } else if(c == 6) { // battery
     dataToSend = getBattery();
   }
   previousMillis = millis();
