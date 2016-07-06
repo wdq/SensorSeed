@@ -149,9 +149,9 @@ void loop() {
           String wind = getWindSpeedI2C(); // i2c
           String gust = getGustSpeedI2C(); // i2c
           String rain = getRainI2C(); // i2c
-          float battery = getBattery(); // adc
-          float solar = getSolar(); // adc
-          unsigned int dir = getDirection(); // adc
+          String battery = getBatteryI2C(); // i2c
+          String solar = getSolarI2C(); // i2c
+          String dir = getDirectionI2C(); // i2c
           float temperaturebmp180 = getTemperatureBMP180(); // i2c
           uint16_t veml6070Data = veml6070.readUV(); // i2c
           float luxData = getLux(); // i2c
@@ -242,13 +242,13 @@ void initializeSensors() {
 }
 
 String getWindSpeedI2C() {
-  Wire.beginTransmission(2); // transmit to device #2
+  Wire.beginTransmission(6); // transmit to device #2
   Wire.write(1);
   Wire.endTransmission();
   delay(25);
   int i = 0;
   char temp1[10];
-  Wire.requestFrom(2, 10);    // request 4 bytes from slave device #2
+  Wire.requestFrom(6, 10);    // request 4 bytes from slave device #2
   while (Wire.available()) { // slave may send less than requested
     temp1[i] = Wire.read(); // receive a byte as character
     i++;
@@ -261,13 +261,73 @@ String getWindSpeedI2C() {
 }
 
 String getGustSpeedI2C() {
-  Wire.beginTransmission(2); // transmit to device #2
+  Wire.beginTransmission(6); // transmit to device #2
   Wire.write(2);
   Wire.endTransmission();
   delay(25);
   int i = 0;
   char temp1[10];
-  Wire.requestFrom(2, 10);    // request 4 bytes from slave device #2
+  Wire.requestFrom(6, 10);    // request 4 bytes from slave device #2
+  while (Wire.available()) { // slave may send less than requested
+    temp1[i] = Wire.read(); // receive a byte as character
+    i++;
+    //Serial.print(c);         // print the character
+  }
+  String data = String(temp1);
+  data.trim();
+  delay(5);
+  return data;
+}
+
+
+String getDirectionI2C() {
+  Wire.beginTransmission(6); // transmit to device #2
+  Wire.write(4);
+  Wire.endTransmission();
+  delay(25);
+  int i = 0;
+  char temp1[10];
+  Wire.requestFrom(6, 10);    // request 4 bytes from slave device #2
+  while (Wire.available()) { // slave may send less than requested
+    temp1[i] = Wire.read(); // receive a byte as character
+    i++;
+    //Serial.print(c);         // print the character
+  }
+  String data = String(temp1);
+  data.trim();
+  delay(5);
+  return data;
+}
+
+
+String getSolarI2C() {
+  Wire.beginTransmission(6); // transmit to device #2
+  Wire.write(5);
+  Wire.endTransmission();
+  delay(25);
+  int i = 0;
+  char temp1[10];
+  Wire.requestFrom(6, 10);    // request 4 bytes from slave device #2
+  while (Wire.available()) { // slave may send less than requested
+    temp1[i] = Wire.read(); // receive a byte as character
+    i++;
+    //Serial.print(c);         // print the character
+  }
+  String data = String(temp1);
+  data.trim();
+  delay(5);
+  return data;
+}
+
+
+String getBatteryI2C() {
+  Wire.beginTransmission(6); // transmit to device #2
+  Wire.write(6);
+  Wire.endTransmission();
+  delay(25);
+  int i = 0;
+  char temp1[10];
+  Wire.requestFrom(6, 10);    // request 4 bytes from slave device #2
   while (Wire.available()) { // slave may send less than requested
     temp1[i] = Wire.read(); // receive a byte as character
     i++;
@@ -280,13 +340,13 @@ String getGustSpeedI2C() {
 }
 
 String getRainI2C() {
-  Wire.beginTransmission(2); // transmit to device #2
+  Wire.beginTransmission(6); // transmit to device #2
   Wire.write(3);
   Wire.endTransmission();
   delay(25);
   int i = 0;
   char temp1[10];
-  Wire.requestFrom(2, 10);    // request 4 bytes from slave device #2
+  Wire.requestFrom(6, 10);    // request 4 bytes from slave device #2
   while (Wire.available()) { // slave may send less than requested
     temp1[i] = Wire.read(); // receive a byte as character
     i++;
