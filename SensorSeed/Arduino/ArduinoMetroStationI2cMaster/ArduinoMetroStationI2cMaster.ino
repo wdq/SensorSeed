@@ -139,8 +139,10 @@ void loop() {
   strcat(radiopacket, temperatureDHT22);
   strcat(radiopacket, ",");
   strcat(radiopacket, humidityDHT22);
+
+  String data = String(radiopacket);
   
-  itoa(packetnum++, radiopacket+13, 10);
+  //itoa(packetnum++, radiopacket+13, 10);
   Serial.print("Sending "); Serial.println(radiopacket);
   if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) { //target node Id, message as string or byte array, message length
     Serial.println("OK");
