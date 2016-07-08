@@ -9,7 +9,7 @@ volatile byte* Float1ArrayPtr;
 double dataToSend;
 unsigned long lastReceivedMillis = millis();
 unsigned long lastSentMillis = millis();
-char radiopacket[150];
+char radiopacket[200];
 
 // Settings for the Adafruit RFM69HCW radio
 #define NETWORKID     81
@@ -59,9 +59,9 @@ void setup() {
   Serial.println("Starting Arduino Metro weather station I2C master, radio receiver...");
   setupRadio();
 
- Wire.begin(7);
- Wire.onRequest(requestEvent); 
- Wire.onReceive(receiveEvent);  
+ //Wire.begin(7);
+ //Wire.onRequest(requestEvent); 
+ //Wire.onReceive(receiveEvent);  
   Serial.println("Setup complete"); 
 }
 
@@ -69,6 +69,7 @@ void loop() {
   //check if something was received (could be an interrupt from the radio)
   if (radio.receiveDone())
   {
+    Serial.println("Got something...");
     //print message received to serial
     Serial.print('[');Serial.print(radio.SENDERID);Serial.print("] ");
     Serial.print((char*)radio.DATA);
