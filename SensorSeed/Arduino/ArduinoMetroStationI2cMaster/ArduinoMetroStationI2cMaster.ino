@@ -19,7 +19,7 @@
 #define IS_RFM69HCW   true
 
 // Settings for the DHT22
-#define DHTPIN            9
+#define DHTPIN            6
 #define DHTTYPE           DHT22
 
 // Pins for the Adafruit RFM69HCW radio
@@ -80,40 +80,59 @@ void setup() {
 }
 
 void loop() {
-  delay(TRANSMIT_INTERVAL); // Transmit at an interval
+    delay(TRANSMIT_INTERVAL); // Transmit at an interval
 
-  char temperatureSHT31[7]; // 7 max chars (based on -999.99 to 999.99)
-  dtostrf(getTemperatureSHT31(), 7, 2, temperatureSHT31);
-  char humiditySHT32[6]; // 6 max chars (based on 0.00 to 100.00)
-  dtostrf(getHumiditySHT31(), 6, 2, humiditySHT32);
-  char pressureBMP180[9]; // 9 max cahrs (based on database model)
-  dtostrf(getPressureBMP180(), 9, 2, pressureBMP180);  
-  char altitudeBMP180[9]; // 9 max chars (based on database model)
-  dtostrf(getAltitudeBMP180(), 9, 2, altitudeBMP180);  
-  char windSpeedI2C[10]; // 10 max chars (based on slave conversion)
-  getWindSpeedI2C().toCharArray(windSpeedI2C, 10);  
-  char gustSpeedI2C[10]; // 10 max chars (based on slave conversion)
-  getGustSpeedI2C().toCharArray(gustSpeedI2C, 10);
-  char rainI2C[10]; // 10 max chars (based on slave conversion)
-  getRainI2C().toCharArray(rainI2C, 10);
-  char batteryI2C[10]; // 10 max chars (based on slave conversion)
-  getBatteryI2C().toCharArray(batteryI2C, 10);
-  char solarI2C[10]; // 10 max chars (based on slave conversion)
-  getSolarI2C().toCharArray(solarI2C, 10);  
-  char directionI2C[10]; // 10 max chars (based on slave conversion)
-  getDirectionI2C().toCharArray(directionI2C, 10); 
-  char temperatureBMP180[7]; // 7 max chars (based on -999.99 to 999.99)
-  dtostrf(getTemperatureBMP180(), 7, 2, temperatureBMP180);
-  char temperatureDHT22[7]; // 7 max chars (based on -999.99 to 999.99)
-  dtostrf(getTemperatureDHT22(), 7, 2, temperatureDHT22);
-  char humidityDHT22[6]; // 6 max chars (based on 0.00 to 100.00)
-  dtostrf(getHumidityDHT22(), 6, 2, humidityDHT22); 
+  String data = String();
+
+  //char temperatureSHT31[7]; // 7 max chars (based on -999.99 to 999.99)
+  String temperatureSHT31 = String(getTemperatureSHT31());
+  String humiditySHT32 = String(getHumiditySHT31());
+  String pressureBMP180 = String(getPressureBMP180());
+  String altitudeBMP180 = String(getAltitudeBMP180());
+  String windSpeedI2C = String(getWindSpeedI2C());
+  String gustSpeedI2C = String(getGustSpeedI2C());
+  String rainI2C = String(getRainI2C());
+  String batteryI2C = String(getBatteryI2C());
+  String solarI2C = String(getSolarI2C());
+  String directionI2C = String(getDirectionI2C());
+  String temperatureBMP180 = String(getTemperatureBMP180());
+  String temperatureDHT22 = String(getTemperatureDHT22());
+  String humidityDHT22 = String(getHumidityDHT22());
+
+  data += temperatureSHT31;
+  data += String(",");
+  data += humiditySHT32;
+  data += String(",");  
+  data += pressureBMP180;
+    data += String(",");
+  data += altitudeBMP180;
+    data += String(",");
+  data += windSpeedI2C;
+    data += String(",");
+  data += gustSpeedI2C;
+    data += String(",");
+  data += rainI2C;
+    data += String(",");
+  data += batteryI2C;
+    data += String(",");
+  data += solarI2C;
+    data += String(",");
+  data += directionI2C;
+    data += String(",");
+  data += temperatureBMP180;
+    data += String(",");
+  data += temperatureDHT22;
+    data += String(",");
+  data += humidityDHT22;
+
+
   // Total data bytes: 7 + 6 + 9 + 9 + 10 + 10 + 10 + 10 + 10 + 10 + 7 + 7 + 6 = 111
   // Total separation comma bytes: 12
   // Total combined bytes: 111 + 12 = 123
   // Round that up with some extra spare bits: 150? 
 
-  char radiopacket[150];
+  /*char radiopacket[151];
+  radiopacket[0] = '\0';
   strcat(radiopacket, temperatureSHT31);
   strcat(radiopacket, ",");
   strcat(radiopacket, humiditySHT32);
@@ -140,17 +159,20 @@ void loop() {
   strcat(radiopacket, ",");
   strcat(radiopacket, humidityDHT22);
 
-  String data = String(radiopacket);
-  
+  */
+
+//Serial.println(data);
+  char radiopacket[200];
+  data.toCharArray(radiopacket, 200);
   //itoa(packetnum++, radiopacket+13, 10);
-  Serial.print("Sending "); Serial.println(radiopacket);
+  //Serial.print("Sending "); Serial.println(radiopacket);
+  Serial.println("Sending");
   if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) { //target node Id, message as string or byte array, message length
     Serial.println("OK");
   }
  
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
-  
 }
 
 
