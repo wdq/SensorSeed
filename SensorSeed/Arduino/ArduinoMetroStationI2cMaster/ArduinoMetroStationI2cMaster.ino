@@ -1,5 +1,5 @@
-#include <TinyWireM.h>
-#include <USI_TWI_Master.h>
+//#include <TinyWireM.h>
+//#include <USI_TWI_Master.h>
 #include <Wire.h>
 #include <RFM69.h>
 #include <SPI.h>
@@ -15,7 +15,7 @@
 #define NODEID        2
 #define RECEIVER      1
 #define FREQUENCY     RF69_915MHZ
-#define ENCRYPTKEY    "wquade"
+#define ENCRYPTKEY    "wquadeEncryptKey"
 #define IS_RFM69HCW   true
 
 // Settings for the DHT22
@@ -166,8 +166,8 @@ void loop() {
   char radiopacket[200];
   data.toCharArray(radiopacket, 200);
   //itoa(packetnum++, radiopacket+13, 10);
-  //Serial.print("Sending "); Serial.println(radiopacket);
-  Serial.println("Sending");
+  Serial.print("Sending "); Serial.println(radiopacket);
+  //Serial.println("Sending");
   if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) { //target node Id, message as string or byte array, message length
     Serial.println("OK");
   }

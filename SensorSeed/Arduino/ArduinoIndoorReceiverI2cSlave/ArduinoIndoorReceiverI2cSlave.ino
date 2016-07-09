@@ -11,11 +11,12 @@ unsigned long lastReceivedMillis = millis();
 unsigned long lastSentMillis = millis();
 char radiopacket[200];
 
+
 // Settings for the Adafruit RFM69HCW radio
 #define NETWORKID     81
 #define NODEID        1
 #define FREQUENCY     RF69_915MHZ
-#define ENCRYPTKEY    "wquade"
+#define ENCRYPTKEY    "wquadeEncryptKey"
 #define IS_RFM69HCW   true
 
 // Pins for the Adafruit RFM69HCW radio
@@ -59,9 +60,9 @@ void setup() {
   Serial.println("Starting Arduino Metro weather station I2C master, radio receiver...");
   setupRadio();
 
- //Wire.begin(7);
- //Wire.onRequest(requestEvent); 
- //Wire.onReceive(receiveEvent);  
+ Wire.begin(7);
+ Wire.onRequest(requestEvent); 
+ Wire.onReceive(receiveEvent);  
   Serial.println("Setup complete"); 
 }
 
@@ -72,7 +73,10 @@ void loop() {
     Serial.println("Got something...");
     //print message received to serial
     Serial.print('[');Serial.print(radio.SENDERID);Serial.print("] ");
-    Serial.print((char*)radio.DATA);
+    for(byte i = 0; i < radio.DATALEN; i++) {
+      radiopacket[i] = (char)radio.DATA[i];
+    }
+    Serial.print(radiopacket);
     Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
 
     lastReceivedMillis = millis();
@@ -109,7 +113,7 @@ void requestEvent(){
 
 
   if(dataToSend == 3) {
-    //String data = String(radiopacket);
+    String data = String(radiopacket);
     lastSentMillis = millis();
     Wire.write(radiopacket);
   } else {
