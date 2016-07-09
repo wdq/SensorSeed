@@ -11,6 +11,20 @@ unsigned long lastReceivedMillis = millis();
 unsigned long lastSentMillis = millis();
 char radiopacket[200];
 
+char temperatureSHT31[7]; // 7 max chars (based on -999.99 to 999.99)
+char humiditySHT32[6]; // 6 max chars (based on 0.00 to 100.00)
+char pressureBMP180[9]; // 9 max cahrs (based on database model)
+char altitudeBMP180[9]; // 9 max chars (based on database model)
+char windSpeedI2C[10]; // 10 max chars (based on slave conversion)
+char gustSpeedI2C[10]; // 10 max chars (based on slave conversion)
+char rainI2C[10]; // 10 max chars (based on slave conversion)
+char batteryI2C[10]; // 10 max chars (based on slave conversion)
+char solarI2C[10]; // 10 max chars (based on slave conversion)
+char directionI2C[10]; // 10 max chars (based on slave conversion)
+char temperatureBMP180[7]; // 7 max chars (based on -999.99 to 999.99)
+char temperatureDHT22[7]; // 7 max chars (based on -999.99 to 999.99)
+char humidityDHT22[6]; // 6 max chars (based on 0.00 to 100.00)
+
 
 // Settings for the Adafruit RFM69HCW radio
 #define NETWORKID     81
@@ -65,7 +79,6 @@ void setup() {
  Wire.onReceive(receiveEvent);  
   Serial.println("Setup complete"); 
 }
-
 void loop() {
   //check if something was received (could be an interrupt from the radio)
   if (radio.receiveDone())
@@ -74,9 +87,53 @@ void loop() {
     //print message received to serial
     Serial.print('[');Serial.print(radio.SENDERID);Serial.print("] ");
     for(byte i = 0; i < radio.DATALEN; i++) {
-      radiopacket[i] = (char)radio.DATA[i];
-    }
-    Serial.print(radiopacket);
+      char newChar = (char)radio.DATA[i];
+
+      int sensorIndex = 1;
+      int sensorCharIndex = 0;
+      
+      if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+        if(newChar == ',') {
+          sensorIndex++;
+          sensorCharIndex = 0;                  
+        } else {
+          if(sensorIndex == 1) {
+            temperatureSHT31[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 2) {
+            humiditySHT32[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 3) {
+            pressureBMP180[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 4) {
+            altitudeBMP180[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 5) {
+            windSpeedI2C[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 6) {
+            gustSpeedI2C[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 7) {
+            rainI2C[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 8) {
+            batteryI2C[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 9) {
+            solarI2C[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 10) {
+            directionI2C[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 11) {
+            temperatureBMP180[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 12) {
+            temperatureDHT22[sensorCharIndex] = newChar;
+          } else if(sensorIndex == 13) {
+            humidityDHT22[sensorCharIndex] = newChar;
+          }
+          sensorCharIndex++;
+         //radiopacket[i] = newChar;
+        }
+      } else {
+        //radiopacket[i] = ' ';
+      }
+
+    } 
+    Serial.println(temperatureSHT31);
+    Serial.print("Got data");
     Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
 
     lastReceivedMillis = millis();
@@ -110,17 +167,62 @@ void requestEvent(){
 
    //String data = String(dataToSend, DEC);
    //dataToSend = 123456.78;
-
-
-  if(dataToSend == 3) {
-    String data = String(radiopacket);
-    lastSentMillis = millis();
-    Wire.write(radiopacket);
-  } else {
+  if(dataToSend == 0 || dataToSend == 1) { // isDataNew
    char temp1[10];
    dtostrf(dataToSend, 10, 2, temp1);
    String data = String(temp1);
    Wire.write(temp1);   
+    
+  } else {
+    Serial.print("Index: ");
+    //String data = String("error");
+    int sensorIndex = dataToSend - 10;
+    Serial.print(sensorIndex);
+    Serial.print(" sent: ");
+    if(sensorIndex == 1) {
+      Wire.write(temperatureSHT31);
+      Serial.println(temperatureSHT31);
+    } else if(sensorIndex == 2) {
+      Wire.write(humiditySHT32);
+      Serial.println(humiditySHT32);
+    } else if(sensorIndex == 3) {
+      Wire.write(pressureBMP180);
+      Serial.println(pressureBMP180);
+    } else if(sensorIndex == 4) {
+      Wire.write(altitudeBMP180);
+      Serial.println(altitudeBMP180);
+    } else if(sensorIndex == 5) {
+      Wire.write(windSpeedI2C);
+      Serial.println(windSpeedI2C);
+    } else if(sensorIndex == 6) {
+      Wire.write(gustSpeedI2C);
+      Serial.println(gustSpeedI2C);
+    } else if(sensorIndex == 7) {
+      Wire.write(rainI2C);
+      Serial.println(rainI2C);
+    } else if(sensorIndex == 8) {
+      Wire.write(batteryI2C);
+      Serial.println(batteryI2C);
+    } else if(sensorIndex == 9) {
+      Wire.write(solarI2C);
+      Serial.println(solarI2C);
+    } else if(sensorIndex == 10) {
+      Wire.write(directionI2C);
+      Serial.println(directionI2C);
+    } else if(sensorIndex == 11) {
+      Wire.write(temperatureBMP180);
+      Serial.println(temperatureBMP180);
+    } else if(sensorIndex == 12) {
+      Wire.write(temperatureDHT22);
+      Serial.println(temperatureDHT22);
+    } else if(sensorIndex == 13) {
+      Wire.write(humidityDHT22);
+      Serial.println(humidityDHT22);
+    }
+    //String data = String(radiopacket);
+    lastSentMillis = millis();
+    //Wire.write(radiopacket);
+    //Serial.println(data);
   }
 
   //Wire.write(frame, 30);
@@ -130,21 +232,31 @@ void requestEvent(){
   //Serial.println("-----"); 
 }
 
-
+      // 1: temperatureSHT31 7
+      // 2: humiditySHT32 6 
+      // 3: pressureBMP1809 
+      // 4: altitudeBMP180 9
+      // 5: windSpeedI2C 10
+      // 6: gustSpeedI2C 10
+      // 7: rainI2C 10
+      // 8: batteryI2C 10
+      // 9: solarI2C 10
+      // 10: directionI2C 10
+      // 11: temperatureBMP180 7
+      // 12: temperatureDHT22 7
+      // 13: humidityDHT22 6
+      
 void receiveEvent(int howMany){
   int c;
   c = Wire.read(); // receive byte as a character
   //Serial.print("Got: ");
   //Serial.println(c);
-  if(c == 1) { // Is there new data?
+  if(c == 0) { // Is there new data?
     dataToSend = isDataNew();
-    //dataToSend = 1.2;
-  } else if(c == 2) { // What is the data?
-     // dataToSend = 3.4;
-    dataToSend = 3;  
+  } else { // New data, Example: to get temperatureSHT31 the Pi sends c=1, and the dataToSend will then be 11, so it doesn't interfere with the is there new data.
+    dataToSend = 10 + c;  
   }
 }      
-
 
 
 

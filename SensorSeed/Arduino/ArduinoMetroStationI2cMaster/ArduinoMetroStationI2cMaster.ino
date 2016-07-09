@@ -80,8 +80,8 @@ void setup() {
 }
 
 void loop() {
-    //delay(TRANSMIT_INTERVAL); // Transmit at an interval
-    delay(1000);
+    delay(TRANSMIT_INTERVAL); // Transmit at an interval
+    //delay(1000);
 
   String data = String();
 
@@ -174,7 +174,7 @@ void loop() {
  
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
-  delay(10000);
+  //delay(10000);
 }
 
 
