@@ -19,7 +19,7 @@
 #define IS_RFM69HCW   true
 
 // Settings for the DHT22
-#define DHTPIN            6
+#define DHTPIN            7
 #define DHTTYPE           DHT22
 
 // Pins for the Adafruit RFM69HCW radio
@@ -31,7 +31,7 @@
 #define LED           13
 
 #define SERIAL_BAUD   9600
-#define TRANSMIT_INTERVAL 150000 // in milliseconds, this is set to 2.5 minutes
+#define TRANSMIT_INTERVAL 90000 // in milliseconds, this is set to 1.5 minutes
 
 int16_t packetnum = 0;
 
@@ -67,6 +67,7 @@ void setupRadio() {
 void initializeSensors() {
   sht31.begin(0x44);
   bmp180.begin();
+  dht.begin();
 }
 
 void setup() {
@@ -75,7 +76,6 @@ void setup() {
   
   setupRadio();
   initializeSensors();
-
     Serial.println("Setup complete");
 }
 
@@ -83,48 +83,60 @@ void loop() {
     delay(TRANSMIT_INTERVAL); // Transmit at an interval
     //delay(1000);
 
-  String data = String();
+    // The limit for the radio is 61 bytes per packet, so I'm splitting the data into four packets
 
+  String packet1 = String();
+  String packet2 = String();
+  String packet3 = String();
+  String packet4 = String();
+  
   //char temperatureSHT31[7]; // 7 max chars (based on -999.99 to 999.99)
   String temperatureSHT31 = String(getTemperatureSHT31());
   String humiditySHT32 = String(getHumiditySHT31());
   String pressureBMP180 = String(getPressureBMP180());
   String altitudeBMP180 = String(getAltitudeBMP180());
+  
   String windSpeedI2C = String(getWindSpeedI2C());
   String gustSpeedI2C = String(getGustSpeedI2C());
+  
   String rainI2C = String(getRainI2C());
   String batteryI2C = String(getBatteryI2C());
   String solarI2C = String(getSolarI2C());
+  
   String directionI2C = String(getDirectionI2C());
   String temperatureBMP180 = String(getTemperatureBMP180());
   String temperatureDHT22 = String(getTemperatureDHT22());
   String humidityDHT22 = String(getHumidityDHT22());
 
-  data += temperatureSHT31;
-  data += String(",");
-  data += humiditySHT32;
-  data += String(",");  
-  data += pressureBMP180;
-    data += String(",");
-  data += altitudeBMP180;
-    data += String(",");
-  data += windSpeedI2C;
-    data += String(",");
-  data += gustSpeedI2C;
-    data += String(",");
-  data += rainI2C;
-    data += String(",");
-  data += batteryI2C;
-    data += String(",");
-  data += solarI2C;
-    data += String(",");
-  data += directionI2C;
-    data += String(",");
-  data += temperatureBMP180;
-    data += String(",");
-  data += temperatureDHT22;
-    data += String(",");
-  data += humidityDHT22;
+  packet1 += String("1:");
+  packet1 += temperatureSHT31;
+  packet1 += String(",");
+  packet1 += humiditySHT32;
+  packet1 += String(",");  
+  packet1 += pressureBMP180;
+  packet1 += String(",");
+  packet1 += altitudeBMP180;
+
+  packet2 += String("2:");  
+  packet2 += windSpeedI2C;
+  packet2 += String(",");
+  packet2 += gustSpeedI2C;
+
+  packet3 += String("3:");
+  packet3 += rainI2C;
+  packet3 += String(",");
+  packet3 += batteryI2C;
+  packet3 += String(",");
+  packet3 += solarI2C;
+
+  packet4 += String("4:");
+  packet4 += directionI2C;
+  packet4 += String(",");
+  packet4 += temperatureBMP180;
+  packet4 += String(",");
+  packet4 += temperatureDHT22;
+  packet4 += String(",");
+  packet4 += humidityDHT22;
 
 
   // Total data bytes: 7 + 6 + 9 + 9 + 10 + 10 + 10 + 10 + 10 + 10 + 7 + 7 + 6 = 111
@@ -161,20 +173,52 @@ void loop() {
   strcat(radiopacket, humidityDHT22);
 
   */
+int timeBetweenPackets = 15000;
 
 //Serial.println(data);
-  char radiopacket[200];
-  data.toCharArray(radiopacket, 200);
-  //itoa(packetnum++, radiopacket+13, 10);
-  Serial.print("Sending "); Serial.println(radiopacket);
-  //Serial.println("Sending");
-  if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) { //target node Id, message as string or byte array, message length
-    Serial.println("OK");
-  }
- 
+  char radiopacket1[61];
+  packet1.toCharArray(radiopacket1, 61);
+  char radiopacket2[61];
+  packet2.toCharArray(radiopacket2, 61);
+  char radiopacket3[61];
+  packet3.toCharArray(radiopacket3, 61);
+  char radiopacket4[61];
+  packet4.toCharArray(radiopacket4, 61);    
+  
+  Serial.print("Sending "); Serial.println(radiopacket1);
+  radio.send(RECEIVER, radiopacket1, strlen(radiopacket1)); //target node Id, message as string or byte array, message length
+  Serial.println("OK");
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
-  //delay(10000);
+
+
+delay(timeBetweenPackets);
+
+  Serial.print("Sending "); Serial.println(radiopacket2);
+  radio.send(RECEIVER, radiopacket2, strlen(radiopacket2)); //target node Id, message as string or byte array, message length
+  Serial.println("OK");
+  radio.receiveDone(); //put radio in RX mode
+  Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
+
+delay(timeBetweenPackets);
+
+  Serial.print("Sending "); Serial.println(radiopacket3);
+  radio.send(RECEIVER, radiopacket3, strlen(radiopacket3)); //target node Id, message as string or byte array, message length
+  Serial.println("OK");
+  radio.receiveDone(); //put radio in RX mode
+  Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
+
+delay(timeBetweenPackets);
+
+
+
+  Serial.print("Sending "); Serial.println(radiopacket4);
+  radio.send(RECEIVER, radiopacket4, strlen(radiopacket4)); //target node Id, message as string or byte array, message length
+  Serial.println("OK");
+  radio.receiveDone(); //put radio in RX mode
+  Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
+
+  delay(timeBetweenPackets);
 }
 
 

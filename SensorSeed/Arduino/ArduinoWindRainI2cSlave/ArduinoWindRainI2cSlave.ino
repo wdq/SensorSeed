@@ -154,7 +154,7 @@ void setup() {
  Wire.begin(6);
  Wire.onRequest(requestEvent); 
  Wire.onReceive(receiveEvent);
- //Serial.begin(9600);
+ Serial.begin(9600);
  setupWeatherInts();
 }
 
@@ -166,6 +166,14 @@ void loop() {
        delay(10);
        digitalWrite(FEATHER_PIN, HIGH);
   }
+  //Serial.print("Solar: ");
+  //Serial.println(getSolar());
+  //Serial.print("Battery: ");
+  //Serial.println(getBattery());
+  //Serial.print("Direction: ");
+  //Serial.println(getDirection());
+  //Serial.println("-----------");
+  //delay(5000);
 }
 
 void requestEvent(){
