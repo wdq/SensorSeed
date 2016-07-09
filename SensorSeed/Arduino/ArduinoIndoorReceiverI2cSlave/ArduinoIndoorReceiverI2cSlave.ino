@@ -9,7 +9,6 @@ volatile byte* Float1ArrayPtr;
 double dataToSend;
 unsigned long lastReceivedMillis = millis();
 unsigned long lastSentMillis = millis();
-char radiopacket[200];
 
 char temperatureSHT31[7]; // 7 max chars (based on -999.99 to 999.99)
 char humiditySHT32[6]; // 6 max chars (based on 0.00 to 100.00)
@@ -83,15 +82,27 @@ void loop() {
   //check if something was received (could be an interrupt from the radio)
   if (radio.receiveDone())
   {
+  int sensorIndex = 1;
+  int sensorCharIndex = 0;
+  int charIndex = 0;
+memset(temperatureSHT31, 0, 7);
+memset(humiditySHT32, 0, 6);
+memset(pressureBMP180, 0, 9);
+memset(altitudeBMP180, 0, 9);
+memset(windSpeedI2C, 0, 10);
+memset(gustSpeedI2C, 0, 10);
+memset(rainI2C, 0, 10);
+memset(batteryI2C, 0, 10);
+memset(solarI2C, 0, 10);
+memset(directionI2C, 0, 10);
+memset(temperatureBMP180, 0, 7);
+memset(temperatureDHT22, 0, 7);
+memset(humidityDHT22, 0, 6); 
     Serial.println("Got something...");
     //print message received to serial
     Serial.print('[');Serial.print(radio.SENDERID);Serial.print("] ");
     for(byte i = 0; i < radio.DATALEN; i++) {
-      char newChar = (char)radio.DATA[i];
-
-      int sensorIndex = 1;
-      int sensorCharIndex = 0;
-      
+      char newChar = (char)radio.DATA[i];      
       if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
         if(newChar == ',') {
           sensorIndex++;
@@ -125,14 +136,12 @@ void loop() {
             humidityDHT22[sensorCharIndex] = newChar;
           }
           sensorCharIndex++;
-         //radiopacket[i] = newChar;
         }
+         charIndex++;        
       } else {
-        //radiopacket[i] = ' ';
       }
 
     } 
-    Serial.println(temperatureSHT31);
     Serial.print("Got data");
     Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
 
@@ -180,48 +189,46 @@ void requestEvent(){
     Serial.print(sensorIndex);
     Serial.print(" sent: ");
     if(sensorIndex == 1) {
-      Wire.write(temperatureSHT31);
+      Wire.write(temperatureSHT31, 7);
       Serial.println(temperatureSHT31);
     } else if(sensorIndex == 2) {
-      Wire.write(humiditySHT32);
+      Wire.write(humiditySHT32, 6);
       Serial.println(humiditySHT32);
     } else if(sensorIndex == 3) {
-      Wire.write(pressureBMP180);
+      Wire.write(pressureBMP180, 9);
       Serial.println(pressureBMP180);
     } else if(sensorIndex == 4) {
-      Wire.write(altitudeBMP180);
+      Wire.write(altitudeBMP180, 9);
       Serial.println(altitudeBMP180);
     } else if(sensorIndex == 5) {
-      Wire.write(windSpeedI2C);
+      Wire.write(windSpeedI2C, 10);
       Serial.println(windSpeedI2C);
     } else if(sensorIndex == 6) {
-      Wire.write(gustSpeedI2C);
+      Wire.write(gustSpeedI2C, 10);
       Serial.println(gustSpeedI2C);
     } else if(sensorIndex == 7) {
-      Wire.write(rainI2C);
+      Wire.write(rainI2C, 10);
       Serial.println(rainI2C);
     } else if(sensorIndex == 8) {
-      Wire.write(batteryI2C);
+      Wire.write(batteryI2C, 10);
       Serial.println(batteryI2C);
     } else if(sensorIndex == 9) {
-      Wire.write(solarI2C);
+      Wire.write(solarI2C, 10);
       Serial.println(solarI2C);
     } else if(sensorIndex == 10) {
-      Wire.write(directionI2C);
+      Wire.write(directionI2C, 10);
       Serial.println(directionI2C);
     } else if(sensorIndex == 11) {
-      Wire.write(temperatureBMP180);
+      Wire.write(temperatureBMP180, 7);
       Serial.println(temperatureBMP180);
     } else if(sensorIndex == 12) {
-      Wire.write(temperatureDHT22);
+      Wire.write(temperatureDHT22, 7);
       Serial.println(temperatureDHT22);
     } else if(sensorIndex == 13) {
-      Wire.write(humidityDHT22);
+      Wire.write(humidityDHT22, 6);
       Serial.println(humidityDHT22);
     }
-    //String data = String(radiopacket);
     lastSentMillis = millis();
-    //Wire.write(radiopacket);
     //Serial.println(data);
   }
 

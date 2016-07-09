@@ -24,7 +24,7 @@ namespace HomeOutsideWeatherStationDataService
 
                 string html = string.Empty;
                 string url = @"http://10.0.13.219/data.txt";
-                string[] sensorData = new string[16];
+                string[] sensorData = new string[13];
 
                 bool tryAgain = true;
                 while (tryAgain)
@@ -40,13 +40,13 @@ namespace HomeOutsideWeatherStationDataService
                         int index = html.IndexOf("\n");
                         html = html.Substring(index + "\n".Length);
                         string[] lines = html.Split(new string[] { "\n" }, StringSplitOptions.None);
-                        for (int i = 0; i < 15; i++)
+                        for (int i = 0; i < 13; i++)
                         {
                             string lineData = lines[i].Substring(lines[i].IndexOf(":") + 2).Trim();
                             sensorData[i] = lineData;
                         }
 
-                        string addDataResult = AddData(sensorData[0], sensorData[1], sensorData[2], sensorData[3], sensorData[4], sensorData[5], sensorData[6], sensorData[7], sensorData[8], sensorData[9], sensorData[10], sensorData[11], sensorData[12], sensorData[13], sensorData[14]);
+                        string addDataResult = AddData(sensorData[0], sensorData[1], sensorData[2], sensorData[3], sensorData[4], sensorData[5], sensorData[6], sensorData[7], sensorData[8], sensorData[9], sensorData[10], sensorData[11], sensorData[12], "0", "0");
                         Console.WriteLine(addDataResult);
                         tryAgain = false;
                     }
@@ -61,7 +61,7 @@ namespace HomeOutsideWeatherStationDataService
             }
         }
 
-        public static string AddData(string Temperature, string Humidity, string Temperature180, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Veml6070, string Lux, string TemperatureDHT22, string HumidityDHT22)
+        public static string AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string TemperatureDHT22, string HumidityDHT22, string Veml6070, string Lux)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
@@ -79,7 +79,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing temperature";
+               // return "Error parsing temperature";
             }
 
             // Humidity
@@ -91,7 +91,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing humidity";
+                //return "Error parsing humidity";
             }
 
             // Pressure
@@ -103,7 +103,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing pressure";
+                //return "Error parsing pressure";
             }
 
             // Altitude
@@ -115,7 +115,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing altitude";
+                //return "Error parsing altitude";
             }
 
 
@@ -128,7 +128,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing wind speed";
+                //return "Error parsing wind speed";
             }
 
             // GustSpeed
@@ -140,7 +140,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing gust speed";
+                //return "Error parsing gust speed";
             }
 
             // Rain
@@ -152,7 +152,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing rain";
+                //return "Error parsing rain";
             }
 
             // Battery
@@ -160,14 +160,14 @@ namespace HomeOutsideWeatherStationDataService
             {
                 decimal BatteryDecimal = 0;
                 BatteryDecimal = Convert.ToDecimal(Battery);
-                BatteryDecimal = BatteryDecimal/(decimal) 1024; // Max ADC value
-                BatteryDecimal = BatteryDecimal*(decimal) 3.3; // High voltage
-                BatteryDecimal = BatteryDecimal*(decimal) 2; // Voltage divider factor
+                BatteryDecimal = BatteryDecimal / (decimal)1024; // Max ADC value
+                BatteryDecimal = BatteryDecimal * (decimal)5; // High voltage
+                BatteryDecimal = BatteryDecimal * (decimal)2; // Voltage divider factor
                 data.Battery = BatteryDecimal;
             }
             catch (Exception exception)
             {
-                return "Error parsing battery";
+                //return "Error parsing battery";
             }
 
             // Solar
@@ -175,14 +175,14 @@ namespace HomeOutsideWeatherStationDataService
             {
                 decimal SolarDecimal = 0;
                 SolarDecimal = Convert.ToDecimal(Solar);
-                SolarDecimal = SolarDecimal/(decimal) 1024; // Max ADC value
-                SolarDecimal = SolarDecimal*(decimal) 3.3; // High voltage
-                SolarDecimal = SolarDecimal*(decimal) 3; // Voltage divider factor
+                SolarDecimal = SolarDecimal / (decimal)1024; // Max ADC value
+                SolarDecimal = SolarDecimal * (decimal)5; // High voltage
+                SolarDecimal = SolarDecimal * (decimal)3; // Voltage divider factor
                 data.Solar = SolarDecimal;
             }
             catch (Exception exception)
             {
-                return "Error parsing solar";
+                //return "Error parsing solar";
             }
 
             // Wind Direction
@@ -193,8 +193,8 @@ namespace HomeOutsideWeatherStationDataService
                 DirectionDecimal = Convert.ToDecimal(Direction);
                 decimal r1 = 10000;
                 decimal r2 = 0; // Unknown
-                decimal vin = (decimal)3.3;
-                decimal vout = ((DirectionDecimal / (decimal)1024) * (decimal)3.3);
+                decimal vin = (decimal)5;
+                decimal vout = ((DirectionDecimal / (decimal)1024) * (decimal)5);
                 r2 = r1 * (1 / ((vin / vout) - 1));
                 if (((decimal)300 <= r2) && (r2 < (decimal)790))
                 {
@@ -266,7 +266,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing wind direction";
+                //return "Error parsing wind direction";
             }
 
             // Temperature180
@@ -278,7 +278,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing temperature180";
+                //return "Error parsing temperature180";
             }
 
             // Veml6070
@@ -290,7 +290,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing veml6070";
+                //return "Error parsing veml6070";
             }
 
             // Lux
@@ -302,7 +302,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing lux";
+                //return "Error parsing lux";
             }
 
             // TemperatureDHT22
@@ -314,7 +314,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing temperaturedht22";
+                //return "Error parsing temperaturedht22";
             }
 
             // HumidityDHT22
@@ -326,7 +326,7 @@ namespace HomeOutsideWeatherStationDataService
             }
             catch (Exception exception)
             {
-                return "Error parsing humidity dht22";
+                //return "Error parsing humidity dht22";
             }
 
 
