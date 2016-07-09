@@ -15,7 +15,7 @@
 #define NODEID        2
 #define RECEIVER      1
 #define FREQUENCY     RF69_915MHZ
-#define ENCRYPTKEY    "eq^YkQ3n7HvC#9c$"
+#define ENCRYPTKEY    "wquade"
 #define IS_RFM69HCW   true
 
 // Settings for the DHT22
@@ -80,7 +80,8 @@ void setup() {
 }
 
 void loop() {
-    delay(TRANSMIT_INTERVAL); // Transmit at an interval
+    //delay(TRANSMIT_INTERVAL); // Transmit at an interval
+    delay(1000);
 
   String data = String();
 
@@ -173,6 +174,7 @@ void loop() {
  
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
+  delay(10000);
 }
 
 

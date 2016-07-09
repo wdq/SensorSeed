@@ -15,7 +15,7 @@ char radiopacket[200];
 #define NETWORKID     81
 #define NODEID        1
 #define FREQUENCY     RF69_915MHZ
-#define ENCRYPTKEY    "eq^YkQ3n7HvC#9c$"
+#define ENCRYPTKEY    "wquade"
 #define IS_RFM69HCW   true
 
 // Pins for the Adafruit RFM69HCW radio
