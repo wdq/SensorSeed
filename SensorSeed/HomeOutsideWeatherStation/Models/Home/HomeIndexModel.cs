@@ -150,9 +150,19 @@ namespace HomeOutsideWeatherStation.Models.Home
             DateTime startOfYesterday = DateTime.Today.AddDays(-1).ToUniversalTime();
             DateTime endOfYesterday = DateTime.Today.ToUniversalTime();
             List<HomeOutsideWeatherStationData> yesterdayData = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfYesterday && x.Timestamp < endOfYesterday).ToList();
-            YesterdayTemperatureMaximum = (double)yesterdayData.Max(x => x.Temperature);
-            YesterdayTemperatureMinimum = (double)yesterdayData.Min(x => x.Temperature);
-            YesterdayRainTotal = (double)yesterdayData.Select(x => x.Rain).Sum();
+            if (yesterdayData.Count > 0)
+            {
+                YesterdayTemperatureMaximum = (double) yesterdayData.Max(x => x.Temperature);
+                YesterdayTemperatureMinimum = (double) yesterdayData.Min(x => x.Temperature);
+                YesterdayRainTotal = (double) yesterdayData.Select(x => x.Rain).Sum();
+            }
+            else
+            {
+                YesterdayTemperatureMaximum = -1;
+                YesterdayTemperatureMinimum = -1;
+                YesterdayRainTotal = -1;
+            }
+
 
             CurrentPressure = (double)currentData.Pressure;
             CurrentVisibility = 0; // todo: either find out how to calculate this, or what kind of sensor I need, or pull it from the Internet

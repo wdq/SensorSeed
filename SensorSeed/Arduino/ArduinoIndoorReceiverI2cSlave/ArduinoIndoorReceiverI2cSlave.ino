@@ -23,7 +23,10 @@ char directionI2C[10]; // 10 max chars (based on slave conversion)
 char temperatureBMP180[7]; // 7 max chars (based on -999.99 to 999.99)
 char temperatureDHT22[7]; // 7 max chars (based on -999.99 to 999.99)
 char humidityDHT22[6]; // 6 max chars (based on 0.00 to 100.00)
-
+char radiopacket1[61];
+char radiopacket2[61];
+char radiopacket3[61];
+char radiopacket4[61];
 
 // Settings for the Adafruit RFM69HCW radio
 #define NETWORKID     81
@@ -72,7 +75,8 @@ void setup() {
   Serial.begin(SERIAL_BAUD);
   Serial.println("Starting Arduino Metro weather station I2C master, radio receiver...");
   setupRadio();
-
+pinMode(8, OUTPUT);
+digitalWrite(8, LOW);
  Wire.begin(7);
  Wire.onRequest(requestEvent); 
  Wire.onReceive(receiveEvent);  
@@ -85,79 +89,144 @@ void loop() {
   int sensorIndex = 1;
   int sensorCharIndex = 0;
   int charIndex = 0;
-memset(temperatureSHT31, 0, 7);
-memset(humiditySHT32, 0, 6);
-memset(pressureBMP180, 0, 9);
-memset(altitudeBMP180, 0, 9);
-memset(windSpeedI2C, 0, 10);
-memset(gustSpeedI2C, 0, 10);
-memset(rainI2C, 0, 10);
-memset(batteryI2C, 0, 10);
-memset(solarI2C, 0, 10);
-memset(directionI2C, 0, 10);
-memset(temperatureBMP180, 0, 7);
-memset(temperatureDHT22, 0, 7);
-memset(humidityDHT22, 0, 6); 
+
     Serial.println("Got something...");
     //print message received to serial
-    Serial.print('[');Serial.print(radio.SENDERID);Serial.print("] ");
-    for(byte i = 0; i < radio.DATALEN; i++) {
-      char newChar = (char)radio.DATA[i];      
-      if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
-        if(newChar == ',') {
-          sensorIndex++;
-          sensorCharIndex = 0;                  
-        } else {
-          if(sensorIndex == 1) {
-            temperatureSHT31[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 2) {
-            humiditySHT32[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 3) {
-            pressureBMP180[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 4) {
-            altitudeBMP180[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 5) {
-            windSpeedI2C[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 6) {
-            gustSpeedI2C[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 7) {
-            rainI2C[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 8) {
-            batteryI2C[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 9) {
-            solarI2C[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 10) {
-            directionI2C[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 11) {
-            temperatureBMP180[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 12) {
-            temperatureDHT22[sensorCharIndex] = newChar;
-          } else if(sensorIndex == 13) {
-            humidityDHT22[sensorCharIndex] = newChar;
+    //Serial.print('[');Serial.print(radio.SENDERID);Serial.print("] ");
+
+    char packetNumber = (char)radio.DATA[0];
+    if(packetNumber == '1') {
+      memset(radiopacket1, 0, 61);   
+      memset(temperatureSHT31, 0, 7);
+      memset(humiditySHT32, 0, 6);
+      memset(pressureBMP180, 0, 9);
+      memset(altitudeBMP180, 0, 9);
+      for(byte i = 2; i < radio.DATALEN; i++) {
+        char newChar = (char)radio.DATA[i];
+        radiopacket1[i] = newChar;      
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+          if(newChar == ',') {
+            sensorIndex++;
+            sensorCharIndex = 0;                  
+          } else {
+            if(sensorIndex == 1) {
+              temperatureSHT31[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 2) {
+              humiditySHT32[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 3) {
+              pressureBMP180[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 4) {
+              altitudeBMP180[sensorCharIndex] = newChar;
+            }
+            sensorCharIndex++;
           }
-          sensorCharIndex++;
+           charIndex++;        
+        } else {
         }
-         charIndex++;        
-      } else {
-      }
+  
+      } 
+      Serial.print("Got data packet 1: ");
+      //Serial.print(radiopacket1);
+      Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.println("]");
+    } else if(packetNumber == '2') {
+      memset(radiopacket2, 0, 61); 
+      memset(windSpeedI2C, 0, 10);
+      memset(gustSpeedI2C, 0, 10);
 
-    } 
-    Serial.print("Got data");
-    Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
+      for(byte i = 2; i < radio.DATALEN; i++) {
+        char newChar = (char)radio.DATA[i];
+        radiopacket2[i] = newChar;      
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+          if(newChar == ',') {
+            sensorIndex++;
+            sensorCharIndex = 0;                  
+          } else {
+            if(sensorIndex == 1) {
+              windSpeedI2C[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 2) {
+              gustSpeedI2C[sensorCharIndex] = newChar;
+            }
+            sensorCharIndex++;
+          }
+           charIndex++;        
+        } else {
+        }
+      } 
+      Serial.print("Got data packet 2: ");
+      //Serial.print(radiopacket2);
+      Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.println("]");
+  } else if(packetNumber == '3') {
+    memset(radiopacket3, 0, 61); 
+    memset(rainI2C, 0, 10);
+    memset(batteryI2C, 0, 10);
+    memset(solarI2C, 0, 10);
 
-    lastReceivedMillis = millis();
-    
-    //check if sender wanted an ACK
-    if (radio.ACKRequested())
-    {
-      radio.sendACK();
-      Serial.println(" - ACK sent");
-    }
+      for(byte i = 2; i < radio.DATALEN; i++) {
+        char newChar = (char)radio.DATA[i];
+        radiopacket3[i] = newChar;      
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+          if(newChar == ',') {
+            sensorIndex++;
+            sensorCharIndex = 0;                  
+          } else {
+            if(sensorIndex == 1) {
+              rainI2C[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 2) {
+              batteryI2C[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 3) {
+              solarI2C[sensorCharIndex] = newChar;
+            }
+            sensorCharIndex++;
+          }
+           charIndex++;        
+        } else {
+        }
+      } 
+      Serial.print("Got data packet 3: ");
+      //Serial.print(radiopacket3);
+      Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.println("]");
+  } else if(packetNumber == '4') {
+    memset(radiopacket4, 0, 61); 
+    memset(directionI2C, 0, 10);
+    memset(temperatureBMP180, 0, 7);
+    memset(temperatureDHT22, 0, 7);
+    memset(humidityDHT22, 0, 6); 
+
+      for(byte i = 2; i < radio.DATALEN; i++) {
+        char newChar = (char)radio.DATA[i];
+        radiopacket4[i] = newChar;      
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+          if(newChar == ',') {
+            sensorIndex++;
+            sensorCharIndex = 0;                  
+          } else {
+            if(sensorIndex == 1) {
+              directionI2C[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 2) {
+              temperatureBMP180[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 3) {
+              temperatureDHT22[sensorCharIndex] = newChar;
+            } else if(sensorIndex == 4) {
+              humidityDHT22[sensorCharIndex] = newChar;
+            }
+            sensorCharIndex++;
+          }
+           charIndex++;        
+        } else {
+        }
+      } 
+      Serial.print("Got data packet 4: ");
+      //Serial.print(radiopacket4);
+      Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.println("]");
+      lastReceivedMillis = millis();
+      digitalWrite(8, HIGH);
   }
- 
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
+  }
 }
+
+
 
 double isDataNew() {
   unsigned long difference = lastReceivedMillis -  lastSentMillis;
@@ -226,7 +295,8 @@ void requestEvent(){
       Serial.println(temperatureDHT22);
     } else if(sensorIndex == 13) {
       Wire.write(humidityDHT22, 6);
-      Serial.println(humidityDHT22);
+      Serial.println(humidityDHT22); 
+      digitalWrite(8, LOW);     
     }
     lastSentMillis = millis();
     //Serial.println(data);

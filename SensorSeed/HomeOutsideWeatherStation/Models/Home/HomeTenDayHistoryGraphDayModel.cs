@@ -29,13 +29,27 @@ namespace HomeOutsideWeatherStation.Models.Home
 
         public HomeTenDayHistoryGraphDayModel(List<HomeOutsideWeatherStationData> dayDatas)
         {
-            Date = dayDatas.FirstOrDefault().Timestamp.ToLocalTime();
-            TemperatureHigh = (double?)dayDatas.Where(x => x.Temperature != null).Max(x => x.Temperature);
-            TemperatureLow = (double?) dayDatas.Where(x => x.Temperature != null).Min(x => x.Temperature);
-            Condition = ""; // todo:
-            Rain = (double?)dayDatas.Where(x => x.Rain != null).Sum(x => x.Rain);
-            Sunrise = DateTime.Today; // todo:
-            Sunset = DateTime.Today; // todo:
-        }
+            if (dayDatas.Count > 0)
+            {
+                Date = dayDatas.FirstOrDefault().Timestamp.ToLocalTime();
+                TemperatureHigh = (double?) dayDatas.Where(x => x.Temperature != null).Max(x => x.Temperature);
+                TemperatureLow = (double?) dayDatas.Where(x => x.Temperature != null).Min(x => x.Temperature);
+                Condition = ""; // todo:
+                Rain = (double?) dayDatas.Where(x => x.Rain != null).Sum(x => x.Rain);
+                Sunrise = DateTime.Today; // todo:
+                Sunset = DateTime.Today; // todo:            
+
+            }
+            else
+            {
+                Date = DateTime.MinValue;
+                TemperatureHigh = -1;
+                TemperatureLow = -1;
+                Condition = ""; // todo:
+                Rain = -1;
+                Sunrise = DateTime.Today; // todo:
+                Sunset = DateTime.Today; // todo:            
+            }
+            }
     }
 }
