@@ -10,11 +10,20 @@ using System.Net;
 using System.IO;
 using System.Collections.Specialized;
 using System.Net.Cache;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace HomeOutsideWeatherStationDataService
 {
     class Program
     {
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp);
+            return dtDateTime;
+        }
+
         static void Main(string[] args)
         {
             while (true)
@@ -31,7 +40,81 @@ namespace HomeOutsideWeatherStationDataService
                 {
                     Console.Write(currentTime.ToString());
                     Console.Write(":    Getting sensor data...");
+
+                    string server = "10.0.13.219";
+                    string database = "HomeOutsideWeatherStation";
+                    string uid = "root";
+                    string password = "";
+                    string connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+
                     try
+                    {
+                        MySqlConnection connection = new MySqlConnection(connectionString);
+                        connection.Open();
+
+                        DateTime lastRecordTime = DateTime.MinValue;
+                        var lastRecordRetrieved =
+                            new SensorSeedDataContext().HomeOutsideWeatherStationDatas.OrderByDescending(
+                                x => x.Timestamp).FirstOrDefault();
+                        if (lastRecordRetrieved != null)
+                        {
+                            lastRecordTime = lastRecordRetrieved.Timestamp;
+                        }
+                        double unixLastRecordTime =
+                            (lastRecordTime - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+
+
+                        var query = "SELECT * FROM HomeOutsideWeatherStation.WeatherData WHERE Timestamp > " +
+                                    unixLastRecordTime + ";";
+
+                        List<string>[] list = new List<string>[15];
+                        for (int i = 0; i < 15; i++)
+                        {
+                            list[i] = new List<string>();
+                        }
+
+                        MySqlCommand command = new MySqlCommand(query, connection);
+                        MySqlDataReader dataReader = command.ExecuteReader();
+                        while (dataReader.Read())
+                        {
+                            list[0].Add(dataReader["Id"] + "");
+                            list[1].Add(dataReader["Timestamp"] + "");
+                            list[2].Add(dataReader["temperatureSHT31"] + "");
+                            list[3].Add(dataReader["humiditySHT32"] + "");
+                            list[4].Add(dataReader["pressureBMP180"] + "");
+                            list[5].Add(dataReader["altitudeBMP180"] + "");
+                            list[6].Add(dataReader["windSpeedI2C"] + "");
+                            list[7].Add(dataReader["gustSpeedI2C"] + "");
+                            list[8].Add(dataReader["rainI2C"] + "");
+                            list[9].Add(dataReader["batteryI2C"] + "");
+                            list[10].Add(dataReader["solarI2C"] + "");
+                            list[11].Add(dataReader["directionI2C"] + "");
+                            list[12].Add(dataReader["temperatureBMP180"] + "");
+                            list[13].Add(dataReader["temperatureDHT22"] + "");
+                            list[14].Add(dataReader["humidityDHT22"] + "");
+                        }
+                        dataReader.Close();
+                        connection.Close();
+
+                        for (int i = 0; i < list[0].Count; i++)
+                        {
+                            string addDataResult = AddData(UnixTimeStampToDateTime(double.Parse(list[1][i])), list[2][i],
+                                list[3][i], list[4][i], list[5][i], list[6][i], list[7][i], list[8][i], list[9][i],
+                                list[10][i], list[11][i], list[12][i], list[13][i], list[14][i], "", "");
+                            Console.Write(", " + addDataResult);
+                        }
+
+                        tryAgain = false;
+                        Console.WriteLine("Success");
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine("Error: " + exception.Message);
+                    }
+
+
+
+                    /*try
                     {
                         WebClient client = new WebClient();
                         client.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
@@ -54,21 +137,22 @@ namespace HomeOutsideWeatherStationDataService
                     {
                         Console.WriteLine("Error: " + ex.Message);
 
-                    }
+                    } */
+
                 }
 
                 Thread.Sleep(TimeSpan.FromMinutes(2.5));
             }
         }
 
-        public static string AddData(string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string TemperatureDHT22, string HumidityDHT22, string Veml6070, string Lux)
+        public static string AddData(DateTime Timestamp, string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string TemperatureDHT22, string HumidityDHT22, string Veml6070, string Lux)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
             HomeOutsideWeatherStationData data = new HomeOutsideWeatherStationData();
 
             data.Id = Guid.NewGuid();
-            data.Timestamp = DateTime.UtcNow;
+            data.Timestamp = Timestamp;
 
             // Temperature
             try
