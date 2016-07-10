@@ -170,8 +170,8 @@ namespace HomeOutsideWeatherStation.Models.Home
             CurrentHeatIndex = WeatherDataConversions.HeatIndex(CurrentTemperature, (double)currentData.Humidity);
             CurrentDewPoint = WeatherDataConversions.DewPoint(CurrentTemperature, (double)currentData.Humidity);
             CurrentHumidity = (double)currentData.Humidity;
-            CurrentUV = (int)currentData.Veml6070;
-            CurrentLux = (double) currentData.Lux;
+            CurrentUV = -1;
+            CurrentLux = -1;
             CurrentRainfall = TodayRainTotal; // todo: this may need to be something else
             CurrentSnowDepth = 0; // todo: snow
             TimeZoneInfo cst = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
