@@ -25,7 +25,9 @@ namespace HomeOutsideWeatherStation.Models.Home
 
     public class HomeTemperatureFeelsLikeDewPointChartDataModel
     {
-        public List<HomeTemperatureFeelsLikeDewPointChartDataPointModel> Data { get; set; }
+        public List<List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>> Data { get; set; }
+        public double MaxY { get; set; }
+        public double MinY { get; set; }
 
         public HomeTemperatureFeelsLikeDewPointChartDataModel()
         {
@@ -36,13 +38,49 @@ namespace HomeOutsideWeatherStation.Models.Home
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Temperature != null && x.Humidity != null && x.WindSpeed != null).OrderByDescending(x => x.Timestamp).ToList();
 
 
-            List<HomeTemperatureFeelsLikeDewPointChartDataPointModel> dataTemp = new List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>();
-            foreach (var data in tenDayDatas)
+            List<List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>> dataTemp = new List<List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>>();
+            List<HomeTemperatureFeelsLikeDewPointChartDataPointModel> currentSeries = new List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>();
+
+            for (int i = tenDayDatas.Count - 1; i > -1; i--)
             {
-                dataTemp.Add(new HomeTemperatureFeelsLikeDewPointChartDataPointModel(data));
+                var currentItem = tenDayDatas.ElementAt(i);
+                if ((i + 1) < tenDayDatas.Count)
+                {
+                    var previousItem = tenDayDatas.ElementAt(i + 1);
+                    var timeDifference = (currentItem.Timestamp - previousItem.Timestamp).TotalMinutes;
+                    if (timeDifference > 30) // start a new series
+                    {
+                        dataTemp.Add(currentSeries);
+                        currentSeries = new List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>();
+                        currentSeries.Add(new HomeTemperatureFeelsLikeDewPointChartDataPointModel(currentItem));
+                    }
+                    else // add to current series
+                    {
+                        currentSeries.Add(new HomeTemperatureFeelsLikeDewPointChartDataPointModel(currentItem));
+                    }
+
+                }
+                else // add to current series
+                {
+                    currentSeries.Add(new HomeTemperatureFeelsLikeDewPointChartDataPointModel(currentItem));
+                }
             }
 
+            if (currentSeries.Count > 0)
+            {
+                dataTemp.Add(currentSeries);
+            }
             Data = dataTemp;
+
+            var maxTemp = (double)tenDayDatas.Max(x => x.Temperature);
+            var maxTempFeelsLike = tenDayDatas.Max(x => WeatherDataConversions.WindChill((double)x.Temperature, (double)x.WindSpeed));
+            var maxDewPoint = tenDayDatas.Max(x => WeatherDataConversions.DewPoint((double)x.Temperature, (double)x.Humidity));
+            var minTemp = (double)tenDayDatas.Min(x => x.Temperature);
+            var minTempFeelsLike = tenDayDatas.Min(x => WeatherDataConversions.WindChill((double)x.Temperature, (double)x.WindSpeed));
+            var minDewPoint = tenDayDatas.Min(x => WeatherDataConversions.DewPoint((double)x.Temperature, (double)x.Humidity));
+
+            MaxY = new List<double> {maxTemp, maxTempFeelsLike, maxDewPoint}.Max();
+            MinY = new List<double> { minTemp, minTempFeelsLike, minDewPoint }.Min();
         }
     }
 }

@@ -36,19 +36,6 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        // Define the line
-        var TemperatureValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.Temperature); });
-        var TemperatureFeelsLikeValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.TemperatureFeelsLike); });
-        var DewPointValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y(d.DewPoint); });
 
         // Adds the svg canvas
         var svg = d3.select("#TemperatureFeelsLikeDewPointChart")
@@ -60,16 +47,19 @@
                       "translate(" + margin.left + "," + margin.top + ")");
 
 
-        data.forEach(function (d) {
-            d.Timestamp = parseDate(d.Timestamp);
-        });
+
+
+
+
+
+
 
         //console.log(data);
 
         var startDate = new Date();
         // Scale the range of the data
         x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y.domain([d3.min(data, function (d) { return d.DewPoint; }), d3.max(data, function (d) { return d.Temperature; })]);
+        y.domain([json.MinY, json.MaxY]);
         //y.domain([-20, 40]);
 
 
@@ -86,15 +76,40 @@
             .call(yAxis);
 
 
-        svg.append("path")
-            .attr("class", "TemperatureLine")
-            .attr("d", TemperatureValueLine(data));
-        /*svg.append("path")
-            .attr("class", "TemperatureFeelsLikeLine")
-            .attr("d", TemperatureFeelsLikeValueLine(data));*/
-        svg.append("path")
-            .attr("class", "DewPointLine")
-            .attr("d", DewPointValueLine(data));
+        data.forEach(function (seriesData) {
+
+            seriesData.forEach(function (d) {
+                d.Timestamp = parseDate(d.Timestamp);
+            });
+            
+            // Define the line
+            var TemperatureValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y(d.Temperature); });
+            var TemperatureFeelsLikeValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y(d.TemperatureFeelsLike); });
+            var DewPointValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y(d.DewPoint); });
+
+            svg.append("path")
+                .attr("class", "TemperatureLine")
+                .attr("d", TemperatureValueLine(seriesData));
+            /*svg.append("path")
+                .attr("class", "TemperatureFeelsLikeLine")
+                .attr("d", TemperatureFeelsLikeValueLine(seriesData));*/
+            svg.append("path")
+                .attr("class", "DewPointLine")
+                .attr("d", DewPointValueLine(seriesData));
+
+        });
+
+
+
 
 
         
