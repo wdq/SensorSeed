@@ -23,7 +23,11 @@ namespace HomeOutsideWeatherStation.Models.Home
 
     public class HomePowerChartDataModel
     {
-        public List<HomePowerChartDataPointModel> Data { get; set; }
+        public List<List<HomePowerChartDataPointModel>> Data { get; set; }
+        public double MaxBatteryY { get; set; }
+        public double MinBatteryY { get; set; }
+        public double MaxSolarY { get; set; }
+        public double MinSolarY { get; set; }
 
         public HomePowerChartDataModel()
         {
@@ -33,14 +37,44 @@ namespace HomeOutsideWeatherStation.Models.Home
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Battery != null && x.Solar != null).OrderByDescending(x => x.Timestamp).ToList();
 
+            List<List<HomePowerChartDataPointModel>> dataTemp = new List<List<HomePowerChartDataPointModel>>();
+            List<HomePowerChartDataPointModel> currentSeries = new List<HomePowerChartDataPointModel>();
 
-            List<HomePowerChartDataPointModel> dataTemp = new List<HomePowerChartDataPointModel>();
-            foreach (var data in tenDayDatas)
+            for (int i = tenDayDatas.Count - 1; i > -1; i--)
             {
-                dataTemp.Add(new HomePowerChartDataPointModel(data));
+                var currentItem = tenDayDatas.ElementAt(i);
+                if ((i + 1) < tenDayDatas.Count)
+                {
+                    var previousItem = tenDayDatas.ElementAt(i + 1);
+                    var timeDifference = (currentItem.Timestamp - previousItem.Timestamp).TotalMinutes;
+                    if (timeDifference > 30) // start a new series
+                    {
+                        dataTemp.Add(currentSeries);
+                        currentSeries = new List<HomePowerChartDataPointModel>();
+                        currentSeries.Add(new HomePowerChartDataPointModel(currentItem));
+                    }
+                    else // add to current series
+                    {
+                        currentSeries.Add(new HomePowerChartDataPointModel(currentItem));
+                    }
+
+                }
+                else // add to current series
+                {
+                    currentSeries.Add(new HomePowerChartDataPointModel(currentItem));
+                }
+            }
+
+            if (currentSeries.Count > 0)
+            {
+                dataTemp.Add(currentSeries);
             }
 
             Data = dataTemp;
+            MaxBatteryY = (double) tenDayDatas.Max(x => x.Battery);
+            MinBatteryY = (double) tenDayDatas.Min(x => x.Battery);
+            MaxSolarY = (double) tenDayDatas.Max(x => x.Solar);
+            MinSolarY = (double) tenDayDatas.Min(x => x.Solar);
         }
     }
 }

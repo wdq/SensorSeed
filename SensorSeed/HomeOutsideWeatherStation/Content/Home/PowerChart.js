@@ -46,15 +46,6 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        // Define the line
-        var BatteryValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y0(d.Battery); });
-        var SolarValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y1(d.Solar); });
 
         // Adds the svg canvas
         var svg = d3.select("#PowerChart")
@@ -66,17 +57,13 @@
                       "translate(" + margin.left + "," + margin.top + ")");
 
 
-        data.forEach(function (d) {
-            d.Timestamp = parseDate(d.Timestamp);
-        });
-
         //console.log(data);
 
         var startDate = new Date();
         // Scale the range of the data
-        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
-        y0.domain([d3.min(data, function (d) { return d.Battery; }), d3.max(data, function (d) { return d.Battery; })]);
-        y1.domain([0, 5]);
+        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]);
+        y0.domain([json.MinBatteryY, json.MaxBatteryY]);
+        y1.domain([json.MinSolarY, json.MaxSolarY]);
         //y.domain([-20, 40]);
 
 
@@ -99,13 +86,28 @@
             .call(yAxisRight);
 
 
-        svg.append("path")
-            .attr("class", "BatteryLine")
-            .attr("d", BatteryValueLine(data));
-        svg.append("path")
-            .attr("class", "SolarLine")
-            .attr("d", SolarValueLine(data));
+        data.forEach(function(seriesData) {
+            seriesData.forEach(function (d) {
+                d.Timestamp = parseDate(d.Timestamp);
+            });
 
+            // Define the line
+            var BatteryValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y0(d.Battery); });
+            var SolarValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y1(d.Solar); });
+
+            svg.append("path")
+                .attr("class", "BatteryLine")
+                .attr("d", BatteryValueLine(seriesData));
+            svg.append("path")
+                .attr("class", "SolarLine")
+                .attr("d", SolarValueLine(seriesData));
+        });
 
         $.get("./Home/TenDaySunriseSunsetData",
             function (data) {
