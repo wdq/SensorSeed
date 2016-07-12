@@ -45,16 +45,6 @@
             .outerTickSize(0)
             .tickPadding(10);
 
-        // Define the line
-        var HumidityValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y0(d.Humidity); });
-        var PressureValueLine = d3.svg.line()
-              .interpolate("basis")
-              .x(function (d) { return x(d.Timestamp); })
-              .y(function (d) { return y1(d.Pressure); });
-
         // Adds the svg canvas
         var svg = d3.select("#HumidityPressureChart")
             .append("svg")
@@ -63,19 +53,13 @@
             .append("g")
                 .attr("transform",
                       "translate(" + margin.left + "," + margin.top + ")");
-
-
-        data.forEach(function (d) {
-            d.Timestamp = parseDate(d.Timestamp);
-        });
-
         //console.log(data);
 
         var startDate = new Date();
         // Scale the range of the data
-        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0,0,0,0), new Date().setHours(23, 59, 59, 999)]);
+        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]);
         y0.domain([0, 100]);
-        y1.domain([d3.min(data, function (d) { return d.Pressure; }), d3.max(data, function (d) { return d.Pressure; })]);
+        y1.domain([json.MinPressureY, json.MaxPressureY]);
         //y.domain([-20, 40]);
 
 
@@ -96,13 +80,31 @@
             .attr("transform", "translate(" + width + " ,0)")
             .call(yAxisRight);
 
-        svg.append("path")
-            .attr("class", "HumidityLine")
-            .attr("d", HumidityValueLine(data));
 
-        svg.append("path")
-            .attr("class", "PressureLine")
-            .attr("d", PressureValueLine(data));
+        data.forEach(function(seriesData) {
+            seriesData.forEach(function (d) {
+                d.Timestamp = parseDate(d.Timestamp);
+            });
+            // Define the line
+            var HumidityValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y0(d.Humidity); });
+            var PressureValueLine = d3.svg.line()
+                  .interpolate("basis")
+                  .x(function (d) { return x(d.Timestamp); })
+                  .y(function (d) { return y1(d.Pressure); });
+
+            svg.append("path")
+                .attr("class", "HumidityLine")
+                .attr("d", HumidityValueLine(seriesData));
+
+            svg.append("path")
+                .attr("class", "PressureLine")
+                .attr("d", PressureValueLine(seriesData));
+
+
+        });
 
         $.get("./Home/TenDaySunriseSunsetData",
             function (data) {

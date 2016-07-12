@@ -23,7 +23,9 @@ namespace HomeOutsideWeatherStation.Models.Home
 
     public class HomeHumidityPressureDataModel
     {
-        public List<HomeHumidityPressureDataPointModel> Data { get; set; }
+        public List<List<HomeHumidityPressureDataPointModel>> Data { get; set; }
+        public double MaxPressureY { get; set; }
+        public double MinPressureY { get; set; }
 
         public HomeHumidityPressureDataModel()
         {
@@ -33,14 +35,44 @@ namespace HomeOutsideWeatherStation.Models.Home
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Humidity != null && x.Pressure != null).OrderByDescending(x => x.Timestamp).ToList();
 
+            List<List<HomeHumidityPressureDataPointModel>> dataTemp = new List<List<HomeHumidityPressureDataPointModel>>();
+            List<HomeHumidityPressureDataPointModel> currentSeries = new List<HomeHumidityPressureDataPointModel>();
 
-            List<HomeHumidityPressureDataPointModel> dataTemp = new List<HomeHumidityPressureDataPointModel>();
-            foreach (var data in tenDayDatas)
+            for (int i = tenDayDatas.Count - 1; i > -1; i--)
             {
-                dataTemp.Add(new HomeHumidityPressureDataPointModel(data));
+                var currentItem = tenDayDatas.ElementAt(i);
+                if ((i + 1) < tenDayDatas.Count)
+                {
+                    var previousItem = tenDayDatas.ElementAt(i + 1);
+                    var timeDifference = (currentItem.Timestamp - previousItem.Timestamp).TotalMinutes;
+                    if (timeDifference > 30) // start a new series
+                    {
+                        dataTemp.Add(currentSeries);
+                        currentSeries = new List<HomeHumidityPressureDataPointModel>();
+                        currentSeries.Add(new HomeHumidityPressureDataPointModel(currentItem));
+                    }
+                    else // add to current series
+                    {
+                        currentSeries.Add(new HomeHumidityPressureDataPointModel(currentItem));
+                    }
+
+                }
+                else // add to current series
+                {
+                    currentSeries.Add(new HomeHumidityPressureDataPointModel(currentItem));
+                }
             }
 
+            if (currentSeries.Count > 0)
+            {
+                dataTemp.Add(currentSeries);
+            }
+
+
             Data = dataTemp;
+
+            MaxPressureY = (double)tenDayDatas.Max(x => x.Pressure);
+            MinPressureY = (double) tenDayDatas.Min(x => x.Pressure);
         }
     }
 }
