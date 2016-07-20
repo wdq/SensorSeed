@@ -246,7 +246,7 @@ namespace HomeOutsideWeatherStationDataService
                 BatteryDecimal = Convert.ToDecimal(Battery);
                 BatteryDecimal = BatteryDecimal / (decimal)1024; // Max ADC value
                 BatteryDecimal = BatteryDecimal * (decimal)5; // High voltage
-                BatteryDecimal = BatteryDecimal * (decimal)2; // Voltage divider factor
+                //BatteryDecimal = BatteryDecimal * (decimal)2; // Voltage divider factor
                 data.Battery = BatteryDecimal;
             }
             catch (Exception exception)
@@ -261,7 +261,7 @@ namespace HomeOutsideWeatherStationDataService
                 SolarDecimal = Convert.ToDecimal(Solar);
                 SolarDecimal = SolarDecimal / (decimal)1024; // Max ADC value
                 SolarDecimal = SolarDecimal * (decimal)5; // High voltage
-                SolarDecimal = SolarDecimal * (decimal)3; // Voltage divider factor
+                //SolarDecimal = SolarDecimal * (decimal)3; // Voltage divider factor
                 data.Solar = SolarDecimal;
             }
             catch (Exception exception)
