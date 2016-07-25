@@ -1,9 +1,11 @@
+#include <Adafruit_SleepyDog.h>
 #include <TinyWireM.h>
 #include <USI_TWI_Master.h>
 #include <Wire.h>
 #include <RFM69.h>
 #include <SPI.h>
 #include <stdlib.h>
+#include <avr/wdt.h>
 
 volatile byte* Float1ArrayPtr;
 double dataToSend;
@@ -79,13 +81,16 @@ pinMode(8, OUTPUT);
 digitalWrite(8, LOW);
  Wire.begin(7);
  Wire.onRequest(requestEvent); 
- Wire.onReceive(receiveEvent);  
+ Wire.onReceive(receiveEvent);
+  int countdownMS = Watchdog.enable();   
   Serial.println("Setup complete"); 
 }
 void loop() {
+  Watchdog.reset();
   //check if something was received (could be an interrupt from the radio)
   if (radio.receiveDone())
   {
+  Watchdog.reset();
   int sensorIndex = 1;
   int sensorCharIndex = 0;
   int charIndex = 0;
@@ -242,7 +247,7 @@ double isDataNew() {
 void requestEvent(){
   // char frame[30];
  //sprintf(frame, "%8.2", dataToSend);
-
+    Watchdog.reset();
    //String data = String(dataToSend, DEC);
    //dataToSend = 123456.78;
   if(dataToSend == 0 || dataToSend == 1) { // isDataNew
@@ -252,6 +257,15 @@ void requestEvent(){
    Wire.write(temp1);   
     
   } else {
+
+    if((millis() - lastSentMillis) < 10000) { // if  data was sent less than ten seconds ago then restart the arduiono
+      Serial.println("Sending bad data, restarting in 8 seconds...");
+      while(1) {
+        int isCrashed = 1;
+        delay(1000);
+        }
+    }
+    
     Serial.print("Index: ");
     //String data = String("error");
     int sensorIndex = dataToSend - 10;
@@ -324,6 +338,7 @@ void requestEvent(){
       // 13: humidityDHT22 6
       
 void receiveEvent(int howMany){
+  Watchdog.reset();
   int c;
   c = Wire.read(); // receive byte as a character
   //Serial.print("Got: ");
