@@ -49,6 +49,7 @@ namespace HomeOutsideWeatherStation.Models.Home
                     var timeDifference = (currentItem.Timestamp - previousItem.Timestamp).TotalMinutes;
                     if (timeDifference > 30) // start a new series
                     {
+                        currentSeries = currentSeries.Where((x, n) => n % 3 == 0).ToList(); // Remove every 3rd item
                         dataTemp.Add(currentSeries);
                         currentSeries = new List<HomePowerChartDataPointModel>();
                         currentSeries.Add(new HomePowerChartDataPointModel(currentItem));
@@ -67,6 +68,7 @@ namespace HomeOutsideWeatherStation.Models.Home
 
             if (currentSeries.Count > 0)
             {
+                currentSeries = currentSeries.Where((x, n) => n % 3 == 0).ToList(); // Remove every 3rd item
                 dataTemp.Add(currentSeries);
             }
 

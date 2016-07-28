@@ -1,68 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 12.625, 10.75" name="SensorSeed">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 11.25" name="SensorSeed">
   <DataContextMoniker Name="/SensorSeedDataContext" />
   <nestedChildShapes>
-    <classShape Id="98f20003-1834-4c9c-b4fc-2695a885b696" absoluteBounds="0.75, 3.75, 2, 1.5785953776041666">
+    <classShape Id="cb2c5708-7050-47fb-a76a-e80d163f8eb2" absoluteBounds="0.75, 3.75, 2, 1.5785953776041666">
       <DataClassMoniker Name="/SensorSeedDataContext/HomeBasementRoomWeatherStationData" />
       <nestedChildShapes>
-        <elementListCompartment Id="3eccf7a5-b627-4711-946a-f70091fd13ef" absoluteBounds="0.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="79e57ee8-90f3-4475-8296-37e4be08abc1" absoluteBounds="0.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="c02fd229-11cb-484d-8342-33310e26568c" absoluteBounds="3.75, 3.75, 2, 1.5785953776041666">
-      <DataClassMoniker Name="/SensorSeedDataContext/HomeLivingRoomWeatherStationData" />
-      <nestedChildShapes>
-        <elementListCompartment Id="e28c7992-b7fd-417b-b704-58a49582d678" absoluteBounds="3.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="1353ad4b-2ec4-43ed-ad4e-cf74db387eb7" absoluteBounds="6.75, 3.75, 2, 1.5785953776041666">
-      <DataClassMoniker Name="/SensorSeedDataContext/HomeServerRoomWeatherStationData" />
-      <nestedChildShapes>
-        <elementListCompartment Id="459b8e29-776f-49c4-be71-c8f4f9bca355" absoluteBounds="6.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="f09ccbe5-da81-48fd-ac27-9bd73da237c3" absoluteBounds="3.75, 6.75, 2, 1.5785953776041666">
-      <DataClassMoniker Name="/SensorSeedDataContext/HomeWilliamRoomWeatherStationData" />
-      <nestedChildShapes>
-        <elementListCompartment Id="1ec3fc0b-ad42-4a4c-8434-47bab1f1c1b5" absoluteBounds="3.765, 7.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="7e7128ec-24b3-42e7-abe0-f5e3fb640428" absoluteBounds="6.25, 0.875, 2, 1.5785953776041666">
-      <DataClassMoniker Name="/SensorSeedDataContext/SensorData" />
-      <nestedChildShapes>
-        <elementListCompartment Id="85dae398-ada9-41b7-acc5-7283df92e73b" absoluteBounds="6.265, 1.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="0bfc818c-90f4-44d6-bbd5-616b5c5a7b26" absoluteBounds="3.5, 1, 2, 1.3862939453124998">
-      <DataClassMoniker Name="/SensorSeedDataContext/Sensor" />
-      <nestedChildShapes>
-        <elementListCompartment Id="cb088b94-09a2-481e-ab65-9d925d04262d" absoluteBounds="3.515, 1.46, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <classShape Id="0260fe02-1f6f-4e31-a4da-9fc39a16ee31" absoluteBounds="0.75, 1.125, 2, 1.1939925130208338">
+    <classShape Id="cf1f717e-0ff3-478b-afb3-8b39bbff1743" absoluteBounds="0.75, 1.125, 2, 1.1939925130208338">
       <DataClassMoniker Name="/SensorSeedDataContext/SensorType" />
       <nestedChildShapes>
-        <elementListCompartment Id="1a43c66d-effe-48b3-a30a-17fb51e6cf58" absoluteBounds="0.765, 1.585, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="d7b572de-a520-4938-992c-6fe25cae6220" absoluteBounds="0.765, 1.585, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.5 : 1.69314697265625); (6.25 : 1.69314697265625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/SensorSeedDataContext/Sensor/Sensor_SensorData" />
-      <nodes>
-        <classShapeMoniker Id="0bfc818c-90f4-44d6-bbd5-616b5c5a7b26" />
-        <classShapeMoniker Id="7e7128ec-24b3-42e7-abe0-f5e3fb640428" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 1.72199625651042); (3.5 : 1.72199625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/SensorSeedDataContext/SensorType/SensorType_Sensor" />
-      <nodes>
-        <classShapeMoniker Id="0260fe02-1f6f-4e31-a4da-9fc39a16ee31" />
-        <classShapeMoniker Id="0bfc818c-90f4-44d6-bbd5-616b5c5a7b26" />
-      </nodes>
-    </associationConnector>
-    <classShape Id="398cd6ad-d6a4-4d54-978a-e637f6b6b4a8" absoluteBounds="10.375, 6.25, 2, 4.2708154296875005">
+    <classShape Id="2c1154e9-2489-4ac2-8891-f60b67f7db68" absoluteBounds="3.75, 3.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/SensorSeedDataContext/HomeLivingRoomWeatherStationData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a66a4fbe-5948-4c83-92ff-9a8b71cbc879" absoluteBounds="3.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="35a22c95-7580-424a-84ee-b13ff6251163" absoluteBounds="0.75, 6.75, 2, 4.2708154296874987">
       <DataClassMoniker Name="/SensorSeedDataContext/HomeOutsideWeatherStationData" />
       <nestedChildShapes>
-        <elementListCompartment Id="bcb16862-b56e-4f6d-94ab-3116c3648def" absoluteBounds="10.39, 6.71, 1.9700000000000002, 3.7108154296875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="ee282927-f318-4239-8219-3be71423f9f0" absoluteBounds="0.765, 7.21, 1.9700000000000002, 3.7108154296875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="48e70c04-58c5-4a59-a72e-a7a4f5e83d5a" absoluteBounds="6.75, 3.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/SensorSeedDataContext/HomeServerRoomWeatherStationData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4f4e1848-5244-4bc0-99d0-d855af016e02" absoluteBounds="6.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="355fc7d0-d44e-4a09-8332-e191572b0ab2" absoluteBounds="3.75, 6.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/SensorSeedDataContext/HomeWilliamRoomWeatherStationData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="be1c7083-3329-4a80-bf0e-e8db91f05cac" absoluteBounds="3.765, 7.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f592ee0b-0f90-4189-958b-50356598298e" absoluteBounds="6.25, 0.875, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/SensorSeedDataContext/SensorData" />
+      <nestedChildShapes>
+        <elementListCompartment Id="be9eb3e9-a306-412a-ae66-23f31fc2457e" absoluteBounds="6.265, 1.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="6396a4eb-bc84-4ba3-b2ad-a6db04f2b6d9" absoluteBounds="3.5, 1, 2, 1.3862939453124998">
+      <DataClassMoniker Name="/SensorSeedDataContext/Sensor" />
+      <nestedChildShapes>
+        <elementListCompartment Id="acb8faec-d1e3-49af-80fc-3c455e50f9d3" absoluteBounds="3.515, 1.46, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 1.69314697265625); (6.25 : 1.69314697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SensorSeedDataContext/Sensor/Sensor_SensorData" />
+      <nodes>
+        <classShapeMoniker Id="6396a4eb-bc84-4ba3-b2ad-a6db04f2b6d9" />
+        <classShapeMoniker Id="f592ee0b-0f90-4189-958b-50356598298e" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 1.72199625651042); (3.5 : 1.72199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SensorSeedDataContext/SensorType/SensorType_Sensor" />
+      <nodes>
+        <classShapeMoniker Id="cf1f717e-0ff3-478b-afb3-8b39bbff1743" />
+        <classShapeMoniker Id="6396a4eb-bc84-4ba3-b2ad-a6db04f2b6d9" />
+      </nodes>
+    </associationConnector>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

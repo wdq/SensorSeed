@@ -1,11 +1,9 @@
-#include <Adafruit_SleepyDog.h>
 #include <TinyWireM.h>
 #include <USI_TWI_Master.h>
 #include <Wire.h>
 #include <RFM69.h>
 #include <SPI.h>
 #include <stdlib.h>
-#include <avr/wdt.h>
 
 volatile byte* Float1ArrayPtr;
 double dataToSend;
@@ -81,16 +79,13 @@ pinMode(8, OUTPUT);
 digitalWrite(8, LOW);
  Wire.begin(7);
  Wire.onRequest(requestEvent); 
- Wire.onReceive(receiveEvent);
-  int countdownMS = Watchdog.enable();   
+ Wire.onReceive(receiveEvent);  
   Serial.println("Setup complete"); 
 }
 void loop() {
-  Watchdog.reset();
   //check if something was received (could be an interrupt from the radio)
   if (radio.receiveDone())
   {
-  Watchdog.reset();
   int sensorIndex = 1;
   int sensorCharIndex = 0;
   int charIndex = 0;
@@ -223,8 +218,36 @@ void loop() {
       Serial.print("Got data packet 4: ");
       //Serial.print(radiopacket4);
       Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.println("]");
+
+      Serial.print("OUTSIDE-STATION-DATA:");
+      Serial.print(temperatureSHT31);
+      Serial.print(",");
+      Serial.print(humiditySHT32);
+      Serial.print(",");
+      Serial.print(pressureBMP180);
+      Serial.print(",");
+      Serial.print(altitudeBMP180);      
+      Serial.print(",");
+      Serial.print(windSpeedI2C);
+      Serial.print(",");
+      Serial.print(gustSpeedI2C);
+      Serial.print(",");
+      Serial.print(rainI2C);
+      Serial.print(",");
+      Serial.print(batteryI2C);
+      Serial.print(",");
+      Serial.print(solarI2C);            
+      Serial.print(",");
+      Serial.print(directionI2C); 
+      Serial.print(",");
+      Serial.print(temperatureBMP180); 
+      Serial.print(",");
+      Serial.print(temperatureDHT22); 
+      Serial.print(",");
+      Serial.println(humidityDHT22); 
+    
       lastReceivedMillis = millis();
-      digitalWrite(8, HIGH);
+      //digitalWrite(8, HIGH);
   }
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
@@ -245,9 +268,10 @@ double isDataNew() {
 
 
 void requestEvent(){
+  Serial.println("requestEvent");
   // char frame[30];
  //sprintf(frame, "%8.2", dataToSend);
-    Watchdog.reset();
+
    //String data = String(dataToSend, DEC);
    //dataToSend = 123456.78;
   if(dataToSend == 0 || dataToSend == 1) { // isDataNew
@@ -257,15 +281,6 @@ void requestEvent(){
    Wire.write(temp1);   
     
   } else {
-
-    if((millis() - lastSentMillis) < 10000) { // if  data was sent less than ten seconds ago then restart the arduiono
-      Serial.println("Sending bad data, restarting in 8 seconds...");
-      while(1) {
-        int isCrashed = 1;
-        delay(1000);
-        }
-    }
-    
     Serial.print("Index: ");
     //String data = String("error");
     int sensorIndex = dataToSend - 10;
@@ -338,17 +353,17 @@ void requestEvent(){
       // 13: humidityDHT22 6
       
 void receiveEvent(int howMany){
-  Watchdog.reset();
   int c;
   c = Wire.read(); // receive byte as a character
-  //Serial.print("Got: ");
-  //Serial.println(c);
+  Serial.print("Got: ");
+  Serial.println(c);
   if(c == 0) { // Is there new data?
     dataToSend = isDataNew();
   } else { // New data, Example: to get temperatureSHT31 the Pi sends c=1, and the dataToSend will then be 11, so it doesn't interfere with the is there new data.
     dataToSend = 10 + c;  
   }
 }      
+
 
 
 
