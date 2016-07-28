@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SensorSeed" Class="SensorSeedDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=IIS;Initial Catalog=SensorSeed;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SensorSeedConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=MSSQL01;Initial Catalog=SensorSeed;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SensorSeedConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.HomeBasementRoomWeatherStationData" Member="HomeBasementRoomWeatherStationDatas">
     <Type Name="HomeBasementRoomWeatherStationData">
       <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -8,12 +8,41 @@
       <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.SensorTypes" Member="SensorTypes">
+    <Type Name="SensorType">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="SensorType_Sensor" Member="Sensors" ThisKey="Id" OtherKey="SensorTypeId" Type="Sensor" />
+    </Type>
+  </Table>
   <Table Name="dbo.HomeLivingRoomWeatherStationData" Member="HomeLivingRoomWeatherStationDatas">
     <Type Name="HomeLivingRoomWeatherStationData">
       <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
       <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
       <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HomeOutsideWeatherStationData" Member="HomeOutsideWeatherStationDatas">
+    <Type Name="HomeOutsideWeatherStationData">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
+      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="Pressure" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Altitude" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="WindSpeed" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+      <Column Name="GustSpeed" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
+      <Column Name="Rain" Type="System.Decimal" DbType="Decimal(8,4)" CanBeNull="true" />
+      <Column Name="Battery" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Solar" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="WindDirection" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Temperature180" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Dewpoint" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
+      <Column Name="Veml6070" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Lux" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
+      <Column Name="TemperatureDHT22" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="HumidityDHT22" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.HomeServerRoomWeatherStationData" Member="HomeServerRoomWeatherStationDatas">
@@ -48,35 +77,6 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Association Name="Sensor_SensorData" Member="SensorDatas" ThisKey="Id" OtherKey="SensorId" Type="SensorData" />
       <Association Name="SensorType_Sensor" Member="SensorType" ThisKey="SensorTypeId" OtherKey="Id" Type="SensorType" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.SensorTypes" Member="SensorTypes">
-    <Type Name="SensorType">
-      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Association Name="SensorType_Sensor" Member="Sensors" ThisKey="Id" OtherKey="SensorTypeId" Type="Sensor" />
-    </Type>
-  </Table>
-  <Table Name="dbo.HomeOutsideWeatherStationData" Member="HomeOutsideWeatherStationDatas">
-    <Type Name="HomeOutsideWeatherStationData">
-      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime2 NOT NULL" CanBeNull="false" />
-      <Column Name="Temperature" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
-      <Column Name="Humidity" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
-      <Column Name="Pressure" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
-      <Column Name="Altitude" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
-      <Column Name="WindSpeed" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
-      <Column Name="GustSpeed" Type="System.Decimal" DbType="Decimal(20,2)" CanBeNull="true" />
-      <Column Name="Rain" Type="System.Decimal" DbType="Decimal(8,4)" CanBeNull="true" />
-      <Column Name="Battery" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
-      <Column Name="Solar" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
-      <Column Name="WindDirection" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
-      <Column Name="Temperature180" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
-      <Column Name="Dewpoint" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
-      <Column Name="Veml6070" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Lux" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
-      <Column Name="TemperatureDHT22" Type="System.Decimal" DbType="Decimal(4,2)" CanBeNull="true" />
-      <Column Name="HumidityDHT22" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
     </Type>
   </Table>
 </Database>

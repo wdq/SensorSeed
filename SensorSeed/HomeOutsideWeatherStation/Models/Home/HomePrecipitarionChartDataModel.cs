@@ -32,6 +32,7 @@ namespace HomeOutsideWeatherStation.Models.Home
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Rain != null).OrderByDescending(x => x.Timestamp).ToList();
             double totalRain = tenDayDatas.Sum(x => (double)x.Rain);
+            tenDayDatas = tenDayDatas.Where(x => x.Rain > 0).ToList();
 
             List<HomePrecipitationChartDataPointModel> dataTemp = new List<HomePrecipitationChartDataPointModel>();
             foreach (var data in tenDayDatas)

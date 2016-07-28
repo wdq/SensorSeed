@@ -218,8 +218,36 @@ void loop() {
       Serial.print("Got data packet 4: ");
       //Serial.print(radiopacket4);
       Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.println("]");
+
+      Serial.print("OUTSIDE-STATION-DATA:");
+      Serial.print(temperatureSHT31);
+      Serial.print(",");
+      Serial.print(humiditySHT32);
+      Serial.print(",");
+      Serial.print(pressureBMP180);
+      Serial.print(",");
+      Serial.print(altitudeBMP180);      
+      Serial.print(",");
+      Serial.print(windSpeedI2C);
+      Serial.print(",");
+      Serial.print(gustSpeedI2C);
+      Serial.print(",");
+      Serial.print(rainI2C);
+      Serial.print(",");
+      Serial.print(batteryI2C);
+      Serial.print(",");
+      Serial.print(solarI2C);            
+      Serial.print(",");
+      Serial.print(directionI2C); 
+      Serial.print(",");
+      Serial.print(temperatureBMP180); 
+      Serial.print(",");
+      Serial.print(temperatureDHT22); 
+      Serial.print(",");
+      Serial.println(humidityDHT22); 
+    
       lastReceivedMillis = millis();
-      digitalWrite(8, HIGH);
+      //digitalWrite(8, HIGH);
   }
   radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
@@ -240,6 +268,7 @@ double isDataNew() {
 
 
 void requestEvent(){
+  Serial.println("requestEvent");
   // char frame[30];
  //sprintf(frame, "%8.2", dataToSend);
 
@@ -326,14 +355,15 @@ void requestEvent(){
 void receiveEvent(int howMany){
   int c;
   c = Wire.read(); // receive byte as a character
-  //Serial.print("Got: ");
-  //Serial.println(c);
+  Serial.print("Got: ");
+  Serial.println(c);
   if(c == 0) { // Is there new data?
     dataToSend = isDataNew();
   } else { // New data, Example: to get temperatureSHT31 the Pi sends c=1, and the dataToSend will then be 11, so it doesn't interfere with the is there new data.
     dataToSend = 10 + c;  
   }
 }      
+
 
 
 

@@ -33,7 +33,7 @@ namespace HomeOutsideWeatherStation.Models.Home
             DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.WindSpeed != null && x.GustSpeed != null && x.WindDirection != null).OrderByDescending(x => x.Timestamp).ToList();
-
+            tenDayDatas = tenDayDatas.Where((x, n) => n % 3 == 0).ToList(); // Remove every 3rd item
 
             List<HomeWindChartDataPointModel> dataTemp = new List<HomeWindChartDataPointModel>();
             foreach (var data in tenDayDatas)
