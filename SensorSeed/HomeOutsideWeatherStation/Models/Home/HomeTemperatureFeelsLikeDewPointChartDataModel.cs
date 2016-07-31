@@ -17,8 +17,8 @@ namespace HomeOutsideWeatherStation.Models.Home
         {
             Timestamp = data.Timestamp.ToString();
             Temperature = (double)data.Temperature;
-            TemperatureFeelsLike = WeatherDataConversions.WindChill((double)data.Temperature, (double)data.WindSpeed);
-            DewPoint = WeatherDataConversions.DewPoint((double)data.Temperature, (double)data.Humidity);
+            TemperatureFeelsLike = WeatherDataConversions.WindChill(Temperature, (double)data.WindSpeed);
+            DewPoint = WeatherDataConversions.DewPoint(Temperature, (double)data.Humidity);
 
         }
     }
@@ -35,8 +35,15 @@ namespace HomeOutsideWeatherStation.Models.Home
 
             DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
-            List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Temperature != null && x.Humidity != null && x.WindSpeed != null).OrderByDescending(x => x.Timestamp).ToList();
+            List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => (x.Temperature != null || x.Temperature180 != null || x.TemperatureDHT22 != null) && (x.Humidity != null || x.HumidityDHT22 != null) && x.WindSpeed != null).OrderByDescending(x => x.Timestamp).ToList();
+            foreach (var dayDatas in tenDayDatas)
+            {
+                List<decimal?> temperaturesTemp = new List<decimal?> { dayDatas.Temperature, dayDatas.Temperature180, dayDatas.TemperatureDHT22 };
+                List<decimal?> humiditiesTemp = new List<decimal?> { dayDatas.Humidity, dayDatas.HumidityDHT22 };
+                dayDatas.Temperature = temperaturesTemp.Where(x => x.HasValue).Average();
+                dayDatas.Humidity = humiditiesTemp.Where(x => x.HasValue).Average();
 
+            }
 
             List<List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>> dataTemp = new List<List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>>();
             List<HomeTemperatureFeelsLikeDewPointChartDataPointModel> currentSeries = new List<HomeTemperatureFeelsLikeDewPointChartDataPointModel>();
