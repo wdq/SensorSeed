@@ -33,7 +33,14 @@ namespace HomeOutsideWeatherStation.Models.Home
 
             DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
             DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
-            List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Humidity != null && x.Pressure != null).OrderByDescending(x => x.Timestamp).ToList();
+            List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => (x.Humidity != null || x.HumidityDHT22 != null) && x.Pressure != null).OrderByDescending(x => x.Timestamp).ToList();
+
+            foreach (var dayDatas in tenDayDatas)
+            {
+                List<decimal?> humiditiesTemp = new List<decimal?> { dayDatas.Humidity, dayDatas.HumidityDHT22 };
+                dayDatas.Humidity = humiditiesTemp.Where(x => x.HasValue).Average();
+
+            }
 
             List<List<HomeHumidityPressureDataPointModel>> dataTemp = new List<List<HomeHumidityPressureDataPointModel>>();
             List<HomeHumidityPressureDataPointModel> currentSeries = new List<HomeHumidityPressureDataPointModel>();

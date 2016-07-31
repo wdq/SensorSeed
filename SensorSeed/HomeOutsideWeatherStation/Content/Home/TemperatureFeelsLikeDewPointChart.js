@@ -99,9 +99,9 @@
             svg.append("path")
                 .attr("class", "TemperatureLine")
                 .attr("d", TemperatureValueLine(seriesData));
-            /*svg.append("path")
+            svg.append("path")
                 .attr("class", "TemperatureFeelsLikeLine")
-                .attr("d", TemperatureFeelsLikeValueLine(seriesData));*/
+                .attr("d", TemperatureFeelsLikeValueLine(seriesData));
             svg.append("path")
                 .attr("class", "DewPointLine")
                 .attr("d", DewPointValueLine(seriesData));
