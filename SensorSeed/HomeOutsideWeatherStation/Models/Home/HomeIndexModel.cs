@@ -21,8 +21,7 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double StationLatitude { get; set; }
         [DisplayFormat(DataFormatString = "{0:N}")]
         public double StationLongitude { get; set; }
-        [DisplayFormat(DataFormatString = "{0:N0}")]
-        public double StationLastUpdated { get; set; }
+        public string StationLastUpdated { get; set; }
 
         // Condition icon/text, 
         public string CurrentCondition { get; set; }
@@ -132,7 +131,7 @@ namespace HomeOutsideWeatherStation.Models.Home
             StationElevation = (double)database.HomeOutsideWeatherStationDatas.Average(x => x.Altitude);
             StationLatitude = 40.815987372770905;
             StationLongitude = -96.61160876043141;
-            StationLastUpdated = (DateTime.Now - currentData.Timestamp.ToLocalTime()).TotalSeconds;
+            StationLastUpdated = currentData.Timestamp.ToLocalTime().ToString();
             CurrentCondition = "Stuff"; // todo: make some sort of algorithm that takes in the data and returns a condition, or get this from an Internet source
             CurrentTemperature = (((double)currentData.Temperature + (double)currentData.Temperature180) / 2);
             CurrentTemperatureFeelsLike = WeatherDataConversions.WindChill(CurrentTemperature, (double)currentData.WindSpeed); // todo: should this be wind chill, heat index, something else?
