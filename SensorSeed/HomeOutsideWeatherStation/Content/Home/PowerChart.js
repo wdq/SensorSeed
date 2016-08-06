@@ -62,8 +62,8 @@
         var startDate = new Date();
         // Scale the range of the data
         x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]);
-        y0.domain([0,4.5]);
-        y1.domain([0,5]);
+        y0.domain([json.MinBatteryY, json.MaxBatteryY]);
+        y1.domain([json.MinSolarY, json.MaxSolarY]);
         //y.domain([-20, 40]);
 
 
