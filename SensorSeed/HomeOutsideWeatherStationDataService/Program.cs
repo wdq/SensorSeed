@@ -10,6 +10,7 @@ using System.Net;
 using System.IO;
 using System.Collections.Specialized;
 using System.Net.Cache;
+using System.Text.RegularExpressions;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 
@@ -147,6 +148,20 @@ namespace HomeOutsideWeatherStationDataService
 
         public static string AddData(DateTime Timestamp, string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string TemperatureDHT22, string HumidityDHT22, string Veml6070, string Lux)
         {
+            Temperature = String.Join("", Temperature.Where(x => Char.IsDigit(x) || x == '.'));
+            Humidity = String.Join("", Humidity.Where(x => Char.IsDigit(x) || x == '.'));
+            Pressure = String.Join("", Pressure.Where(x => Char.IsDigit(x) || x == '.'));
+            Altitude = String.Join("", Altitude.Where(x => Char.IsDigit(x) || x == '.'));
+            Wind = String.Join("", Wind.Where(x => Char.IsDigit(x) || x == '.'));
+            Gust = String.Join("", Gust.Where(x => Char.IsDigit(x) || x == '.'));
+            Rain = String.Join("", Rain.Where(x => Char.IsDigit(x) || x == '.'));
+            Battery = String.Join("", Battery.Where(x => Char.IsDigit(x) || x == '.'));
+            Solar = String.Join("", Solar.Where(x => Char.IsDigit(x) || x == '.'));
+            Direction = String.Join("", Direction.Where(x => Char.IsDigit(x) || x == '.'));
+            Temperature180 = String.Join("", Temperature180.Where(x => Char.IsDigit(x) || x == '.'));
+            TemperatureDHT22 = String.Join("", TemperatureDHT22.Where(x => Char.IsDigit(x) || x == '.'));
+            HumidityDHT22 = String.Join("", HumidityDHT22.Where(x => Char.IsDigit(x) || x == '.'));
+
             SensorSeedDataContext database = new SensorSeedDataContext();
 
             HomeOutsideWeatherStationData data = new HomeOutsideWeatherStationData();
