@@ -10,45 +10,87 @@ namespace HomeOutsideWeatherStation.Controllers.Home
     using Models.Home;
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(DateTime? endDate)
         {
-            HomeIndexModel model = new HomeIndexModel();            
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomeIndexModel model = new HomeIndexModel(endDateNotNull);            
             return View(model);
         }
 
-        public JsonResult TemperatureFeelsLikeDewPointChartData()
+        public JsonResult TemperatureFeelsLikeDewPointChartData(DateTime? endDate)
         {
-            HomeTemperatureFeelsLikeDewPointChartDataModel model = new HomeTemperatureFeelsLikeDewPointChartDataModel();
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomeTemperatureFeelsLikeDewPointChartDataModel model = new HomeTemperatureFeelsLikeDewPointChartDataModel(endDateNotNull);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult HumidityPressureChartData()
+        public JsonResult HumidityPressureChartData(DateTime? endDate)
         {
-            HomeHumidityPressureDataModel model = new HomeHumidityPressureDataModel();
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomeHumidityPressureDataModel model = new HomeHumidityPressureDataModel(endDateNotNull);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult PrecipitationChartData()
+        public ActionResult PrecipitationChartData(DateTime? endDate)
         {
-            HomePrecipitationChartDataModel model = new HomePrecipitationChartDataModel();
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomePrecipitationChartDataModel model = new HomePrecipitationChartDataModel(endDateNotNull);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult WindChartData()
+        public JsonResult WindChartData(DateTime? endDate)
         {
-            HomeWindChartDataModel model = new HomeWindChartDataModel();
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomeWindChartDataModel model = new HomeWindChartDataModel(endDateNotNull);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult PowerChartData()
+        public JsonResult PowerChartData(DateTime? endDate)
         {
-            HomePowerChartDataModel model = new HomePowerChartDataModel();
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomePowerChartDataModel model = new HomePowerChartDataModel(endDateNotNull);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult TenDaySunriseSunsetData()
+        public JsonResult TenDaySunriseSunsetData(DateTime? endDate)
         {
-            HomeTenDaySunriseSunsetDataModel model = new HomeTenDaySunriseSunsetDataModel();
+            DateTime endDateNotNull = DateTime.Now;
+            if (endDate.HasValue)
+            {
+                endDateNotNull = endDate.Value;
+            }
+            endDateNotNull = endDateNotNull.ToUniversalTime();
+            HomeTenDaySunriseSunsetDataModel model = new HomeTenDaySunriseSunsetDataModel(endDateNotNull);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
     }

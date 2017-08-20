@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using HomeOutsideWeatherStation.Shared;
 using Innovative.SolarCalculator;
-
+using SunSetRiseLib;
 
 
 namespace HomeOutsideWeatherStation.Models.Home
@@ -19,10 +19,17 @@ namespace HomeOutsideWeatherStation.Models.Home
         {
             Date = date.Date.ToString();
 
-            TimeZoneInfo cst = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            SolarTimes solarTimes = new SolarTimes(date, 40.815987372770905, -96.61160876043141);
-            DateTime sunrise = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunrise.ToUniversalTime(), cst).AddHours(-1); // todo: pretty sure the subtracting an hour is required for the daylight savings stuff
-            DateTime sunset = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunset.ToUniversalTime(), cst).AddHours(-1);  // todo: I'll need to figure that out and get this to work year round
+            double JD = 0;
+            int zone = -6;
+            double latitude = 40.815987372770905;
+            double longitude = -96.61160876043141;
+            bool dst = false;
+
+            JD = Util.calcJD(date.Date);
+            double sunRise = Util.calcSunRiseUTC(JD, latitude, longitude);
+            double sunSet = Util.calcSunSetUTC(JD, latitude, longitude);
+            DateTime? sunrise = Util.getDateTime(sunRise, zone, date.Date, dst);
+            DateTime? sunset = Util.getDateTime(sunSet, zone, date.Date, dst);
 
             Sunrise = sunrise.ToString();
             Sunset = sunset.ToString();
@@ -34,14 +41,14 @@ namespace HomeOutsideWeatherStation.Models.Home
     {
         public List<HomeTenDaySunriseSunsetDataPointModel> Data { get; set; }
 
-        public HomeTenDaySunriseSunsetDataModel()
+        public HomeTenDaySunriseSunsetDataModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
             List<HomeTenDaySunriseSunsetDataPointModel> dataTemp = new List<HomeTenDaySunriseSunsetDataPointModel>();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9);
-            DateTime endOfToday = DateTime.Today.AddHours(24);
+            DateTime startOfTenDaysAgo = endDate.Date.AddDays(-9).AddHours(-18);
+            DateTime endOfToday = endDate.Date.AddHours(24);
 
             for (int i = 0; i < 11; i++)
             {

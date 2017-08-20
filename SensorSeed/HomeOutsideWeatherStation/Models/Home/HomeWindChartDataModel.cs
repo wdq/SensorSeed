@@ -26,12 +26,12 @@ namespace HomeOutsideWeatherStation.Models.Home
     {
         public List<HomeWindChartDataPointModel> Data { get; set; }
 
-        public HomeWindChartDataModel()
+        public HomeWindChartDataModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
-            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime startOfTenDaysAgo = endDate.Date.AddDays(-9).ToUniversalTime().AddHours(-18);
+            DateTime endOfToday = endDate.Date.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.WindSpeed != null && x.GustSpeed != null && x.WindDirection != null).OrderByDescending(x => x.Timestamp).ToList();
             tenDayDatas = tenDayDatas.Where((x, n) => n % 3 == 0).ToList(); // Remove every 3rd item
 

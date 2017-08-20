@@ -43,6 +43,8 @@
       <Column Name="Lux" Type="System.Decimal" DbType="Decimal(10,2)" CanBeNull="true" />
       <Column Name="TemperatureDHT22" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
       <Column Name="HumidityDHT22" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="PacketRSSI" Type="System.Decimal" DbType="Decimal(5,2)" CanBeNull="true" />
+      <Column Name="NumberOfPackets" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.HomeServerRoomWeatherStationData" Member="HomeServerRoomWeatherStationDatas">

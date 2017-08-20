@@ -29,12 +29,12 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double MaxY { get; set; }
         public double MinY { get; set; }
 
-        public HomeTemperatureFeelsLikeDewPointChartDataModel()
+        public HomeTemperatureFeelsLikeDewPointChartDataModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
-            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime startOfTenDaysAgo = endDate.Date.AddDays(-9).ToUniversalTime().AddHours(-18);
+            DateTime endOfToday = endDate.Date.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => (x.Temperature != null || x.Temperature180 != null || x.TemperatureDHT22 != null) && (x.Humidity != null || x.HumidityDHT22 != null) && x.WindSpeed != null).OrderByDescending(x => x.Timestamp).ToList();
             foreach (var dayDatas in tenDayDatas)
             {

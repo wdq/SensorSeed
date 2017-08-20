@@ -29,12 +29,12 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double MaxSolarY { get; set; }
         public double MinSolarY { get; set; }
 
-        public HomePowerChartDataModel()
+        public HomePowerChartDataModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
-            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime startOfTenDaysAgo = endDate.Date.AddDays(-9).ToUniversalTime().AddHours(-18);
+            DateTime endOfToday = endDate.Date.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Battery != null && x.Solar != null).OrderByDescending(x => x.Timestamp).ToList();
 
             List<List<HomePowerChartDataPointModel>> dataTemp = new List<List<HomePowerChartDataPointModel>>();

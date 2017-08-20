@@ -15,16 +15,16 @@ namespace HomeOutsideWeatherStation.Models.Home
         public List<TimeGraphModel> RainfallGraph { get; set; }
         public List<WindGraphModel> WindSpeedGraph { get; set; }
 
-        public HomeTenDayHistoryGraphModel()
+        public HomeTenDayHistoryGraphModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-10).ToUniversalTime();
-            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime startOfTenDaysAgo = endDate.Date.AddDays(-10).ToUniversalTime();
+            DateTime endOfToday = endDate.Date.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).OrderByDescending(x => x.Timestamp).ToList();
 
             List<HomeTenDayHistoryGraphDayModel> DayInformationTemp = new List<HomeTenDayHistoryGraphDayModel>();
-            DateTime endOfTodayTemp = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime endOfTodayTemp = endDate.Date.AddHours(24).ToUniversalTime();
             for (int i = 0; i < 10; i++)
             {
                 DateTime start = endOfTodayTemp.AddDays(-1);

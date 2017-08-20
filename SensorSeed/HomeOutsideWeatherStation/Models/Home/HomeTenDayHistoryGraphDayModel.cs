@@ -32,8 +32,39 @@ namespace HomeOutsideWeatherStation.Models.Home
             if (dayDatas.Count > 0)
             {
                 Date = dayDatas.FirstOrDefault().Timestamp.ToLocalTime();
-                TemperatureHigh = (double?) dayDatas.Where(x => x.Temperature != null).Max(x => x.Temperature);
-                TemperatureLow = (double?) dayDatas.Where(x => x.Temperature != null).Min(x => x.Temperature);
+                if (dayDatas.Where(x => x.Temperature != null).Max(x => x.Temperature180).HasValue)
+                {
+                    TemperatureHigh = (double) dayDatas.Where(x => x.Temperature != null).Max(x => x.Temperature180).Value;
+                }
+                else if (dayDatas.Where(x => x.Temperature180 != null).Max(x => x.Temperature180).HasValue)
+                {
+                    TemperatureHigh = (double)dayDatas.Where(x => x.Temperature180 != null).Max(x => x.Temperature180).Value;
+                }
+                else if (dayDatas.Where(x => x.TemperatureDHT22 != null).Max(x => x.TemperatureDHT22).HasValue)
+                {
+                    TemperatureHigh = (double) dayDatas.Where(x => x.TemperatureDHT22 != null).Max(x => x.TemperatureDHT22).Value;
+                }
+                else
+                {
+                    TemperatureHigh = -1;
+                }
+
+                if (dayDatas.Where(x => x.Temperature != null).Min(x => x.Temperature180).HasValue)
+                {
+                    TemperatureLow = (double)dayDatas.Where(x => x.Temperature != null).Min(x => x.Temperature180).Value;
+                }
+                else if (dayDatas.Where(x => x.Temperature180 != null).Min(x => x.Temperature180).HasValue)
+                {
+                    TemperatureLow = (double)dayDatas.Where(x => x.Temperature180 != null).Min(x => x.Temperature180).Value;
+                }
+                else if (dayDatas.Where(x => x.TemperatureDHT22 != null).Min(x => x.TemperatureDHT22).HasValue)
+                {
+                    TemperatureLow = (double)dayDatas.Where(x => x.TemperatureDHT22 != null).Min(x => x.TemperatureDHT22).Value;
+                }
+                else
+                {
+                    TemperatureLow = -1;
+                }
                 Condition = ""; // todo:
                 Rain = (double?) dayDatas.Where(x => x.Rain != null).Sum(x => x.Rain);
                 Sunrise = DateTime.Today; // todo:

@@ -1,8 +1,49 @@
 ﻿$(document).ready(function () {
 
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                if (sParameterName[1] === undefined) {
+                    return new Date();
+                }
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear(),
+            hour = d.getHours(),
+            minute = d.getMinutes()
+        second = d.getSeconds();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        if (hour.length < 2) hour = '0' + hour;
+        if (minute.length < 2) minute = '0' + minute;
+        if (second.length < 2) second = '0' + second;
+
+        return [month, day, year].join('-') + " " + [hour, minute, second].join(':');
+    }
+
+    var startDate = new Date(getUrlParameter("endDate"));
+    if (startDate == "Invalid Date") {
+        startDate = new Date();
+    }
+
 
     // Get the data
-    d3.json("./Home/HumidityPressureChartData", function (error, json) {
+    d3.json("./Home/HumidityPressureChartData" + "?endDate=" + formatDate(startDate), function (error, json) {
         var data;
         data = json.Data;
 
@@ -55,9 +96,14 @@
                       "translate(" + margin.left + "," + margin.top + ")");
         //console.log(data);
 
-        var startDate = new Date();
+
         // Scale the range of the data
-        x.domain([new Date(startDate.setDate(startDate.getDate() - 9)).setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]);
+        var xAxisLeftBounds = new Date(startDate);
+        var xAxisRightBounds = new Date(startDate);
+        xAxisLeftBounds = new Date(xAxisLeftBounds.setDate(xAxisLeftBounds.getDate() - 9)).setHours(0, 0, 0, 0);
+        xAxisRightBounds = xAxisRightBounds.setHours(23, 59, 59, 999);
+
+        x.domain([xAxisLeftBounds, xAxisRightBounds]);
         y0.domain([0, 100]);
         y1.domain([json.MinPressureY, json.MaxPressureY]);
         //y.domain([-20, 40]);
@@ -106,7 +152,7 @@
 
         });
 
-        $.get("./Home/TenDaySunriseSunsetData",
+        $.get("./Home/TenDaySunriseSunsetData" + "?endDate=" + formatDate(startDate),
             function (data) {
                 var previousSunset = data.Data[0].Date;
                 $.each(data.Data,

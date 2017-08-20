@@ -112,7 +112,20 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3>10-Day Weather History</h3>
+            <div class="form-inline">
+                <label foor="day">
+                    <h3>10-Day Weather History</h3></label>
+                @{
+                    string endDate = DateTime.Now.ToString();
+                    if (Request.Params["endDate"] != null)
+                    {
+                        endDate = Request.Params["endDate"];
+                    }
+                }
+                <input type="text" name="EndDate" class="form-control datetimepicker" id="EndDate" value="@endDate"/>
+                <a href="@Url.Content("~/Home")" class="btn btn-default" role="button">Now</a>
+            </div>
+            <br/>
             <table class="TenDayWeatherHistoryTable">
                 <tbody>
                     <tr class="TenDayWeatherHistoryTableTopRow">
@@ -288,7 +301,13 @@
 </div>
 <script type="text/javascript">
     $(document)
-        .ready(function() {
+        .ready(function () {
+            $('#EndDate').datetimepicker({
+                format: 'n/j/Y h:i:s A',
+                onClose: function () {
+                    window.location.href = location.protocol + "//" + location.host + location.pathname + "?endDate=" + $('#EndDate').val();
+                }
+            });
         });
 </script>
 

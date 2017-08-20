@@ -45,7 +45,7 @@ namespace HomeOutsideWeatherStationDataService
                     string server = "10.0.14.71";
                     string database = "HomeOutsideWeatherStation";
                     string uid = "root";
-                    string password = "";
+                    string password = "password";
                     string connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
 
                     try
@@ -148,19 +148,25 @@ namespace HomeOutsideWeatherStationDataService
 
         public static string AddData(DateTime Timestamp, string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string TemperatureDHT22, string HumidityDHT22, string Veml6070, string Lux)
         {
-            Temperature = String.Join("", Temperature.Where(x => Char.IsDigit(x) || x == '.'));
-            Humidity = String.Join("", Humidity.Where(x => Char.IsDigit(x) || x == '.'));
-            Pressure = String.Join("", Pressure.Where(x => Char.IsDigit(x) || x == '.'));
-            Altitude = String.Join("", Altitude.Where(x => Char.IsDigit(x) || x == '.'));
-            Wind = String.Join("", Wind.Where(x => Char.IsDigit(x) || x == '.'));
-            Gust = String.Join("", Gust.Where(x => Char.IsDigit(x) || x == '.'));
-            Rain = String.Join("", Rain.Where(x => Char.IsDigit(x) || x == '.'));
-            Battery = String.Join("", Battery.Where(x => Char.IsDigit(x) || x == '.'));
-            Solar = String.Join("", Solar.Where(x => Char.IsDigit(x) || x == '.'));
-            Direction = String.Join("", Direction.Where(x => Char.IsDigit(x) || x == '.'));
-            Temperature180 = String.Join("", Temperature180.Where(x => Char.IsDigit(x) || x == '.'));
-            TemperatureDHT22 = String.Join("", TemperatureDHT22.Where(x => Char.IsDigit(x) || x == '.'));
-            HumidityDHT22 = String.Join("", HumidityDHT22.Where(x => Char.IsDigit(x) || x == '.'));
+            Temperature = String.Join("", Temperature.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Humidity = String.Join("", Humidity.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Pressure = String.Join("", Pressure.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Altitude = String.Join("", Altitude.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Wind = String.Join("", Wind.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Wind = Wind.TrimEnd('.');
+            Gust = String.Join("", Gust.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Gust = Gust.Replace("." + Wind + ".", "");
+            Rain = String.Join("", Rain.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Rain = Rain.TrimEnd('.');
+            Battery = String.Join("", Battery.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Battery = Battery.TrimEnd('.');
+            Solar = String.Join("", Solar.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Solar = Solar.TrimEnd('.');
+            Direction = String.Join("", Direction.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            Direction = Direction.TrimEnd('.');
+            Temperature180 = String.Join("", Temperature180.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            TemperatureDHT22 = String.Join("", TemperatureDHT22.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
+            HumidityDHT22 = String.Join("", HumidityDHT22.Where(x => Char.IsDigit(x) || x == '.' || x == '-'));
 
             SensorSeedDataContext database = new SensorSeedDataContext();
 
@@ -269,7 +275,7 @@ namespace HomeOutsideWeatherStationDataService
                     BatteryDecimal = Convert.ToDecimal(Battery);
                     BatteryDecimal = BatteryDecimal / (decimal)1024; // Max ADC value
                     BatteryDecimal = BatteryDecimal * (decimal)5; // High voltage
-                                                                  //BatteryDecimal = BatteryDecimal * (decimal)2; // Voltage divider factor
+                    BatteryDecimal = BatteryDecimal * (decimal)3; // Voltage divider factor
                     data.Battery = BatteryDecimal;
                 }
                 catch (Exception exception)
@@ -284,7 +290,7 @@ namespace HomeOutsideWeatherStationDataService
                     SolarDecimal = Convert.ToDecimal(Solar);
                     SolarDecimal = SolarDecimal / (decimal)1024; // Max ADC value
                     SolarDecimal = SolarDecimal * (decimal)5; // High voltage
-                                                              //SolarDecimal = SolarDecimal * (decimal)3; // Voltage divider factor
+                    SolarDecimal = SolarDecimal * (decimal)3; // Voltage divider factor
                     data.Solar = SolarDecimal;
                 }
                 catch (Exception exception)

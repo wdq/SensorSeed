@@ -9,13 +9,13 @@ namespace HomeOutsideWeatherStation.Models.Home
     public class HomePrecipitationChartDataPointModel
     {
         public string Timestamp { get; set; }
-        public double CurrentRain { get; set; }
-        public double TotalRain { get; set; }
+        public decimal CurrentRain { get; set; }
+        public decimal TotalRain { get; set; }
 
-        public HomePrecipitationChartDataPointModel(HomeOutsideWeatherStationData data, double totalRain)
+        public HomePrecipitationChartDataPointModel(HomeOutsideWeatherStationData data, decimal totalRain)
         {
             Timestamp = data.Timestamp.ToString();
-            CurrentRain = (double)data.Rain;
+            CurrentRain = (decimal)data.Rain;
             TotalRain = totalRain;
         }
     }
@@ -24,20 +24,20 @@ namespace HomeOutsideWeatherStation.Models.Home
     {
         public List<HomePrecipitationChartDataPointModel> Data { get; set; }
 
-        public HomePrecipitationChartDataModel()
+        public HomePrecipitationChartDataModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            DateTime startOfTenDaysAgo = DateTime.Today.AddDays(-9).ToUniversalTime();
-            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime startOfTenDaysAgo = endDate.Date.AddDays(-9).ToUniversalTime().AddHours(-18);
+            DateTime endOfToday = endDate.Date.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> tenDayDatas = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfTenDaysAgo && x.Timestamp < endOfToday).Where(x => x.Rain != null).OrderByDescending(x => x.Timestamp).ToList();
-            double totalRain = tenDayDatas.Sum(x => (double)x.Rain);
+            decimal totalRain = tenDayDatas.Sum(x => (decimal)x.Rain);
             tenDayDatas = tenDayDatas.Where(x => x.Rain > 0).ToList();
 
             List<HomePrecipitationChartDataPointModel> dataTemp = new List<HomePrecipitationChartDataPointModel>();
             foreach (var data in tenDayDatas)
             {
-                totalRain -= (double)data.Rain;
+                totalRain -= (decimal)data.Rain;
                 dataTemp.Add(new HomePrecipitationChartDataPointModel(data, totalRain));
             }
 

@@ -104,7 +104,7 @@ void loop() {
       for(byte i = 2; i < radio.DATALEN; i++) {
         char newChar = (char)radio.DATA[i];
         radiopacket1[i] = newChar;      
-        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.' || newChar == '-') {
           if(newChar == ',') {
             sensorIndex++;
             sensorCharIndex = 0;                  
@@ -136,7 +136,7 @@ void loop() {
       for(byte i = 2; i < radio.DATALEN; i++) {
         char newChar = (char)radio.DATA[i];
         radiopacket2[i] = newChar;      
-        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.' || newChar == '-') {
           if(newChar == ',') {
             sensorIndex++;
             sensorCharIndex = 0;                  
@@ -164,7 +164,7 @@ void loop() {
       for(byte i = 2; i < radio.DATALEN; i++) {
         char newChar = (char)radio.DATA[i];
         radiopacket3[i] = newChar;      
-        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.' || newChar == '-') {
           if(newChar == ',') {
             sensorIndex++;
             sensorCharIndex = 0;                  
@@ -195,7 +195,7 @@ void loop() {
       for(byte i = 2; i < radio.DATALEN; i++) {
         char newChar = (char)radio.DATA[i];
         radiopacket4[i] = newChar;      
-        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.') {
+        if(isAlphaNumeric(newChar) || newChar == ',' || newChar == '.' || newChar == '-') {
           if(newChar == ',') {
             sensorIndex++;
             sensorCharIndex = 0;                  

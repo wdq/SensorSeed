@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Innovative.SolarCalculator;
+using SunSetRiseLib;
 
 namespace HomeOutsideWeatherStation.Models.Home
 {
@@ -123,36 +124,118 @@ namespace HomeOutsideWeatherStation.Models.Home
         public double YesterdayTemperatureMinimumRecord { get; set; }
         public DateTime YesterdayTemperatureMinimumRecordTimestamp { get; set; }
 
-        public HomeIndexModel()
+        public HomeIndexModel(DateTime endDate)
         {
             SensorSeedDataContext database = new SensorSeedDataContext();
 
-            HomeOutsideWeatherStationData currentData = database.HomeOutsideWeatherStationDatas.OrderByDescending(x => x.Timestamp).FirstOrDefault();
+            HomeOutsideWeatherStationData currentData = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp < endDate).OrderByDescending(x => x.Timestamp).FirstOrDefault();
             StationElevation = (double)database.HomeOutsideWeatherStationDatas.Average(x => x.Altitude);
             StationLatitude = 40.815987372770905;
             StationLongitude = -96.61160876043141;
             StationLastUpdated = currentData.Timestamp.ToLocalTime().ToString();
             CurrentCondition = "Stuff"; // todo: make some sort of algorithm that takes in the data and returns a condition, or get this from an Internet source
-            CurrentTemperature = (((double)currentData.Temperature + (double)currentData.Temperature180) / 2);
+            double currentTemperatureTemp = 0.00;
+            int currentTemperatureTempCount = 0;
+            if (currentData.Temperature.HasValue)
+            {
+                currentTemperatureTemp += (double) currentData.Temperature.Value;
+                currentTemperatureTempCount++;
+            }
+            if (currentData.Temperature180.HasValue)
+            {
+                currentTemperatureTemp += (double) currentData.Temperature180.Value;
+                currentTemperatureTempCount++;
+            }
+            if (currentData.TemperatureDHT22.HasValue)
+            {
+                currentTemperatureTemp += (double) currentData.TemperatureDHT22.Value;
+                currentTemperatureTempCount++;
+            }
+            if (currentTemperatureTempCount == 0)
+            {
+                currentTemperatureTempCount = 1;
+            }
+            CurrentTemperature = currentTemperatureTemp / currentTemperatureTempCount;
             CurrentTemperatureFeelsLike = WeatherDataConversions.WindChill(CurrentTemperature, (double)currentData.WindSpeed); // todo: should this be wind chill, heat index, something else?
             CurrentWindSpeed = (double)currentData.WindSpeed;
-            CurrentWindDirection = (double)currentData.WindDirection;
-            CurrentWindGusts = (double)currentData.GustSpeed;
+            if (currentData.WindDirection == null)
+            {
+                CurrentWindDirection = -1;
+            }
+            else
+            {
+                CurrentWindDirection = (double)currentData.WindDirection;
+            }
+            if (currentData.GustSpeed == null)
+            {
+                CurrentWindGusts = -1;
+            }
+            else
+            {
+                CurrentWindGusts = (double)currentData.GustSpeed;
+            }
 
-            DateTime startOfToday = DateTime.Today.ToUniversalTime();
-            DateTime endOfToday = DateTime.Today.AddHours(24).ToUniversalTime();
+            DateTime startOfToday = endDate.Date.ToUniversalTime();
+            DateTime endOfToday = endDate.Date.AddHours(24).ToUniversalTime();
             List<HomeOutsideWeatherStationData> todayData = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfToday && x.Timestamp < endOfToday).ToList();
             TodayTemperatureMaximum = (double?)todayData.Where(x => x.Temperature != null).Max(x => x.Temperature); // todo: probably have a field for the times that these happen too
+            if (!TodayTemperatureMaximum.HasValue)
+            {
+                TodayTemperatureMaximum = (double?)todayData.Where(x => x.Temperature180 != null).Max(x => x.Temperature180);
+            }
+            if (!TodayTemperatureMaximum.HasValue)
+            {
+                TodayTemperatureMaximum = (double?)todayData.Where(x => x.TemperatureDHT22 != null).Max(x => x.TemperatureDHT22);
+            }
             TodayTemperatureMinimum = (double?)todayData.Where(x => x.Temperature != null).Min(x => x.Temperature);
+            if (!TodayTemperatureMinimum.HasValue)
+            {
+                TodayTemperatureMinimum = (double?)todayData.Where(x => x.Temperature180 != null).Min(x => x.Temperature180);
+            }
+            if (!TodayTemperatureMinimum.HasValue)
+            {
+                TodayTemperatureMinimum = (double?)todayData.Where(x => x.TemperatureDHT22 != null).Min(x => x.TemperatureDHT22);
+            }
             TodayRainTotal = (double)todayData.Select(x => x.Rain).Sum();
 
-            DateTime startOfYesterday = DateTime.Today.AddDays(-1).ToUniversalTime();
-            DateTime endOfYesterday = DateTime.Today.ToUniversalTime();
+            DateTime startOfYesterday = startOfToday.AddDays(-1).ToUniversalTime();
+            DateTime endOfYesterday = startOfToday.ToUniversalTime();
             List<HomeOutsideWeatherStationData> yesterdayData = database.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > startOfYesterday && x.Timestamp < endOfYesterday).ToList();
             if (yesterdayData.Count > 0)
             {
-                YesterdayTemperatureMaximum = (double) yesterdayData.Max(x => x.Temperature);
-                YesterdayTemperatureMinimum = (double) yesterdayData.Min(x => x.Temperature);
+                if (yesterdayData.Max(x => x.Temperature).HasValue)
+                {
+                    YesterdayTemperatureMaximum = (double)yesterdayData.Max(x => x.Temperature).Value;
+                }
+                else if (yesterdayData.Max(x => x.Temperature180).HasValue)
+                {
+                    YesterdayTemperatureMaximum = (double)yesterdayData.Max(x => x.Temperature180).Value;
+                }
+                else if (yesterdayData.Max(x => x.TemperatureDHT22).HasValue)
+                {
+                    YesterdayTemperatureMaximum = (double) yesterdayData.Max(x => x.TemperatureDHT22).Value;
+                }
+                else
+                {
+                    YesterdayTemperatureMaximum = -1;
+                }
+
+                if (yesterdayData.Min(x => x.Temperature).HasValue)
+                {
+                    YesterdayTemperatureMinimum = (double)yesterdayData.Min(x => x.Temperature).Value;
+                }
+                else if (yesterdayData.Min(x => x.Temperature180).HasValue)
+                {
+                    YesterdayTemperatureMinimum = (double)yesterdayData.Min(x => x.Temperature180).Value;
+                }
+                else if (yesterdayData.Min(x => x.TemperatureDHT22).HasValue)
+                {
+                    YesterdayTemperatureMinimum = (double)yesterdayData.Min(x => x.TemperatureDHT22).Value;
+                }
+                else
+                {
+                    YesterdayTemperatureMaximum = -1;
+                }
                 YesterdayRainTotal = (double) yesterdayData.Select(x => x.Rain).Sum();
             }
             else
@@ -166,23 +249,46 @@ namespace HomeOutsideWeatherStation.Models.Home
             CurrentPressure = (double)currentData.Pressure;
             CurrentVisibility = 0; // todo: either find out how to calculate this, or what kind of sensor I need, or pull it from the Internet
             CurrentClouds = ""; // todo: either find out how to calculate this, or what kind of sensor I need, or pull it from the Internet
-            CurrentHeatIndex = WeatherDataConversions.HeatIndex(CurrentTemperature, (double)currentData.Humidity);
-            CurrentDewPoint = WeatherDataConversions.DewPoint(CurrentTemperature, (double)currentData.Humidity);
-            CurrentHumidity = (double)currentData.Humidity;
+            
+
+            if (currentData.Humidity.HasValue)
+            {
+                CurrentHumidity = (double) currentData.Humidity.Value;
+            }
+            else if (currentData.HumidityDHT22.HasValue)
+            {
+                CurrentHumidity = (double) currentData.HumidityDHT22.Value;
+            }
+            else
+            {
+                CurrentHumidity = -1;
+            }
+
+            CurrentHeatIndex = WeatherDataConversions.HeatIndex(CurrentTemperature, (double)CurrentHumidity);
+            CurrentDewPoint = WeatherDataConversions.DewPoint(CurrentTemperature, (double)CurrentHumidity);
             CurrentUV = -1;
             CurrentLux = -1;
             CurrentRainfall = TodayRainTotal; // todo: this may need to be something else
             CurrentSnowDepth = 0; // todo: snow
-            TimeZoneInfo cst = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            SolarTimes solarTimes = new SolarTimes(DateTime.Today, 40.815999, -96.611661);
-            DateTime sunrise = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunrise.ToUniversalTime(), cst);
-            DateTime sunset = TimeZoneInfo.ConvertTimeFromUtc(solarTimes.Sunset.ToUniversalTime(), cst); 
+
+            double JD = 0;
+            int zone = -6;
+            double latitude = 40.815987372770905;
+            double longitude = -96.61160876043141;
+            bool dst = false;
+
+            JD = Util.calcJD(endDate.Date);
+            double sunRise = Util.calcSunRiseUTC(JD, latitude, longitude);
+            double sunSet = Util.calcSunSetUTC(JD, latitude, longitude);
+            DateTime sunrise = Util.getDateTime(sunRise, zone, endDate.Date, dst).Value;
+            DateTime sunset = Util.getDateTime(sunSet, zone, endDate.Date, dst).Value;
+
             Sunrise = sunrise;
             Sunset = sunset;
             MoonType = ""; // todo: moon stuff
             MoonVisible = 0;
 
-            TenDayHistoryGraph = new HomeTenDayHistoryGraphModel(); 
+            TenDayHistoryGraph = new HomeTenDayHistoryGraphModel(endDate); 
 
         }
 

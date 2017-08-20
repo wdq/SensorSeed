@@ -575,6 +575,10 @@ namespace HomeOutsideWeatherStation
 		
 		private System.Nullable<decimal> _HumidityDHT22;
 		
+		private System.Nullable<decimal> _PacketRSSI;
+		
+		private System.Nullable<int> _NumberOfPackets;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -615,6 +619,10 @@ namespace HomeOutsideWeatherStation
     partial void OnTemperatureDHT22Changed();
     partial void OnHumidityDHT22Changing(System.Nullable<decimal> value);
     partial void OnHumidityDHT22Changed();
+    partial void OnPacketRSSIChanging(System.Nullable<decimal> value);
+    partial void OnPacketRSSIChanged();
+    partial void OnNumberOfPacketsChanging(System.Nullable<int> value);
+    partial void OnNumberOfPacketsChanged();
     #endregion
 		
 		public HomeOutsideWeatherStationData()
@@ -978,6 +986,46 @@ namespace HomeOutsideWeatherStation
 					this._HumidityDHT22 = value;
 					this.SendPropertyChanged("HumidityDHT22");
 					this.OnHumidityDHT22Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PacketRSSI", DbType="Decimal(5,2)")]
+		public System.Nullable<decimal> PacketRSSI
+		{
+			get
+			{
+				return this._PacketRSSI;
+			}
+			set
+			{
+				if ((this._PacketRSSI != value))
+				{
+					this.OnPacketRSSIChanging(value);
+					this.SendPropertyChanging();
+					this._PacketRSSI = value;
+					this.SendPropertyChanged("PacketRSSI");
+					this.OnPacketRSSIChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfPackets", DbType="Int")]
+		public System.Nullable<int> NumberOfPackets
+		{
+			get
+			{
+				return this._NumberOfPackets;
+			}
+			set
+			{
+				if ((this._NumberOfPackets != value))
+				{
+					this.OnNumberOfPacketsChanging(value);
+					this.SendPropertyChanging();
+					this._NumberOfPackets = value;
+					this.SendPropertyChanged("NumberOfPackets");
+					this.OnNumberOfPacketsChanged();
 				}
 			}
 		}
