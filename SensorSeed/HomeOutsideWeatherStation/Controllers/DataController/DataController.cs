@@ -93,7 +93,7 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                         temperaturePointCount++;
                     }
                     url += "&tempf=" + (((temperatureAverage/temperaturePointCount) * 1.8) + 32);
-                    temperature = ((temperatureAverage/temperaturePointCount)*1.8) + 32;
+                    temperature = ((temperatureAverage/temperaturePointCount));
                 }
                 if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.UtcNow.AddMinutes(-60)).Sum(x => x.Rain).HasValue)
                 {
