@@ -311,7 +311,6 @@ double getWind() {
     dataBuffer[i] = Wire.read();
     i++;    
   }
-  Wire.endTransmission();
   union dataUnionTag {byte dataBytes[4]; unsigned long dataLong;} dataUnion;
   dataUnion.dataBytes[0] = dataBuffer[0];
   dataUnion.dataBytes[1] = dataBuffer[1];
@@ -335,7 +334,6 @@ double getGust() {
     dataBuffer[i] = Wire.read();
     i++;
   }
-  Wire.endTransmission();
   union dataUnionTag {byte dataBytes[4]; unsigned long dataLong;} dataUnion;
   dataUnion.dataBytes[0] = dataBuffer[0];
   dataUnion.dataBytes[1] = dataBuffer[1];
@@ -359,13 +357,11 @@ float getRain() {
   Wire.endTransmission();
   delay(50);
   Wire.requestFrom(RAINGAUGE_I2C_ADDRESS, 4);
-  delay(50);
   byte dataBuffer[4];
   int i = 0;
   while(Wire.available()) {
     dataBuffer[i] = Wire.read();    i++;
   }
-  Wire.endTransmission();
   union dataUnionTag {byte dataBytes[4]; float dataFloat;} dataUnion;
   dataUnion.dataBytes[0] = dataBuffer[0];
   dataUnion.dataBytes[1] = dataBuffer[1];
