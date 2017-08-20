@@ -1,43 +1,50 @@
 # SensorSeed
 
-This is C# code for a custom weather station I built.
+This is everything relating to my weather station project, including C# website code, AVR code for the hardware, PCB layouts, and schematics.
 
-There is an outdoor component to the station that collects temperature, humidity, pressure, wind speed, wind direction, and rain every five minutes. There are four small indoor devices that collect just temperature and humidity data in four rooms every five minutes.
+There is an outdoor component to the station that collects temperature, humidity, pressure, wind speed, wind direction, and rain every two and a half minutes, I might bump this up to every minute in the future. Data is pushed over the air using a 100mW 900MHz radio to a Particle Photon inside my house. The Photon is connected to WiFi and uploads the data to the website. 
+
+You can view the data collected from the weather station on [my website](sensorseed.quade.co/HomeOutsideWeatherStation/Home), and on the [Weather Underground website](https://www.wunderground.com/personal-weather-station/dashboard?ID=KNELINCO88)
 
 
 
-Outdoor weather station parts list:
+Parts list: 
 
-| Item                                             | Price   | Description                                                                                                                                                   | Link                                                                                                                                          |
-|--------------------------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| 2x Arduino Uno | $50  | These collect the data from the sensors outside. One is used to count interrupts, and collect analog readings, and then send them to the other over I2C. The second Arduino Uno is connected to the digital sensors, and the 900MHz radio transmitter.                                                                                  | https://www.adafruit.com/products/50                                                                                                         |
-| Sparkfun Weather Meters                          | $80  | Wind vane, cup anemometer, tipping bucket rain gauge to measure wind and rain.                                                                                | https://www.sparkfun.com/products/8942                                                                                                        |
-| Adafruit Sensiron SHT32-D                        | $15  | Temperature and humidity I2C sensor.                                                                                                                          | https://www.adafruit.com/product/2857                                                                                                         |
-| BMP180                                           | $10   | Barometric pressure, temperature, and altitude sensor.                                                                                                        | https://www.adafruit.com/product/1603                                                                                                         |
-| Adafruit Metro 328                                  | $20  | This is a custom Arduino Uno board that is connected to the 900MHz radio receiver inside. It communicates with the Raspberry Pi over I2C. It can be replaced with an Arduino Uno if they are out of stock.                                    | https://www.adafruit.com/products/2466                                                                                                          |
-| Lithium battery charger.                    | $20      | Charge the batteries using the solar panels.                                                                                                                  | https://www.adafruit.com/products/390                         |
-| 2x 2.5W/5V/500mA Solar Panels                    | $20     | Charge the batteries, two in parallel provide 5V/1A. More current and a better charger may be needed in the winter. | http://www.amazon.com/ALLPOWERS-Encapsulated-Battery-Charger-130x150mm/dp/B00CBT8A14                                                          |
-| 3.7V, 12.6Ah Lithium battery                              | $45     | Power the station.                                                                                                      | http://www.batteryspace.com/customizepolymerli-ionmodule37v126ah47wh5arate-prewiredwithpcbpl-8570170.aspx |
-| Ambient Weather SRS100LX                         | $40     | Solar radiation shield to get accurate temperature and humidity measurements.                                                                                 | http://www.amazon.com/Ambient-Weather-SRS100LX-Temperature-Radiation/dp/B003EB3GE4?ie=UTF8&psc=1&redirect=true&ref_=oh_aui_detailpage_o06_s00 |
-| BUD Industries NBF-32018                         | $25     | Sealed, weather proof, enclosure for the microcontrollers, battery, and other electronics.                                                                    | http://www.amazon.com/BUD-Industries-NBF-32018-Plastic-Economy/dp/B005T990I0?ie=UTF8&psc=1&redirect=true&ref_=oh_aui_detailpage_o00_s00       |
-| Adafruit TSL2561                         | $6     | Luminosity/Lux/Light sensor.                                                                    | https://www.adafruit.com/products/439       |
-| Adafruit VEML6070                         | $6     | UV index sensor.                                                                    | https://www.adafruit.com/products/2899      |
-| Photo transistor                         | $1     | Photo transistor, will be used to measure solar irradiance/flux.                                                                    | https://www.adafruit.com/products/2831      |
-| Adafruit VERTER                         | $10     | Connects to the load connectors on the solar charger. A 5V power source for the Arduinos and sensors.                                                                    | https://www.adafruit.com/products/2190     |
-| 2x Adafruit RFM69HCW                         | $10     | One is a transmitter, and one is a receiver, they are affordable 900MHz radios.                                                                    | https://www.adafruit.com/products/3070      |
-| RF SMA jacks                        | $10     | Used to connect external SMA antennas to the 900MHz radios.                                                                    | https://www.amazon.com/gp/product/B00X9IPMFS/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1 |
-| Raspberry Pi Model B                         | $40     | Connects the 900MHz radio inside to the Internet. Any of the Raspberry Pi boards should work, this is what I had.                                                                   | https://www.adafruit.com/products/998      |
-| 2x SMA antenna                         | $10     | Connects to the RF SMA jacks to the radios.                                                                    | https://www.amazon.com/HUACAM-HCM16-Omni-directional-Antenna-Connector/dp/B00VHDXSSU/ref=sr_1_6?ie=UTF8&qid=1468544484&sr=8-6&keywords=sma+antenna      |
-|                                                  |         |                                                                                                                                                               |                                                                                                                                               |
-| Total:                                           | ~$418 |                                                                                                                                                               |                                                                                
-|
-Indoor weather station parts list:
+| Item                              | Price | Description                                                                                                            |
+|-----------------------------------|-------|------------------------------------------------------------------------------------------------------------------------|
+| Outdoor PCB                       | $15   | The PCB for the outside part of the weather station. I got them made at Elecrow and the price shipped was about $15.   |
+| Indoor PCB                        | $15   | The PCB for the indoor part of the weather station. I got them made at Elecrow and the price shipped was about $15.    |
+| ATmega328p                        | $2    | Main microcontroller for the outside station. PDIP package.                                                            |
+| 2x ATtiny44/88                    | $4    | I2C slaves that keep track of wind speed and rain outside. PDIP package.                                               |
+| 2x Adafruit RFM69HCW              | $20   | Radios to handle communication between indoor and outdoor device. I use the 900MHz version with the nine pin breakout. |
+| Particle Photon                   | $20   | The microcontroller for the indoor station.                                                                            |
+| 2x 900MHz antennas                | $10   | For the radios. I used right angle SMA ones that Adafruit sells.                                                       |
+| 2x SMA jacks                      | $5    | Edge mount SMA jacks for 1.6mm PCBs for the radios. Adafruit sells these.                                              |
+| 6x 220 ohm resistors              | $0.60 | Through hole package. These are for LEDs, so you can use different sizes based on how bright you want the LEDs to be.  |
+| 6x LEDs                           | $1    | Through hole 5mm LEDs. Any color.                                                                                      |
+| 2x 20pF capacitors                | $0.20 | Through hole package, ceramic. May be different depending on the crystal oscillator you pick.                          |
+| 6x 0.1uF capacitors               | $0.60 | Through hole package, ceramic. For the AVR decoupling.                                                                 |
+| 8MHz crystal                      | $0.30 | An 8MHz quartz crystal oscillator. You can use other frequencies if you want.                                          |
+| 2x 1k ohm resistors               | $0.20 | For voltage divider. Through hole.                                                                                     |
+| 3x 2k ohm resistors               | $0.30 | For voltage divider. Through hole.                                                                                     |
+| 10k ohm resistor                  | $0.10 | For the wind vane. Through hole.                                                                                       |
+| 4.7k ohm resistor                 | $0.10 | Pullup resistor for the radio. Through hole.                                                                           |
+| 2x 10uF capacitors                | $0.20 | Bypass capacitors, through hole, one per board, electrolytic.                                                          |
+| 6x jumpers                        | $1.00 | Jumpers to turn on/off the LEDs for debugging                                                                          |
+| Pin headers                       | $1    | Used throughout both boards                                                                                            |
+| Pin header sockets                | $1    | Used throughout both boards                                                                                            |
+| 3x 28 pin DIP sockets             | $1    | Used to make the AVR chips removable.                                                                                  |
+|  Sparkfun weather meters          | $77   | There are lots of distributors. I got mine on Amazon. Has the rain gauge, anemometer, and wind vane.                   |
+| Weatherproof box                  | $30   | A box to hold the outside station.                                                                                     |
+| Solar radiation shield            | $40   | Very important for accurate temperature and humidity readings.                                                         |
+| 35W solar panel                   | $40   | A panel to charge the battery, bigger is generally better.                                                             |
+| 12V 18Ah lead acid battery        | $40   | To run the outside station. Lead acid charges at lower temperatures than lithium ion. Bigger is generally better.      |
+| Lead acid solar charge controller | $20   | To charge the battery.                                                                                                 |
+| Adafruit SHT31-D                  | $14   | Temperature/humidity sensor.                                                                                           |
+| DHT22                             | $4    | Temperature/humidity sensor.                                                                                           |
+| BMP180                            | $4    | Pressure/Temperature/Altitude sensor.                                                                                  |
+| Silica Gel packets                            | $10    | To help keep the outdoor station dry inside the box                                                                                  |
+|                                   |       |                                                                                                                        |
+| Total:                            | $378  |                                              
 
-| Item                | Price | Description                                                                           | Link                                                                                                                                                                    |
-|---------------------|-------|---------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 5x DHT11            | $9    | Temperature/humidity sensor.                                                          | http://www.ebay.com/itm/5X-DHT11-Temperature-and-Relative-Humidity-Sensor-Module-for-arduino-/321972401029?hash=item4af70cf385:g:rCUAAOSwaA5WkrJA                       |
-| 5x ESP8266          | $12   | Arduino compatible microcontroller with WiFi support.                                 | http://www.ebay.com/itm/5pcs-ESP8266-Serial-WIFI-Wireless-Transceiver-Module-WIFI-ESP-01-Support-AP-STA-/291362195261?hash=item43d68a473d:g:r1cAAOSwstxVFSb9            |
-| 5x LD1117V33        | $3    | Linear voltage regulator to convert 5V USB power to 3V power for the microcontroller. | http://www.ebay.com/itm/5PCS-LD1117V33-Linear-Voltage-Regulator-800mA-3-3V-TO-220-/181941289370?hash=item2a5c8bc19a:g:pN4AAOSwv-NWVDIz                                  |
-| 4x USB Wall Charger | $12   | Used to power the stations.                                                           | http://www.ebay.com/itm/2A-Fast-Wall-Charger-USB-Data-Cable-For-Samsung-Galaxy-S6-S6-Edge-Note-5-White-/272094650576?var=&hash=item3f5a1ae0d0:m:mC8CwZiIfjTshipOqjTuGcQ |
-|                     |       |                                                                                       |                                                                                                                                                                         |
-| Total:              | $46   |                                                                                       |                                                                                                                                                                         |
+I recommend buying extras for many of the cheaper electronic parts. That way you can have a replacement board if something goes wrong, and generally buying in bulk is cheaper anyways.
