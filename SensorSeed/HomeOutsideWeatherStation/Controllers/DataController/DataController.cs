@@ -32,8 +32,8 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
         {
             using (var context = new SensorSeedDataContext())
             {
-                double? humidity = null;
-                double? temperature = null;
+                decimal? humidity = null;
+                decimal? temperature = null;
 
                 string url = "https://rtupdate.wunderground.com/weatherstation/updateweatherstation.php";
                 url += "?ID=KNELINCO88";
@@ -45,29 +45,29 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 }
                 if (data.WindSpeed.HasValue)
                 {
-                    url += "&windspeedmph=" + Convert.ToDouble(data.WindSpeed.Value)*0.621371;
-                    url += "&winddir_avg2m=" + Convert.ToDouble(data.WindSpeed.Value)*0.621371;
+                    url += "&windspeedmph=" + data.WindSpeed.Value*(decimal)0.621371;
+                    url += "&winddir_avg2m=" + data.WindSpeed.Value*(decimal)0.621371;
                 }
                 if (data.GustSpeed.HasValue)
                 {
-                    url += "&windgustmph=" + Convert.ToDouble(data.GustSpeed.Value)*0.621371;
+                    url += "&windgustmph=" + data.GustSpeed.Value*(decimal)0.621371;
                 }
                 if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (DateTime.UtcNow.AddMinutes(-10))).Average(x => x.GustSpeed).HasValue)
                 {
-                    url += "&windgustmph_10m=" + Convert.ToDouble(context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (DateTime.UtcNow.AddMinutes(-10))).Average(x => x.GustSpeed)) * 0.621371;
+                    url += "&windgustmph_10m=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (DateTime.UtcNow.AddMinutes(-10))).Average(x => x.GustSpeed) * (decimal)0.621371;
                 }
                 if (data.Humidity.HasValue || data.HumidityDHT22.HasValue)
                 {
-                    double humidityAverage = 0;
-                    int humidityPointCount = 0;
+                    decimal humidityAverage = 0;
+                    decimal humidityPointCount = 0;
                     if (data.Humidity.HasValue)
                     {
-                        humidityAverage += Convert.ToDouble(data.Humidity.Value);
+                        humidityAverage += data.Humidity.Value;
                         humidityPointCount++;
                     }
                     if (data.HumidityDHT22.HasValue)
                     {
-                        humidityAverage += Convert.ToDouble(data.HumidityDHT22.Value);
+                        humidityAverage += data.HumidityDHT22.Value;
                         humidityPointCount++;
                     }
                     url += "&humidity=" + humidityAverage / humidityPointCount;
@@ -75,42 +75,45 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 }
                 if (data.Temperature.HasValue || data.Temperature180.HasValue || data.TemperatureDHT22.HasValue)
                 {
-                    double temperatureAverage = 0;
-                    double temperaturePointCount = 0;
+                    decimal temperatureAverage = 0;
+                    decimal temperaturePointCount = 0;
                     if (data.Temperature.HasValue)
                     {
-                        temperatureAverage += Convert.ToDouble(data.Temperature.Value);
+                        temperatureAverage += data.Temperature.Value;
                         temperaturePointCount++;
                     }
                     if (data.Temperature180.HasValue)
                     {
-                        temperatureAverage += Convert.ToDouble(data.Temperature180.Value);
+                        temperatureAverage += data.Temperature180.Value;
                         temperaturePointCount++;
                     }
                     if (data.TemperatureDHT22.HasValue)
                     {
-                        temperatureAverage += Convert.ToDouble(data.TemperatureDHT22.Value);
+                        temperatureAverage += data.TemperatureDHT22.Value;
                         temperaturePointCount++;
                     }
-                    url += "&tempf=" + (((temperatureAverage/temperaturePointCount) * 1.8) + 32);
+                    url += "&tempf=" + (((temperatureAverage/temperaturePointCount) * (decimal)1.8) + (decimal)32);
                     temperature = ((temperatureAverage/temperaturePointCount));
                 }
                 if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.UtcNow.AddMinutes(-60)).Sum(x => x.Rain).HasValue)
                 {
-                    url += "&rainin=" + Convert.ToDouble(context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.UtcNow.AddMinutes(-60)).Sum(x => x.Rain)) * 0.0393701;
+                    url += "&rainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.UtcNow.AddMinutes(-60)).Sum(x => x.Rain) * (decimal)0.0393701;
                 }
                 if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.Today.ToUniversalTime()).Sum(x => x.Rain).HasValue)
                 {
-                    url += "&dailyrainin=" + Convert.ToDouble(context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.Today.ToUniversalTime()).Sum(x => x.Rain)) * 0.0393701;
+                    url += "&dailyrainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.Today.ToUniversalTime()).Sum(x => x.Rain) * (decimal)0.0393701;
                 }
                 if (data.Pressure.HasValue)
                 {
-                    url += "&baromin=" + Convert.ToDouble(data.Pressure.Value) * 0.029529983071445; // might be wrong conversion factor, todo:
+                    // For some reason the wunderground API changes the pressure when it is uploaded, this offsets that.
+                    decimal offsetPressureValue = data.Pressure.Value - (decimal)43.69;
+                    url += "&baromin=" + offsetPressureValue * (decimal)0.029529983071445;
                 }
                 if (temperature.HasValue && humidity.HasValue)
                 {
-                    url += "&dewptf=" + ((WeatherDataConversions.DewPoint(temperature.Value, humidity.Value) * 1.8) + 32);
+                    url += "&dewptf=" + ((WeatherDataConversions.DewPoint((double)temperature.Value, (double)humidity.Value) * 1.8) + 32);
                 }
+                url += "&realtime=1&rtfreq=155";
 
                 HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
                 request.AutomaticDecompression = DecompressionMethods.GZip;
