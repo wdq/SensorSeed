@@ -37,7 +37,7 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
 
                 string url = "https://rtupdate.wunderground.com/weatherstation/updateweatherstation.php";
                 url += "?ID=KNELINCO88";
-                url += "&PASSWORD=NOPE";
+                url += "&PASSWORD=";
                 url += "&dateutc=" + data.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
                 if (data.WindDirection.HasValue)
                 {
@@ -354,6 +354,22 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                     else if (((decimal)92450 <= r2) && (r2 < (decimal)160000))
                     {
                         DirectionDegreesDecimal = (decimal)270;
+                    }
+
+                    // Mapping the 0-360 output to the actual 0-360 based on direction
+                    // Info: 
+                    //          East reported from the sensor is physically north
+                    //          South reported from the sensor is physically east
+                    // That means the physical direction is the sensor direction -90 (or +270 in cases where the result would be negative)
+                    // Todo: Update all data in database added before 8/24/17 at 7:55 PM with this math.
+
+                    if (DirectionDegreesDecimal > 90)
+                    {
+                        DirectionDegreesDecimal -= 90;
+                    }
+                    else
+                    {
+                        DirectionDegreesDecimal += 270;
                     }
 
                     data.WindDirection = DirectionDegreesDecimal;
