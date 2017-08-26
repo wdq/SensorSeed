@@ -1,12 +1,14 @@
 # SensorSeed
 
+![Weather station wind and rain sensors](https://raw.githubusercontent.com/wdq/SensorSeed/master/images/install-1.jpg)
+
 This is everything relating to my weather station project, including C# website code, AVR code for the hardware, PCB layouts, and schematics.
 
 There is an outdoor component to the station that collects temperature, humidity, pressure, wind speed, wind direction, and rain every two and a half minutes, I might bump this up to every minute in the future. Data is pushed over the air using a 100mW 900MHz radio to a Particle Photon inside my house. The Photon is connected to WiFi and uploads the data to the website. 
 
 You can view the data collected from the weather station on [my website](sensorseed.quade.co/HomeOutsideWeatherStation/Home), and on the [Weather Underground website](https://www.wunderground.com/personal-weather-station/dashboard?ID=KNELINCO88)
 
-
+![Weather station hardware](https://raw.githubusercontent.com/wdq/SensorSeed/master/images/install-2.jpg)
 
 Parts list: 
 
@@ -48,3 +50,9 @@ Parts list:
 | Total:                            | $378  |                                              
 
 I recommend buying extras for many of the cheaper electronic parts. That way you can have a replacement board if something goes wrong, and generally buying in bulk is cheaper anyways.
+
+![Outdoor board](https://raw.githubusercontent.com/wdq/SensorSeed/master/images/outdoor-v1-1.jpg)
+![Indoor board](https://raw.githubusercontent.com/wdq/SensorSeed/master/images/indoor-v1-1.jpg)
+
+You can find more images of this station [here](https://github.com/wdq/SensorSeed/tree/master/images).
+
