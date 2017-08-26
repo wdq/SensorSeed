@@ -6,7 +6,7 @@ This is everything relating to my weather station project, including C# website 
 
 There is an outdoor component to the station that collects temperature, humidity, pressure, wind speed, wind direction, and rain every two and a half minutes, I might bump this up to every minute in the future. Data is pushed over the air using a 100mW 900MHz radio to a Particle Photon inside my house. The Photon is connected to WiFi and uploads the data to the website. 
 
-You can view the data collected from the weather station on [my website](sensorseed.quade.co/HomeOutsideWeatherStation/Home), and on the [Weather Underground website](https://www.wunderground.com/personal-weather-station/dashboard?ID=KNELINCO88)
+You can view the data collected from the weather station on [my website](https://sensorseed.quade.co/HomeOutsideWeatherStation/Home), and on the [Weather Underground website](https://www.wunderground.com/personal-weather-station/dashboard?ID=KNELINCO88)
 
 ![Weather station hardware](https://raw.githubusercontent.com/wdq/SensorSeed/master/images/install-2.jpg)
 
