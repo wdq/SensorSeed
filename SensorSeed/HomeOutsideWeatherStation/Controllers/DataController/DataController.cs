@@ -50,11 +50,29 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 }
                 if (data.GustSpeed.HasValue)
                 {
-                    url += "&windgustmph=" + data.GustSpeed.Value*(decimal)0.621371;
+                    url += "&windgustmph=" + data.GustSpeed.Value*(decimal) 0.621371;
                 }
-                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (DateTime.UtcNow.AddMinutes(-10))).Average(x => x.GustSpeed).HasValue)
+                else
                 {
-                    url += "&windgustmph_10m=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (DateTime.UtcNow.AddMinutes(-10))).Average(x => x.GustSpeed) * (decimal)0.621371;
+                    // Want to upload something, and since the gust only works for every other reading I'll use this
+                    if (data.WindSpeed > 0)
+                    {
+                        // If there is still wind, use the last gust value if possible
+                        if (context.HomeOutsideWeatherStationDatas.Where(x => x.GustSpeed.HasValue && x.Timestamp.Date == data.Timestamp.Date && x.Timestamp > data.Timestamp.Date.AddMinutes(-10)).OrderByDescending(x => x.Timestamp).Any())
+                        {
+                            url += "&windgustmph=" + context.HomeOutsideWeatherStationDatas.Where(x => x.GustSpeed.HasValue && x.Timestamp > data.Timestamp.AddMinutes(-10) && x.Timestamp < data.Timestamp).OrderByDescending(x => x.Timestamp).FirstOrDefault().GustSpeed.Value;
+                        }
+                    }
+                    else 
+                    {
+                        // If there isn't any wind, then there wouldn't be a gust either
+                        url += "&windgustmph=" + 0.00;
+                    }
+
+                }
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (data.Timestamp.AddMinutes(-10))).Average(x => x.GustSpeed).HasValue)
+                {
+                    url += "&windgustmph_10m=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (data.Timestamp.AddMinutes(-10)) && x.Timestamp <= data.Timestamp).Average(x => x.GustSpeed) * (decimal)0.621371;
                 }
                 if (data.Humidity.HasValue || data.HumidityDHT22.HasValue)
                 {
@@ -95,19 +113,17 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                     url += "&tempf=" + (((temperatureAverage/temperaturePointCount) * (decimal)1.8) + (decimal)32);
                     temperature = ((temperatureAverage/temperaturePointCount));
                 }
-                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.UtcNow.AddMinutes(-60)).Sum(x => x.Rain).HasValue)
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.AddMinutes(-60) && x.Timestamp <= data.Timestamp).Sum(x => x.Rain).HasValue)
                 {
-                    url += "&rainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.UtcNow.AddMinutes(-60)).Sum(x => x.Rain) * (decimal)0.0393701;
+                    url += "&rainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.AddMinutes(-60) && x.Timestamp <= data.Timestamp).Sum(x => x.Rain) * (decimal)0.0393701;
                 }
-                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.Today.ToUniversalTime()).Sum(x => x.Rain).HasValue)
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp.Date == data.Timestamp.Date).Sum(x => x.Rain).HasValue)
                 {
-                    url += "&dailyrainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > DateTime.Today.ToUniversalTime()).Sum(x => x.Rain) * (decimal)0.0393701;
+                    url += "&dailyrainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp.Date == data.Timestamp.Date).Sum(x => x.Rain) * (decimal)0.0393701;
                 }
                 if (data.Pressure.HasValue)
                 {
-                    // For some reason the wunderground API changes the pressure when it is uploaded, this offsets that.
-                    decimal offsetPressureValue = data.Pressure.Value - (decimal)43.69;
-                    url += "&baromin=" + offsetPressureValue * (decimal)0.029529983071445;
+                    url += "&baromin=" + data.Pressure.Value * (decimal)0.029529983071445;
                 }
                 if (temperature.HasValue && humidity.HasValue)
                 {
