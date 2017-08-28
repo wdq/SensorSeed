@@ -76,20 +76,14 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 }
                 if (data.Humidity.HasValue || data.HumidityDHT22.HasValue)
                 {
-                    decimal humidityAverage = 0;
-                    decimal humidityPointCount = 0;
                     if (data.Humidity.HasValue)
                     {
-                        humidityAverage += data.Humidity.Value;
-                        humidityPointCount++;
+                        humidity = data.Humidity.Value;
+                        url += "&humidity=" + humidity;
+                    } else {
+                        humidity = data.HumidityDHT22.Value;
+                        url += "&humidity=" + humidity;
                     }
-                    if (data.HumidityDHT22.HasValue)
-                    {
-                        humidityAverage += data.HumidityDHT22.Value;
-                        humidityPointCount++;
-                    }
-                    url += "&humidity=" + humidityAverage / humidityPointCount;
-                    humidity = humidityAverage/humidityPointCount;
                 }
                 if (data.Temperature.HasValue || data.Temperature180.HasValue || data.TemperatureDHT22.HasValue)
                 {
