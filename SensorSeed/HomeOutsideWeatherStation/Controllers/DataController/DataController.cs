@@ -99,13 +99,11 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                         temperatureAverage += data.Temperature180.Value;
                         temperaturePointCount++;
                     }
-                    if (data.TemperatureDHT22.HasValue)
+                    if (data.Temperature.HasValue || data.Temperature180.HasValue)
                     {
-                        temperatureAverage += data.TemperatureDHT22.Value;
-                        temperaturePointCount++;
+                        url += "&tempf=" + (((temperatureAverage/temperaturePointCount)*(decimal) 1.8) + (decimal) 32);
+                        temperature = ((temperatureAverage/temperaturePointCount));
                     }
-                    url += "&tempf=" + (((temperatureAverage/temperaturePointCount) * (decimal)1.8) + (decimal)32);
-                    temperature = ((temperatureAverage/temperaturePointCount));
                 }
                 if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.AddMinutes(-60) && x.Timestamp <= data.Timestamp).Sum(x => x.Rain).HasValue)
                 {
