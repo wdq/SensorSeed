@@ -25,125 +25,180 @@ namespace HomeOutsideWeatherStationDataService
             return dtDateTime;
         }
 
-        static void Main(string[] args)
+        public static void UploadHistoryToWunderground()
         {
-            while (true)
+            using (var context = new SensorSeedDataContext())
             {
-                DateTime currentTime = DateTime.Now;
-
-
-                string html = string.Empty;
-                string url = @"http://10.0.13.219/data.txt";
-                string[] sensorData = new string[13];
-
-                bool tryAgain = true;
-                while (tryAgain)
+                var rows = context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp <= DateTime.Parse("2016-04-18").Date.AddHours(24)).OrderByDescending(x => x.Timestamp);
+                foreach (var row in rows)
                 {
-                    Console.Write(currentTime.ToString());
-                    Console.Write(":    Getting sensor data...");
+                    UploadToWunderground(row);
+                }
+            }
+        }
 
-                    string server = "10.0.14.71";
-                    string database = "HomeOutsideWeatherStation";
-                    string uid = "root";
-                    string password = "password";
-                    string connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+        private static void UploadToWunderground(HomeOutsideWeatherStationData data)
+        {
+            using (var context = new SensorSeedDataContext())
+            {
+                double? humidity = null;
+                double? temperature = null;
 
-                    try
+                string url = "https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php";
+                url += "?ID=KNELINCO88";
+                url += "&PASSWORD=";
+                url += "&dateutc=" + data.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+                if (data.WindDirection.HasValue)
+                {
+                    url += "&winddir=" + Convert.ToInt32(data.WindDirection.Value);
+                }
+                if (data.WindSpeed.HasValue)
+                {
+                    url += "&windspeedmph=" + Convert.ToDouble(data.WindSpeed.Value) * 0.621371;
+                    url += "&winddir_avg2m=" + Convert.ToDouble(data.WindSpeed.Value) * 0.621371;
+                }
+                if (data.GustSpeed.HasValue)
+                {
+                    url += "&windgustmph=" + Convert.ToDouble(data.GustSpeed.Value) * 0.621371;
+                }
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (data.Timestamp.AddMinutes(-10)) && x.Timestamp <= data.Timestamp).Average(x => x.GustSpeed).HasValue)
+                {
+                    url += "&windgustmph_10m=" + Convert.ToDouble(context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > (data.Timestamp.AddMinutes(-10)) && x.Timestamp <= data.Timestamp).Average(x => x.GustSpeed)) * 0.621371;
+                }
+                if (data.Humidity.HasValue || data.HumidityDHT22.HasValue)
+                {
+                    double humidityAverage = 0;
+                    int humidityPointCount = 0;
+                    if (data.Humidity.HasValue)
                     {
-                        MySqlConnection connection = new MySqlConnection(connectionString);
-                        connection.Open();
-
-                        DateTime lastRecordTime = DateTime.MinValue;
-                        var lastRecordRetrieved =
-                            new SensorSeedDataContext().HomeOutsideWeatherStationDatas.OrderByDescending(
-                                x => x.Timestamp).FirstOrDefault();
-                        if (lastRecordRetrieved != null)
-                        {
-                            lastRecordTime = lastRecordRetrieved.Timestamp;
-                        }
-                        double unixLastRecordTime =
-                            (lastRecordTime - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-
-
-                        var query = "SELECT * FROM HomeOutsideWeatherStation.WeatherData WHERE Timestamp > " +
-                                    unixLastRecordTime + ";";
-
-                        List<string>[] list = new List<string>[15];
-                        for (int i = 0; i < 15; i++)
-                        {
-                            list[i] = new List<string>();
-                        }
-
-                        MySqlCommand command = new MySqlCommand(query, connection);
-                        MySqlDataReader dataReader = command.ExecuteReader();
-                        while (dataReader.Read())
-                        {
-                            list[0].Add(dataReader["Id"] + "");
-                            list[1].Add(dataReader["Timestamp"] + "");
-                            list[2].Add(dataReader["temperatureSHT31"] + "");
-                            list[3].Add(dataReader["humiditySHT32"] + "");
-                            list[4].Add(dataReader["pressureBMP180"] + "");
-                            list[5].Add(dataReader["altitudeBMP180"] + "");
-                            list[6].Add(dataReader["windSpeedI2C"] + "");
-                            list[7].Add(dataReader["gustSpeedI2C"] + "");
-                            list[8].Add(dataReader["rainI2C"] + "");
-                            list[9].Add(dataReader["batteryI2C"] + "");
-                            list[10].Add(dataReader["solarI2C"] + "");
-                            list[11].Add(dataReader["directionI2C"] + "");
-                            list[12].Add(dataReader["temperatureBMP180"] + "");
-                            list[13].Add(dataReader["temperatureDHT22"] + "");
-                            list[14].Add(dataReader["humidityDHT22"] + "");
-                        }
-                        dataReader.Close();
-                        connection.Close();
-
-                        for (int i = 0; i < list[0].Count; i++)
-                        {
-                            string addDataResult = AddData(UnixTimeStampToDateTime(double.Parse(list[1][i])), list[2][i],
-                                list[3][i], list[4][i], list[5][i], list[6][i], list[7][i], list[8][i], list[9][i],
-                                list[10][i], list[11][i], list[12][i], list[13][i], list[14][i], "", "");
-                            Console.Write(", " + addDataResult);
-                        }
-
-                        tryAgain = false;
-                        Console.WriteLine("Success");
+                        humidityAverage += Convert.ToDouble(data.Humidity.Value);
+                        humidityPointCount++;
                     }
-                    catch (Exception exception)
+                    if (data.HumidityDHT22.HasValue)
                     {
-                        Console.WriteLine("Error: " + exception.Message);
+                        humidityAverage += Convert.ToDouble(data.HumidityDHT22.Value);
+                        humidityPointCount++;
                     }
-
-
-
-                    /*try
+                    url += "&humidity=" + humidityAverage / humidityPointCount;
+                    humidity = humidityAverage / humidityPointCount;
+                }
+                if (data.Temperature.HasValue || data.Temperature180.HasValue || data.TemperatureDHT22.HasValue)
+                {
+                    double temperatureAverage = 0;
+                    double temperaturePointCount = 0;
+                    if (data.Temperature.HasValue)
                     {
-                        WebClient client = new WebClient();
-                        client.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-                        html = client.DownloadString(url);
-
-                        int index = html.IndexOf("\n");
-                        html = html.Substring(index + "\n".Length);
-                        string[] lines = html.Split(new string[] { "\n" }, StringSplitOptions.None);
-                        for (int i = 0; i < 13; i++)
-                        {
-                            string lineData = lines[i].Substring(lines[i].IndexOf(":") + 2).Trim();
-                            sensorData[i] = lineData;
-                        }
-
-                        string addDataResult = AddData(sensorData[0], sensorData[1], sensorData[2], sensorData[3], sensorData[4], sensorData[5], sensorData[6], sensorData[7], sensorData[8], sensorData[9], sensorData[10], sensorData[11], sensorData[12], "0", "0");
-                        Console.WriteLine(addDataResult);
-                        tryAgain = false;
+                        temperatureAverage += Convert.ToDouble(data.Temperature.Value);
+                        temperaturePointCount++;
                     }
-                    catch (Exception ex)
+                    if (data.Temperature180.HasValue)
                     {
-                        Console.WriteLine("Error: " + ex.Message);
-
-                    } */
-
+                        temperatureAverage += Convert.ToDouble(data.Temperature180.Value);
+                        temperaturePointCount++;
+                    }
+                    if (data.TemperatureDHT22.HasValue)
+                    {
+                        temperatureAverage += Convert.ToDouble(data.TemperatureDHT22.Value);
+                        temperaturePointCount++;
+                    }
+                    url += "&tempf=" + (((temperatureAverage / temperaturePointCount) * 1.8) + 32);
+                    temperature = ((temperatureAverage / temperaturePointCount));
+                }
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.AddMinutes(-60) && x.Timestamp <= data.Timestamp).Sum(x => x.Rain).HasValue)
+                {
+                    url += "&rainin=" + Convert.ToDouble(context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.AddMinutes(-60) && x.Timestamp <= data.Timestamp).Sum(x => x.Rain)) * 0.0393701;
+                }
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.Date && x.Timestamp <= data.Timestamp).Sum(x => x.Rain).HasValue)
+                {
+                    url += "&dailyrainin=" + Convert.ToDouble(context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.Date && x.Timestamp <= data.Timestamp).Sum(x => x.Rain)) * 0.0393701;
+                }
+                if (data.Pressure.HasValue)
+                {
+                    url += "&baromin=" + Convert.ToDouble(data.Pressure.Value) * 0.029529983071445; // might be wrong conversion factor, todo:
+                }
+                if (temperature.HasValue && humidity.HasValue)
+                {
+                    url += "&dewptf=" + ((DewPoint(temperature.Value, humidity.Value) * 1.8) + 32);
                 }
 
-                Thread.Sleep(TimeSpan.FromMinutes(2.5));
+                Console.WriteLine(url);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.AutomaticDecompression = DecompressionMethods.GZip;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) ;
+                Thread.Sleep(250);
             }
+
+        }
+
+        public static double DewPoint(double temperature, double humidity)
+        {
+            //double dewPoint = 0;
+
+            // Dewpoint: https://en.wikipedia.org/wiki/Dew_point
+            // Code taken from here: http://stackoverflow.com/a/27289801
+
+            return (temperature - (14.55 + 0.114 * temperature) * (1 - (0.01 * humidity)) - Math.Pow(((2.5 + 0.007 * temperature) * (1 - (0.01 * humidity))), 3) - (15.9 + 0.117 * temperature) * Math.Pow((1 - (0.01 * humidity)), 14));
+        }
+
+
+        static void ImportOldCSV()
+        {
+            var csvLines = File.ReadLines(@"C:\Projects\mongoweather.csv");
+            int lineCount = 0;
+            foreach (var line in csvLines)
+            {
+                if (lineCount > 0)
+                {
+                    var fields = line.Split(',');
+                    var guid = Guid.NewGuid();
+                    double timestamp = Convert.ToDouble(fields[1]);
+                    Decimal temperature = Convert.ToDecimal(fields[2]);
+                    Decimal humidity = Convert.ToDecimal(fields[3]);
+
+                    HomeOutsideWeatherStationData row = new HomeOutsideWeatherStationData();;
+                    row.Id = guid;
+                    row.Timestamp = UnixTimeStampToDateTime(timestamp/1000);
+                    row.TemperatureDHT22 = temperature;
+                    row.HumidityDHT22 = humidity;
+
+                    using (var context = new SensorSeedDataContext())
+                    {
+                        context.HomeOutsideWeatherStationDatas.InsertOnSubmit(row);
+                        context.SubmitChanges();
+                    }
+
+                    string url = "https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php";
+                    url += "?ID=KNELINCO88";
+                    url += "&PASSWORD=";
+                    url += "&dateutc=" + row.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+                    if (row.TemperatureDHT22.HasValue)
+                    {
+                        url += "&tempf=" + (row.TemperatureDHT22.Value*(decimal) 1.8) + (decimal) 32;
+                    }
+                    if (row.HumidityDHT22.HasValue)
+                    {
+                        url += "&humidity=" + row.HumidityDHT22.Value;
+                    }
+                    if (row.TemperatureDHT22.HasValue && row.HumidityDHT22.HasValue)
+                    {
+                        url += "&dewptf=" + ((DewPoint(Convert.ToDouble(row.TemperatureDHT22.Value), Convert.ToDouble(row.HumidityDHT22.Value)) * 1.8) + 32);
+                    }
+
+                    Console.WriteLine(url);
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.AutomaticDecompression = DecompressionMethods.GZip;
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) ;
+                    Thread.Sleep(250);
+
+                }
+                lineCount++;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            //UploadHistoryToWunderground();
+            ImportOldCSV();
         }
 
         public static string AddData(DateTime Timestamp, string Temperature, string Humidity, string Pressure, string Altitude, string Wind, string Gust, string Rain, string Battery, string Solar, string Direction, string Temperature180, string TemperatureDHT22, string HumidityDHT22, string Veml6070, string Lux)
