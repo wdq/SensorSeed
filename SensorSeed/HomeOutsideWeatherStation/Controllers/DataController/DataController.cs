@@ -109,9 +109,14 @@ namespace HomeOutsideWeatherStation.Controllers.DataController
                 {
                     url += "&rainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp > data.Timestamp.AddMinutes(-60) && x.Timestamp <= data.Timestamp).Sum(x => x.Rain) * (decimal)0.0393701;
                 }
-                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp.Date == data.Timestamp.Date).Sum(x => x.Rain).HasValue)
+                DateTime nowUtcTime = DateTime.UtcNow;
+                DateTime nowLocalTime = nowUtcTime.ToLocalTime();
+                TimeSpan timeDifference = nowUtcTime - nowLocalTime;
+                int timeDifferenceHours = timeDifference.Hours * -1;
+
+                if (context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp.AddHours(timeDifferenceHours).Date == data.Timestamp.AddHours(timeDifferenceHours).Date).Sum(x => x.Rain).HasValue)
                 {
-                    url += "&dailyrainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp.Date == data.Timestamp.Date).Sum(x => x.Rain) * (decimal)0.0393701;
+                    url += "&dailyrainin=" + context.HomeOutsideWeatherStationDatas.Where(x => x.Timestamp.AddHours(timeDifferenceHours).Date == data.Timestamp.AddHours(timeDifferenceHours).Date).Sum(x => x.Rain) * (decimal)0.0393701;
                 }
                 if (data.Pressure.HasValue)
                 {
